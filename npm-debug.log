@@ -1,0 +1,150 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', '-g', 'typescript' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.32
+4 verbose cache add [ 'typescript', null ]
+5 verbose cache add name=undefined spec="typescript" args=["typescript",null]
+6 verbose parsed url { protocol: null,
+6 verbose parsed url   slashes: null,
+6 verbose parsed url   auth: null,
+6 verbose parsed url   host: null,
+6 verbose parsed url   port: null,
+6 verbose parsed url   hostname: null,
+6 verbose parsed url   hash: null,
+6 verbose parsed url   search: null,
+6 verbose parsed url   query: null,
+6 verbose parsed url   pathname: 'typescript',
+6 verbose parsed url   path: 'typescript',
+6 verbose parsed url   href: 'typescript' }
+7 silly lockFile fb9da861-typescript typescript
+8 verbose lock typescript /Users/imgemp/.npm/fb9da861-typescript.lock
+9 silly lockFile fb9da861-typescript typescript
+10 silly lockFile fb9da861-typescript typescript
+11 verbose addNamed [ 'typescript', '' ]
+12 verbose addNamed [ null, '*' ]
+13 silly lockFile b598c0ef-typescript typescript@
+14 verbose lock typescript@ /Users/imgemp/.npm/b598c0ef-typescript.lock
+15 silly addNameRange { name: 'typescript', range: '*', hasData: false }
+16 verbose request where is /typescript
+17 verbose request registry https://registry.npmjs.org/
+18 verbose request id 158b6a7f6c627d4c
+19 verbose url raw /typescript
+20 verbose url resolving [ 'https://registry.npmjs.org/', './typescript' ]
+21 verbose url resolved https://registry.npmjs.org/typescript
+22 verbose request where is https://registry.npmjs.org/typescript
+23 info trying registry request attempt 1 at 13:21:35
+24 http GET https://registry.npmjs.org/typescript
+25 http 200 https://registry.npmjs.org/typescript
+26 silly registry.get cb [ 200,
+26 silly registry.get   { date: 'Wed, 24 Sep 2014 17:21:35 GMT',
+26 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+26 silly registry.get     etag: '"3D636FL7XK9I7GKRNK23P8CQG"',
+26 silly registry.get     'content-type': 'application/json',
+26 silly registry.get     'cache-control': 'max-age=60',
+26 silly registry.get     'content-length': '15662',
+26 silly registry.get     'accept-ranges': 'bytes',
+26 silly registry.get     via: '1.1 varnish',
+26 silly registry.get     age: '6096',
+26 silly registry.get     'x-served-by': 'cache-iad2123-IAD',
+26 silly registry.get     'x-cache': 'HIT',
+26 silly registry.get     'x-cache-hits': '1',
+26 silly registry.get     'x-timer': 'S1411579295.693055,VS0,VE85',
+26 silly registry.get     vary: 'Accept',
+26 silly registry.get     'keep-alive': 'timeout=10, max=50',
+26 silly registry.get     connection: 'Keep-Alive' } ]
+27 silly addNameRange number 2 { name: 'typescript', range: '*', hasData: true }
+28 silly addNameRange versions [ 'typescript',
+28 silly addNameRange   [ '0.8.0',
+28 silly addNameRange     '0.8.1',
+28 silly addNameRange     '0.8.1-1',
+28 silly addNameRange     '0.8.2',
+28 silly addNameRange     '0.8.3',
+28 silly addNameRange     '0.9.0',
+28 silly addNameRange     '0.9.0-1',
+28 silly addNameRange     '0.9.1',
+28 silly addNameRange     '0.9.1-1',
+28 silly addNameRange     '0.9.5',
+28 silly addNameRange     '0.9.7',
+28 silly addNameRange     '1.0.0',
+28 silly addNameRange     '1.0.1' ] ]
+29 verbose addNamed [ 'typescript', '1.0.1' ]
+30 verbose addNamed [ '1.0.1', '1.0.1' ]
+31 silly lockFile 22c3f0dc-typescript-1-0-1 typescript@1.0.1
+32 verbose lock typescript@1.0.1 /Users/imgemp/.npm/22c3f0dc-typescript-1-0-1.lock
+33 silly lockFile 7b147ede--typescript-typescript-1-0-1-tgz https://registry.npmjs.org/typescript/-/typescript-1.0.1.tgz
+34 verbose lock https://registry.npmjs.org/typescript/-/typescript-1.0.1.tgz /Users/imgemp/.npm/7b147ede--typescript-typescript-1-0-1-tgz.lock
+35 verbose addRemoteTarball [ 'https://registry.npmjs.org/typescript/-/typescript-1.0.1.tgz',
+35 verbose addRemoteTarball   'e8eacde3084a091d3fe29b60ac5862252662a25a' ]
+36 info retry fetch attempt 1 at 13:21:36
+37 verbose fetch to= /var/folders/_j/14yh_69x3lb8vx_09f36py3r0000gp/T/npm-84377-k-DxiBf2/registry.npmjs.org/typescript/-/typescript-1.0.1.tgz
+38 http GET https://registry.npmjs.org/typescript/-/typescript-1.0.1.tgz
+39 http 200 https://registry.npmjs.org/typescript/-/typescript-1.0.1.tgz
+40 silly lockFile 7b147ede--typescript-typescript-1-0-1-tgz https://registry.npmjs.org/typescript/-/typescript-1.0.1.tgz
+41 silly lockFile 7b147ede--typescript-typescript-1-0-1-tgz https://registry.npmjs.org/typescript/-/typescript-1.0.1.tgz
+42 silly lockFile 22c3f0dc-typescript-1-0-1 typescript@1.0.1
+43 silly lockFile 22c3f0dc-typescript-1-0-1 typescript@1.0.1
+44 silly lockFile b598c0ef-typescript typescript@
+45 silly lockFile b598c0ef-typescript typescript@
+46 silly resolved [ { name: 'typescript',
+46 silly resolved     author: { name: 'Microsoft Corp.' },
+46 silly resolved     homepage: 'http://typescriptlang.org/',
+46 silly resolved     version: '1.0.1',
+46 silly resolved     licenses: [ [Object] ],
+46 silly resolved     description: 'TypeScript is a language for application scale JavaScript development',
+46 silly resolved     keywords: [ 'TypeScript', 'Microsoft', 'compiler', 'language', 'javascript' ],
+46 silly resolved     bugs: { url: 'http://typescript.codeplex.com/workitem/list/basic' },
+46 silly resolved     repository: { type: 'git', url: 'https://git01.codeplex.com/typescript' },
+46 silly resolved     preferGlobal: true,
+46 silly resolved     main: './bin/typescript.js',
+46 silly resolved     bin: { tsc: './bin/tsc' },
+46 silly resolved     engines: { node: '>=0.8.0' },
+46 silly resolved     devDependencies: { jake: 'latest' },
+46 silly resolved     _id: 'typescript@1.0.1',
+46 silly resolved     dist:
+46 silly resolved      { shasum: 'e8eacde3084a091d3fe29b60ac5862252662a25a',
+46 silly resolved        tarball: 'http://registry.npmjs.org/typescript/-/typescript-1.0.1.tgz' },
+46 silly resolved     _from: 'typescript@',
+46 silly resolved     _npmVersion: '1.4.3',
+46 silly resolved     _npmUser: { name: 'typescript', email: 'typescript@microsoft.com' },
+46 silly resolved     maintainers: [ [Object] ],
+46 silly resolved     directories: {},
+46 silly resolved     _shasum: 'e8eacde3084a091d3fe29b60ac5862252662a25a',
+46 silly resolved     _resolved: 'https://registry.npmjs.org/typescript/-/typescript-1.0.1.tgz' } ]
+47 info install typescript@1.0.1 into /usr/local/lib
+48 info installOne typescript@1.0.1
+49 verbose lib/node_modules/typescript unbuild
+50 verbose tar unpack /Users/imgemp/.npm/typescript/1.0.1/package.tgz
+51 silly lockFile 2d878377-ocal-lib-node-modules-typescript tar:///usr/local/lib/node_modules/typescript
+52 verbose lock tar:///usr/local/lib/node_modules/typescript /Users/imgemp/.npm/2d878377-ocal-lib-node-modules-typescript.lock
+53 silly lockFile 7ebacf01-npm-typescript-1-0-1-package-tgz tar:///Users/imgemp/.npm/typescript/1.0.1/package.tgz
+54 verbose lock tar:///Users/imgemp/.npm/typescript/1.0.1/package.tgz /Users/imgemp/.npm/7ebacf01-npm-typescript-1-0-1-package-tgz.lock
+55 silly gunzTarPerm modes [ '755', '644' ]
+56 error Error: EACCES, mkdir '/usr/local/lib/node_modules/typescript'
+56 error  { [Error: EACCES, mkdir '/usr/local/lib/node_modules/typescript']
+56 error   errno: 3,
+56 error   code: 'EACCES',
+56 error   path: '/usr/local/lib/node_modules/typescript',
+56 error   fstream_type: 'Directory',
+56 error   fstream_path: '/usr/local/lib/node_modules/typescript',
+56 error   fstream_class: 'DirWriter',
+56 error   fstream_stack:
+56 error    [ '/usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23',
+56 error      '/usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:46:53',
+56 error      'Object.oncomplete (fs.js:107:15)' ] }
+57 error Please try running this command again as root/Administrator.
+58 error System Darwin 13.3.0
+59 error command "node" "/usr/local/bin/npm" "install" "-g" "typescript"
+60 error cwd /Users/imgemp/Desktop
+61 error node -v v0.10.32
+62 error npm -v 1.4.28
+63 error path /usr/local/lib/node_modules/typescript
+64 error fstream_path /usr/local/lib/node_modules/typescript
+65 error fstream_type Directory
+66 error fstream_class DirWriter
+67 error code EACCES
+68 error errno 3
+69 error stack Error: EACCES, mkdir '/usr/local/lib/node_modules/typescript'
+70 error fstream_stack /usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23
+70 error fstream_stack /usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:46:53
+70 error fstream_stack Object.oncomplete (fs.js:107:15)
+71 verbose exit [ 3, true ]
