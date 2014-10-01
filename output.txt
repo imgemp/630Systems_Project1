@@ -1,0 +1,20 @@
+1           0 LOAD_CONST               4 ((1, 0))
+            3 UNPACK_SEQUENCE          2
+            6 STORE_NAME               0 (a)
+            9 STORE_NAME               1 (b)
+
+2          12 LOAD_NAME                0 (a)
+           15 JUMP_IF_TRUE             7 (to 24)
+           18 LOAD_NAME                1 (b)
+           21 JUMP_IF_FALSE           13 (to 36)
+      >>   24 POP_TOP
+
+3          26 LOAD_CONST               2 ('Hello')
+           29 PRINT_ITEM
+           30 LOAD_NAME                0 (a)
+           33 PRINT_ITEM
+           34 PRINT_NEWLINE
+           35 JUMP_FORWARD             1 (to 39)
+      >>   38 POP_TOP
+      >>   39 LOAD_CONST               3 (None)
+           42 RETURN_VALUE
