@@ -1,4 +1,4 @@
-// Start Node
+/// <reference path="node.d.ts" />
 
 var fs = require('fs');
 fs.readFile('foo.pyc', function doneReading(err, bytecode) {
