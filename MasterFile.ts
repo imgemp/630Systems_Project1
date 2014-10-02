@@ -123,23 +123,70 @@ function parseBytecode(bytecode) {
     console.log('constants:');
     logout = '';
     console.log(i);
-    while (i < len) {
-        if (String.fromCharCode(bytecode.slice(i,i+1).readUInt8(0)) == '(') {
-            console.log('(');
-            logout = logout.concat('\t');
-            i = parseCollection(bytecode,i,logout);
-        }
-        console.log(i);
+    // while (i < len) {
+    //     if (String.fromCharCode(bytecode.slice(i,i+1).readUInt8(0)) == '(') {
+    //         console.log('(');
+    //         logout = logout.concat('\t');
+    //         i = parseCollection(bytecode,i+1,logout);
+    //     }
+    //     console.log('got here');
+    //     console.log(i);
+    // }
+    while (String.fromCharCode(bytecode.slice(i,i+1).readUInt8(0)) == '(') {
+        console.log('(');
+        logout = logout.concat('\t');
+        i = parseCollection(bytecode,i+1,logout);
+    }
+
+    // Read Filename
+    console.log('filename');
+    var type = String.fromCharCode(bytecode.slice(i,i+1).readUInt8(0));
+    console.log('type = '.concat(type));
+    if (type in readByType) {
+        i = readByType[type](bytecode,i+1,logout);
+    } else { i = i + 1; }
+
+    // Read Function Name
+    console.log('name');
+    var type = String.fromCharCode(bytecode.slice(i,i+1).readUInt8(0));
+    console.log('type = '.concat(type));
+    if (type in readByType) {
+        i = readByType[type](bytecode,i+1,logout);
+    } else { i = i + 1; }
+
+    // Read First Line Number
+    console.log('firstlineno');
+    i = readByType['i'](bytecode,i,logout);
+
+    // Read Line Number Tab
+    console.log('lnotab');
+    // var type = String.fromCharCode(bytecode.slice(i,i+1).readUInt8(0));
+    // console.log('type = '.concat(type));
+    // console.log('i = '.concat(String(i)));
+    // if (type in readByType) {
+    //     i = readByType[type](bytecode,i+1,logout);
+    // } else { i = i + 1; }
+    // even though it's a string, you read it as pairs of numbers
+    // see: http://nedbatchelder.com/blog/200804/wicked_hack_python_bytecode_tracing.html
+    i = i + 1; // skipping the 's' byte
+    var npairs = bytecode.slice(i,i+4).readUInt32LE(0)/2; i = i + 4;
+    console.log('npairs = '.concat(String(npairs)));
+    for (var j=0; j<npairs; j++) {
+        var byteDelta = bytecode.slice(i,i+1).readUInt8(0); i = i + 1;
+        var lineDelta = bytecode.slice(i,i+1).readUInt8(0); i = i + 1;
+        console.log('('.concat(String(byteDelta),',',String(lineDelta),')'));
     }
 
 }
 
 function parseCollection(bytecode,i,logout) {
     var nobjs = bytecode.slice(i,i+4).readUInt32LE(0);
+    console.log('nobjs = '.concat(String(nobjs)));
     i = i + 4;
     for (var j=0; j<nobjs; j++) {
         var type = String.fromCharCode(bytecode.slice(i,i+1).readUInt8(0));
-        console.log(type);
+        console.log('j = '.concat(String(j)));
+        console.log('type = '.concat(type));
         if (type in readByType) {
             i = readByType[type](bytecode,i+1,logout);
         } else { i = i + 1; }
