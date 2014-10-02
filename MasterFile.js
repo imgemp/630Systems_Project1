@@ -13,30 +13,30 @@ readByType['R'] = "readStringRef";
 readByType['u'] = "readUnicode";
 readByType['('] = parseCollection;
 
-function readInt32(bytecode, i, logout) {
+function readInt32(bytecode, i, level) {
     var result = undefined;
     result = bytecode.slice(i, i + 4).readUInt32LE(0);
-    console.log(logout.concat(result));
+    console.log(Array(level).join('\t').concat(result));
     return i + 4;
 }
 
-function readString(bytecode, i, logout) {
-    var result = [];
+function readString(bytecode, i, level) {
+    var result = '';
     var size = bytecode.slice(i, i + 4).readUInt32LE(0);
     for (var j = 0; j < size; j++) {
-        result[i] = String.fromCharCode(bytecode.slice(i + 4 + j, i + 4 + j + 1).readUInt8(0));
-        console.log(logout.concat(result[i]));
+        result = result.concat(String.fromCharCode(bytecode.slice(i + 4 + j, i + 4 + j + 1).readUInt8(0)));
     }
+    console.log(Array(level).join('\t').concat(result));
     return i + 4 + size;
 }
 
-function readStringInterned(bytecode, i, logout) {
-    var result = [];
+function readStringInterned(bytecode, i, level) {
+    var result = '';
     var size = bytecode.slice(i, i + 4).readUInt32LE(0);
     for (var j = 0; j < size; j++) {
-        result[i] = String.fromCharCode(bytecode.slice(i + 4 + j, i + 4 + j + 1).readUInt8(0));
-        console.log(logout.concat(result[i]));
+        result = result.concat(String.fromCharCode(bytecode.slice(i + 4 + j, i + 4 + j + 1).readUInt8(0)));
     }
+    console.log(Array(level).join('\t').concat(result));
     return i + 4 + size;
 }
 
@@ -94,6 +94,8 @@ function parseBytecode(bytecode) {
     console.log('flags: '.concat(String(flags)));
 
     // Skip 5 Bytes - figure out why later
+    // first byte says 's'
+    // second byte tells the number of opcodes to expect
     i = i + 16 + 5;
 
     // Start Reading Op Codes
@@ -117,41 +119,39 @@ function parseBytecode(bytecode) {
 
     // Start Reading Constants
     console.log('constants:');
-    logout = '';
-    console.log(i);
 
     while (String.fromCharCode(bytecode.slice(i, i + 1).readUInt8(0)) == '(') {
-        console.log('(');
-        logout = logout.concat('\t');
-        i = parseCollection(bytecode, i + 1, logout);
+        i = parseCollection(bytecode, i + 1, 0);
     }
 
     // Read Filename
-    console.log('filename');
+    console.log('filename:');
     var type = String.fromCharCode(bytecode.slice(i, i + 1).readUInt8(0));
-    console.log('type = '.concat(type));
+
+    // console.log('type = '.concat(type));
     if (type in readByType) {
-        i = readByType[type](bytecode, i + 1, logout);
+        i = readByType[type](bytecode, i + 1, 0);
     } else {
         i = i + 1;
     }
 
     // Read Function Name
-    console.log('name');
+    console.log('name:');
     var type = String.fromCharCode(bytecode.slice(i, i + 1).readUInt8(0));
-    console.log('type = '.concat(type));
+
+    // console.log('type = '.concat(type));
     if (type in readByType) {
-        i = readByType[type](bytecode, i + 1, logout);
+        i = readByType[type](bytecode, i + 1, 0);
     } else {
         i = i + 1;
     }
 
     // Read First Line Number
-    console.log('firstlineno');
-    i = readByType['i'](bytecode, i, logout);
+    console.log('firstlineno:');
+    i = readByType['i'](bytecode, i, 0);
 
     // Read Line Number Tab
-    console.log('lnotab');
+    console.log('lnotab:');
 
     // var type = String.fromCharCode(bytecode.slice(i,i+1).readUInt8(0));
     // console.log('type = '.concat(type));
@@ -164,7 +164,7 @@ function parseBytecode(bytecode) {
     i = i + 1; // skipping the 's' byte
     var npairs = bytecode.slice(i, i + 4).readUInt32LE(0) / 2;
     i = i + 4;
-    console.log('npairs = '.concat(String(npairs)));
+
     for (var j = 0; j < npairs; j++) {
         var byteDelta = bytecode.slice(i, i + 1).readUInt8(0);
         i = i + 1;
@@ -174,16 +174,19 @@ function parseBytecode(bytecode) {
     }
 }
 
-function parseCollection(bytecode, i, logout) {
+function parseCollection(bytecode, i, level) {
     var nobjs = bytecode.slice(i, i + 4).readUInt32LE(0);
-    console.log('nobjs = '.concat(String(nobjs)));
+
+    // console.log('nobjs = '.concat(String(nobjs)));
+    level = level + 1;
     i = i + 4;
     for (var j = 0; j < nobjs; j++) {
         var type = String.fromCharCode(bytecode.slice(i, i + 1).readUInt8(0));
-        console.log('j = '.concat(String(j)));
-        console.log('type = '.concat(type));
+
+        // console.log('j = '.concat(String(j)));
+        // console.log('type = '.concat(type));
         if (type in readByType) {
-            i = readByType[type](bytecode, i + 1, logout);
+            i = readByType[type](bytecode, i + 1, level);
         } else {
             i = i + 1;
         }
