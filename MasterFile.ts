@@ -98,6 +98,8 @@ function parseBytecode(bytecode) {
     console.log('flags: '.concat(String(flags)));
 
     // Skip 5 Bytes - figure out why later
+    // first byte says 's'
+    // second byte tells the number of opcodes to expect
     i = i + 16 + 5;
 
     // Start Reading Op Codes
@@ -107,7 +109,7 @@ function parseBytecode(bytecode) {
     var arg = undefined;
     var logout = '';
     while (opcode != 83) {
-        opcode = bytecode.slice(i,i+1).readUInt8(0); 
+        opcode = bytecode.slice(i,i+1).readUInt8(0);
         logout = String(i-i0).concat(': ',String(opcode));
         if (opcode > 90) {
             arg = bytecode.slice(i,i+2).readUInt8(1);
