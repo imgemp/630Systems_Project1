@@ -1,69 +1,80 @@
 /// <reference path="node.d.ts" />
 function readNull(bytecode, ptr, level) {
     console.log(Array(level).join('\t') + 'Null');
-    return ptr;
+    var byteObject = null;
+    return [ptr, byteObject];
 }
 
 function readNone(bytecode, ptr, level) {
     console.log(Array(level).join('\t') + 'None');
-    return ptr;
+    var byteObject = 'None';
+    return [ptr, byteObject];
 }
 
 function readFalse(bytecode, ptr, level) {
     console.log(Array(level).join('\t') + 'False');
-    return ptr;
+    var byteObject = false;
+    return [ptr, byteObject];
 }
 
 function readTrue(bytecode, ptr, level) {
     console.log(Array(level).join('\t') + 'True');
-    return ptr;
+    var byteObject = true;
+    return [ptr, byteObject];
 }
 
 function readStopIter(bytecode, ptr, level) {
     console.log(Array(level).join('\t') + 'StopIteration');
-    return ptr;
+    var byteObject = 'StopIteration';
+    return [ptr, byteObject];
 }
 
 function readEllipsis(bytecode, ptr, level) {
     console.log(Array(level).join('\t') + 'Ellipsis');
-    return ptr;
+    var byteObject = 'Ellipsis';
+    return [ptr, byteObject];
 }
 
 function readInt32(bytecode, ptr, level) {
-    var result = undefined;
-    result = bytecode.readUInt32LE(ptr);
+    var result = bytecode.readUInt32LE(ptr);
     console.log(Array(level).join('\t') + result);
-    return ptr + 4;
+    return [ptr + 4, result];
 }
 
 function readInt64(bytecode, ptr, level) {
     console.log('Int64 Not implemented yet!');
-    return ptr + 8;
+    var byteObject = 'Int64 Not implemented yet!';
+    return [ptr + 8, byteObject];
 }
 
 function readFloat32(bytecode, ptr, level) {
     console.log('Float32 Not implemented yet!');
-    return ptr + 4;
+    var byteObject = 'Float32 Not implemented yet!';
+    return [ptr + 4, byteObject];
 }
 
 function readFloat64(bytecode, ptr, level) {
     console.log('Float64 Not implemented yet!');
-    return ptr + 8;
+    var byteObject = 'Float64 Not implemented yet!';
+    return [ptr + 8, byteObject];
 }
 
 function readComplex32(bytecode, ptr, level) {
     console.log('Complex32 Not implemented yet!');
-    return ptr + 4;
+    var byteObject = 'Complex32 Not implemented yet!';
+    return [ptr + 4, byteObject];
 }
 
 function readComplex64(bytecode, ptr, level) {
     console.log('Complex64 Not implemented yet!');
-    return ptr + 8;
+    var byteObject = 'Complex64 Not implemented yet!';
+    return [ptr + 8, byteObject];
 }
 
 function readLong(bytecode, ptr, level) {
     console.log('Long Not implemented yet!');
-    return ptr + 4;
+    var byteObject = 'Long Not implemented yet!';
+    return [ptr + 4, byteObject];
 }
 
 function readString(bytecode, ptr, level) {
@@ -73,7 +84,7 @@ function readString(bytecode, ptr, level) {
         result = result + bytecode.toString('utf8', ptr + 4 + j, ptr + 4 + j + 1);
     }
     console.log(Array(level).join('\t') + result);
-    return ptr + 4 + size;
+    return [ptr + 4 + size, result];
 }
 
 function readStringInterned(bytecode, ptr, level) {
@@ -83,12 +94,13 @@ function readStringInterned(bytecode, ptr, level) {
         result = result + bytecode.toString('utf8', ptr + 4 + j, ptr + 4 + j + 1);
     }
     console.log(Array(level).join('\t') + result);
-    return ptr + 4 + size;
+    return [ptr + 4 + size, result];
 }
 
 function readStringRef(bytecode, ptr, level) {
-    console.log(Array(level).join('\t') + 'ref to interned string in position ' + bytecode.readUInt32LE(ptr));
-    return ptr + 4;
+    var result = bytecode.readUInt32LE(ptr);
+    console.log(Array(level).join('\t') + 'ref to interned string in position ' + result);
+    return [ptr + 4, result];
 }
 
 function readUnicode(bytecode, ptr, level) {
@@ -98,15 +110,17 @@ function readUnicode(bytecode, ptr, level) {
         result = result + bytecode.toString('utf8', ptr + 4 + j, ptr + 4 + j + 1);
     }
     console.log(Array(level).join('\t') + result);
-    return ptr + 4 + size;
+    return [ptr + 4 + size, result];
 }
 
 function readDict(bytecode, ptr, level) {
     console.log('readDict Not implemented yet! You are screwed');
-    return ptr + 4;
+    var byteObject = 'readDict Not implemented yet! You are screwed';
+    return [ptr + 4, byteObject];
 }
 
 function readTuple(bytecode, ptr, level) {
+    var byteObject = [];
     var prefix = Array(level).join('\t');
     var nobjs = bytecode.readUInt32LE(ptr);
     process.stdout.write(' (' + String(nobjs) + ')\n');
@@ -115,35 +129,45 @@ function readTuple(bytecode, ptr, level) {
     for (var j = 0; j < nobjs; j++) {
         var type = bytecode.toString('ascii', ptr, ptr + 1);
         if (type in readByType) {
-            ptr = readByType[type](bytecode, ptr + 1, level);
+            var out = readByType[type](bytecode, ptr + 1, level);
+            ptr = out[0];
+            byteObject[j] = out[1];
         } else {
             ptr = ptr + 1;
         }
     }
-    return ptr;
+    return [ptr, byteObject];
 }
 
 function readCodeObject(bytecode, ptr, level) {
     console.log(Array(level).join('\t') + 'code object:');
+    var byteObject = {};
+    var out = [];
+
+    console.log(typeof (byteObject));
 
     level = level + 1;
     var prefix = Array(level).join('\t');
 
-    var argcount = bytecode.readUInt32LE(ptr);
+    byteObject.argcount = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
-    console.log(prefix + 'argcount:\n' + prefix + String(argcount));
+    console.log(prefix + 'argcount:\n' + prefix + String(byteObject.argcount));
 
+    // byteObject.argcount = argcount;
     var nlocals = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
     console.log(prefix + 'nlocals:\n' + prefix + String(nlocals));
+    byteObject.nlocals = nlocals;
 
     var stacksize = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
     console.log(prefix + 'stacksize:\n' + prefix + String(stacksize));
+    byteObject.stacksize = stacksize;
 
     var flags = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
     console.log(prefix + 'flags:\n' + prefix + String(flags));
+    byteObject.flags = flags;
 
     var type = bytecode.toString('utf8', ptr, ptr + 1);
     ptr = ptr + 1; // should be 's'
@@ -151,6 +175,7 @@ function readCodeObject(bytecode, ptr, level) {
     ptr = ptr + 4;
 
     // Start Reading Op Codes
+    byteObject.code = [];
     console.log(prefix + 'code: (' + String(codelen) + ')');
     var ptr0 = ptr;
     while (ptr < ptr0 + codelen) {
@@ -160,37 +185,51 @@ function readCodeObject(bytecode, ptr, level) {
             var arg = bytecode.readUInt8(ptr + 1);
             logout = logout + ' (' + String(arg) + ')';
             ptr = ptr + 2;
+            byteObject.code.push([opcode, arg]);
         } else {
             ptr = ptr + 1;
+            byteObject.code.push([opcode, null]);
         }
         console.log(prefix + logout);
     }
 
     // Start Reading Tuple of Constants
     process.stdout.write(prefix + 'consts:');
-    ptr = readTuple(bytecode, ptr + 1, level);
+    out = readTuple(bytecode, ptr + 1, level);
+    ptr = out[0];
+    byteObject.consts = out[1];
 
     // Start Reading Tuple of Names
     process.stdout.write(prefix + 'names:');
-    ptr = readTuple(bytecode, ptr + 1, level);
+    out = readTuple(bytecode, ptr + 1, level);
+    ptr = out[0];
+    byteObject.names = out[1];
 
     // Start Reading Tuple of Variable Names
     process.stdout.write(prefix + 'varnames:');
-    ptr = readTuple(bytecode, ptr + 1, level);
+    out = readTuple(bytecode, ptr + 1, level);
+    ptr = out[0];
+    byteObject.varnames = out[1];
 
     // Start Reading Tuple of Free Variables
     process.stdout.write(prefix + 'freevars:');
-    ptr = readTuple(bytecode, ptr + 1, level);
+    out = readTuple(bytecode, ptr + 1, level);
+    ptr = out[0];
+    byteObject.freevars = out[1];
 
     // Start Reading Tuple of Variables Used in Nested Functions
     process.stdout.write(prefix + 'cellvars:');
-    ptr = readTuple(bytecode, ptr + 1, level);
+    out = readTuple(bytecode, ptr + 1, level);
+    ptr = out[0];
+    byteObject.cellvars = out[1];
 
     // Read Filename
     console.log(prefix + 'filename:');
     type = bytecode.toString('utf8', ptr, ptr + 1);
     if (type in readByType) {
-        ptr = readByType[type](bytecode, ptr + 1, level);
+        out = readByType[type](bytecode, ptr + 1, level);
+        ptr = out[0];
+        byteObject.filename = out[1];
     } else {
         ptr = ptr + 1;
     }
@@ -199,16 +238,21 @@ function readCodeObject(bytecode, ptr, level) {
     console.log(prefix + 'name:');
     type = bytecode.toString('utf8', ptr, ptr + 1);
     if (type in readByType) {
-        ptr = readByType[type](bytecode, ptr + 1, level);
+        out = readByType[type](bytecode, ptr + 1, level);
+        ptr = out[0];
+        byteObject.name = out[1];
     } else {
         ptr = ptr + 1;
     }
 
     // Read First Line Number
     console.log(prefix + 'firstlineno:');
-    ptr = readByType['i'](bytecode, ptr, level);
+    out = readByType['i'](bytecode, ptr, level);
+    ptr = out[0];
+    byteObject.firstlineno = out[1];
 
     // Read Line Number Tab: http://nedbatchelder.com/blog/200804/wicked_hack_python_bytecode_tracing.html
+    byteObject.lnotab = [];
     ptr = ptr + 1; // skipping the 's' byte
     var npairs = bytecode.readUInt32LE(ptr) / 2;
     ptr = ptr + 4;
@@ -219,25 +263,28 @@ function readCodeObject(bytecode, ptr, level) {
         var lineDelta = bytecode.readUInt8(ptr);
         ptr = ptr + 1;
         console.log(prefix + '('.concat(String(byteDelta), ',', String(lineDelta), ')'));
+        byteObject.lnotab.push((byteDelta, lineDelta));
     }
 
-    return ptr;
+    return [ptr, byteObject];
 }
 
-function parseBytecode(bytecode) {
+function parseBytecode(bytecode, byteObject) {
     var len = bytecode.length;
 
     var magic_number = '';
-    var time_stamp = '';
     for (var j = 0; j < 4; j++) {
         magic_number = magic_number + String(bytecode.readUInt8(j));
     }
+    console.log('magic number: ' + magic_number);
+    byteObject.magic_number = magic_number;
+
+    var time_stamp = '';
     for (j = 4; j < 8; j++) {
         time_stamp = time_stamp + String(bytecode.readUInt8(j));
     }
-
-    console.log('magic number: ' + magic_number);
     console.log('time stamp: ' + time_stamp);
+    byteObject.time_stamp = time_stamp;
 
     // Check Magic Number Against Python 2.7 (03f3 0d0a)
     var my_version = '32431310';
@@ -253,7 +300,9 @@ function parseBytecode(bytecode) {
     while (ptr < len) {
         var type = bytecode.toString('utf8', ptr, ptr + 1);
         if (type in readByType) {
-            ptr = readByType[type](bytecode, ptr + 1, 1);
+            var out = readByType[type](bytecode, ptr + 1, 1);
+            ptr = out[0];
+            byteObject.code_object = out[1];
         } else {
             ptr = ptr + 1;
         }
@@ -262,7 +311,12 @@ function parseBytecode(bytecode) {
 
 function interpretBytecode(bytecode) {
     // Parse Bytecode and Return Op Codes
-    parseBytecode(bytecode);
+    var byteObject = {};
+    parseBytecode(bytecode, byteObject);
+    // console.log(byteObject);
+    // console.log(byteObject.code_object.code);
+    // console.log(byteObject.code_object.code[0]);
+    // console.log(byteObject.code_object.consts[0]);
     // Execute Op Codes
 }
 
