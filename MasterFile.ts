@@ -20,54 +20,54 @@ function readTrue(bytecode,ptr,level) {
     return ptr;
 }
 
-function readStopIter(bytecode,ptr,level) {
+function readStopIter(bytecode:NodeBuffer,ptr:number,level:number) {
     console.log(Array(level).join('\t')+'StopIteration');
     return ptr;
 }
 
-function readEllipsis(bytecode,ptr,level) {
+function readEllipsis(bytecode:NodeBuffer,ptr:number,level:number) {
     console.log(Array(level).join('\t')+'Ellipsis');
     return ptr;
 }
 
-function readInt32(bytecode,ptr,level) {
+function readInt32(bytecode:NodeBuffer,ptr:number,level:number) {
     var result = undefined;
     result = bytecode.readUInt32LE(ptr);
     console.log(Array(level).join('\t')+result);
     return ptr+4;
 }
 
-function readInt64(bytecode,ptr,level) {
+function readInt64(bytecode:NodeBuffer,ptr:number,level:number) {
     console.log('Int64 Not implemented yet!');
     return ptr+8;
 }
 
-function readFloat32(bytecode,ptr,level) {
+function readFloat32(bytecode:NodeBuffer,ptr:number,level:number) {
     console.log('Float32 Not implemented yet!');
     return ptr+4;
 }
 
-function readFloat64(bytecode,ptr,level) {
+function readFloat64(bytecode:NodeBuffer,ptr:number,level:number) {
     console.log('Float64 Not implemented yet!');
     return ptr+8;
 }
 
-function readComplex32(bytecode,ptr,level) {
+function readComplex32(bytecode:NodeBuffer,ptr:number,level:number) {
     console.log('Complex32 Not implemented yet!');
     return ptr+4;
 }
 
-function readComplex64(bytecode,ptr,level) {
+function readComplex64(bytecode:NodeBuffer,ptr:number,level:number) {
     console.log('Complex64 Not implemented yet!');
     return ptr+8;
 }
 
-function readLong(bytecode,ptr,level) {
+function readLong(bytecode:NodeBuffer,ptr:number,level:number) {
     console.log('Long Not implemented yet!');
     return ptr+4;
 }
 
-function readString(bytecode,ptr,level) {
+function readString(bytecode:NodeBuffer,ptr:number,level:number) {
     var result = '';
     var size = bytecode.readUInt32LE(ptr);
     for (var j=0; j<size; j++) {
@@ -77,7 +77,7 @@ function readString(bytecode,ptr,level) {
     return ptr+4+size;
 }
 
-function readStringInterned(bytecode,ptr,level) {
+function readStringInterned(bytecode:NodeBuffer,ptr:number,level:number) {
     var result = '';
     var size = bytecode.readUInt32LE(ptr);
     for (var j=0; j<size; j++) {
@@ -87,12 +87,12 @@ function readStringInterned(bytecode,ptr,level) {
     return ptr+4+size;
 }
 
-function readStringRef(bytecode,ptr,level) {
+function readStringRef(bytecode:NodeBuffer,ptr:number,level:number) {
     console.log(Array(level).join('\t')+'ref to interned string in position '+bytecode.readUInt32LE(ptr));
     return ptr+4;
 }
 
-function readUnicode(bytecode,ptr,level) {
+function readUnicode(bytecode:NodeBuffer,ptr:number,level:number) {
     var result = '';
     var size = bytecode.readUInt32LE(ptr);
     for (var j=0; j<size; j++) {
@@ -102,12 +102,12 @@ function readUnicode(bytecode,ptr,level) {
     return ptr+4+size;
 }
 
-function readDict(bytecode,ptr,level) {
+function readDict(bytecode:NodeBuffer,ptr:number,level:number) {
     console.log('readDict Not implemented yet! You are screwed');
     return ptr+4;
 }
 
-function readTuple(bytecode,ptr,level) {
+function readTuple(bytecode:NodeBuffer,ptr:number,level:number) {
     var prefix = Array(level).join('\t');
     var nobjs = bytecode.readUInt32LE(ptr);
     process.stdout.write(' ('+String(nobjs)+')\n');
@@ -122,7 +122,7 @@ function readTuple(bytecode,ptr,level) {
     return ptr;
 }
 
-function readCodeObject(bytecode,ptr,level) {
+function readCodeObject(bytecode:NodeBuffer,ptr:number,level:number) {
 
     console.log(Array(level).join('\t')+'code object:');
 
@@ -211,7 +211,7 @@ function readCodeObject(bytecode,ptr,level) {
     return ptr;
 }
 
-function parseBytecode(bytecode) {
+function parseBytecode(bytecode:NodeBuffer) {
 
     var len = bytecode.length;
 
@@ -243,7 +243,7 @@ function parseBytecode(bytecode) {
     
 }
 
-function interpretBytecode(bytecode) {
+function interpretBytecode(bytecode:NodeBuffer) {
 
     // Parse Bytecode and Return Op Codes
     parseBytecode(bytecode);
