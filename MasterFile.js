@@ -258,7 +258,7 @@ function readCodeObject(bytecode, ptr, level) {
         var lineDelta = bytecode.readUInt8(ptr);
         ptr = ptr + 1;
         console.log(prefix + '('.concat(String(byteDelta), ',', String(lineDelta), ')'));
-        obj.lnotab.push((byteDelta, lineDelta));
+        obj.lnotab.push([byteDelta, lineDelta]);
     }
 
     return [ptr, obj];
@@ -321,6 +321,7 @@ function interpretBytecode(bytecode) {
     console.log(byteObject.interned_list);
     // Execute Op Codes
 }
+class Main{
 
 var byteObject = {};
 
@@ -348,9 +349,14 @@ readByType['{'] = readDict;
 readByType['>'] = readTuple;
 readByType['c'] = readCodeObject;
 
+
+
+
 var fs = require('fs');
 fs.readFile('foo2.pyc', function doneReading(err, bytecode) {
     if (err)
         throw err;
     interpretBytecode(bytecode);
 });
+}
+var main:Main = new Main();
