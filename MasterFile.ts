@@ -94,7 +94,8 @@ function readStringInterned(bytecode:NodeBuffer,ptr:number,level:number) {
     for (var j=0; j<size; j++) {
         result = result+bytecode.toString('utf8',ptr+4+j,ptr+4+j+1);
     }
-    console.log(Array(level).join('\t')+result);
+    console.log(Array(level).join('\t')+'(interned)'+result);
+    // byteObject.interned_list.push(result);
     return [ptr+4+size,result];
 }
 
@@ -168,7 +169,7 @@ function readCodeObject(bytecode:NodeBuffer,ptr:number,level:number) {
     while (ptr<ptr0+codelen) {
         var opcode = bytecode.readUInt8(ptr);
         var logout = '\t'+String(ptr-ptr0)+': '+String(opcode);
-        if (opcode > 90) {
+        if (opcode >= 90) {
             var arg = bytecode.readUInt8(ptr+1);
             logout = logout+' ('+String(arg)+')';
             ptr = ptr + 2;
@@ -264,6 +265,9 @@ function parseBytecode(bytecode:NodeBuffer,byteObject) {
         }
     }
 
+    // Initialize Interned List
+    byteObject.interned_list = [];
+
     // Start Parsing Bytecode
     var ptr = 8;
     while (ptr<len) {
@@ -278,13 +282,16 @@ function parseBytecode(bytecode:NodeBuffer,byteObject) {
 
 function interpretBytecode(bytecode:NodeBuffer) {
 
-    // Parse Bytecode and Return Op Codes
+    // Parse Bytecode and Return Op Codes:
+    // http://daeken.com/2010-02-20_Python_Marshal_Format.html
+    // http://nedbatchelder.com/blog/200804/the_structure_of_pyc_files.html
     var byteObject:any = {};
     parseBytecode(bytecode,byteObject);
     // console.log(byteObject);
     // console.log(byteObject.code_object.code);
     // console.log(byteObject.code_object.code[0]);
     // console.log(byteObject.code_object.consts[0]);
+    console.log(byteObject.interned_list);
 
     // Execute Op Codes
 }

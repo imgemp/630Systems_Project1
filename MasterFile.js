@@ -93,7 +93,9 @@ function readStringInterned(bytecode, ptr, level) {
     for (var j = 0; j < size; j++) {
         result = result + bytecode.toString('utf8', ptr + 4 + j, ptr + 4 + j + 1);
     }
-    console.log(Array(level).join('\t') + result);
+    console.log(Array(level).join('\t') + '(interned)' + result);
+
+    // byteObject.interned_list.push(result);
     return [ptr + 4 + size, result];
 }
 
@@ -144,8 +146,6 @@ function readCodeObject(bytecode, ptr, level) {
     var byteObject = {};
     var out = [];
 
-    console.log(typeof (byteObject));
-
     level = level + 1;
     var prefix = Array(level).join('\t');
 
@@ -153,21 +153,17 @@ function readCodeObject(bytecode, ptr, level) {
     ptr = ptr + 4;
     console.log(prefix + 'argcount:\n' + prefix + String(byteObject.argcount));
 
-    // byteObject.argcount = argcount;
-    var nlocals = bytecode.readUInt32LE(ptr);
+    byteObject.nlocals = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
-    console.log(prefix + 'nlocals:\n' + prefix + String(nlocals));
-    byteObject.nlocals = nlocals;
+    console.log(prefix + 'nlocals:\n' + prefix + String(byteObject.nlocals));
 
-    var stacksize = bytecode.readUInt32LE(ptr);
+    byteObject.stacksize = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
-    console.log(prefix + 'stacksize:\n' + prefix + String(stacksize));
-    byteObject.stacksize = stacksize;
+    console.log(prefix + 'stacksize:\n' + prefix + String(byteObject.stacksize));
 
-    var flags = bytecode.readUInt32LE(ptr);
+    byteObject.flags = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
-    console.log(prefix + 'flags:\n' + prefix + String(flags));
-    byteObject.flags = flags;
+    console.log(prefix + 'flags:\n' + prefix + String(byteObject.flags));
 
     var type = bytecode.toString('utf8', ptr, ptr + 1);
     ptr = ptr + 1; // should be 's'
@@ -181,7 +177,7 @@ function readCodeObject(bytecode, ptr, level) {
     while (ptr < ptr0 + codelen) {
         var opcode = bytecode.readUInt8(ptr);
         var logout = '\t' + String(ptr - ptr0) + ': ' + String(opcode);
-        if (opcode > 90) {
+        if (opcode >= 90) {
             var arg = bytecode.readUInt8(ptr + 1);
             logout = logout + ' (' + String(arg) + ')';
             ptr = ptr + 2;
@@ -295,6 +291,9 @@ function parseBytecode(bytecode, byteObject) {
         }
     }
 
+    // Initialize Interned List
+    byteObject.interned_list = [];
+
     // Start Parsing Bytecode
     var ptr = 8;
     while (ptr < len) {
@@ -310,13 +309,17 @@ function parseBytecode(bytecode, byteObject) {
 }
 
 function interpretBytecode(bytecode) {
-    // Parse Bytecode and Return Op Codes
+    // Parse Bytecode and Return Op Codes:
+    // http://daeken.com/2010-02-20_Python_Marshal_Format.html
+    // http://nedbatchelder.com/blog/200804/the_structure_of_pyc_files.html
     var byteObject = {};
     parseBytecode(bytecode, byteObject);
+
     // console.log(byteObject);
     // console.log(byteObject.code_object.code);
     // console.log(byteObject.code_object.code[0]);
     // console.log(byteObject.code_object.consts[0]);
+    console.log(byteObject.interned_list);
     // Execute Op Codes
 }
 
