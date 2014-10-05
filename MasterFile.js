@@ -264,6 +264,237 @@ function readCodeObject(bytecode, ptr, level) {
     return [ptr, obj];
 }
 
+//Implemented bytecode functions
+function STOP_CODE() {
+}
+function POP_TOP() {
+}
+function ROT_TWO() {
+}
+function ROT_THREE() {
+}
+function DUP_TOP() {
+}
+function ROT_FOUR() {
+}
+function NOP() {
+}
+function UNARY_POSITIVE() {
+}
+function UNARY_NEGATIVE() {
+}
+function UNARY_NOT() {
+}
+function UNARY_CONVERT() {
+}
+function UNARY_INVERT() {
+}
+function BINARY_POWER() {
+}
+function BINARY_MULTIPLY() {
+}
+function BINARY_DIVIDE() {
+}
+function BINARY_MODULO() {
+}
+function BINARY_ADD() {
+}
+function BINARY_SUBTRACT() {
+}
+function BINARY_SUBSCR() {
+}
+function BINARY_FLOOR_DIVIDE() {
+}
+function BINARY_TRUE_DIVIDE() {
+}
+function INPLACE_FLOOR_DIVIDE() {
+}
+function INPLACE_TRUE_DIVIDE() {
+}
+function SLICE() {
+}
+function STORE_SLICE() {
+}
+function DELETE_SLICE() {
+}
+function STORE_MAP() {
+}
+function INPLACE_ADD() {
+}
+function INPLACE_SUBTRACT() {
+}
+function INPLACE_MULTIPY() {
+}
+function INPLACE_DIVIDE() {
+}
+function INPLACE_MODULO() {
+}
+function STORE_SUBSCR() {
+}
+function DELETE_SUBSCR() {
+}
+function BINARY_LSHIFT() {
+}
+function BINARY_RSHIFT() {
+}
+function BINARY_AND() {
+}
+function BINARY_XOR() {
+}
+function BINARY_OR() {
+}
+function INPLACE_POWER() {
+}
+function GET_ITER() {
+}
+function PRINT_EXPR() {
+}
+function PRINT_ITEM() {
+}
+function PRINT_NEWLINE() {
+}
+function PRINT_ITEM_TO() {
+}
+function PRINT_NEWLINE_TO() {
+}
+function INPLACE_LSHIFT() {
+}
+function INPLACE_RSHIFT() {
+}
+function INPLACE_AND() {
+}
+function INPLACE_XOR() {
+}
+function INPLACE_OR() {
+}
+function BREAK_LOOP() {
+}
+function WITH_CLEANUP() {
+}
+function LOAD_LOCALS() {
+}
+function RETURN_VALUE() {
+}
+function IMPORT_STAR() {
+}
+function EXEC_STMT() {
+}
+function YIELD_VALUE() {
+}
+function POP_BLOCK() {
+}
+function END_FINALLY() {
+}
+function BUILD_CLASS() {
+}
+
+//Opcodes from here have an argument
+function STORE_NAME(index) {
+}
+function DELETE_NAME(index) {
+}
+function UNPACK_SEQUENCE(numItems) {
+}
+function FOR_ITER() {
+}
+function LIST_APPEND() {
+}
+function STORE_ATTR(index) {
+}
+function DELETE_ATTR(index) {
+}
+function STORE_GLOBAL(index) {
+}
+function DELETE_GLOBAL(index) {
+}
+function DUP_TOPX(numItemsDup) {
+}
+function LOAD_CONST(index) {
+}
+function LOAD_NAME(index) {
+}
+function BUILD_TUPLE(numItems) {
+}
+function BUILD_LIST(numItems) {
+}
+function BUILD_SET(numItems) {
+}
+function BUILD_MAP() {
+}
+function LOAD_ATTR(index) {
+}
+function COMPARE_OP() {
+}
+function IMPORT_NAME(index) {
+}
+function IMPORT_FROM(index) {
+}
+function JUMP_FORWARD(numBytes) {
+}
+function JUMP_IF_FALSE_OR_POP(offest) {
+}
+function JUMP_IF_TRUE_OR_POP(offset) {
+}
+function JUMP_ABSOLUTE(offset) {
+}
+function POP_JUMP_IF_FALSE(offset) {
+}
+function POP_JUMP_IF_TRUE(offset) {
+}
+function LOAD_GLOBAL(index) {
+}
+function CONTINUE_LOOP(start) {
+}
+function SETUP_LOOP(addr) {
+}
+function SETUP_EXCEPT(addr) {
+}
+function SETUP_FINALLY(addr) {
+}
+function LOAD_FAST(varNum) {
+}
+function STORE_FAST(varNum) {
+}
+function DELETE_FAST(varNum) {
+}
+function RAISE_VARARGS(numArg) {
+}
+
+/* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
+function CALL_FUNCTION(arg) {
+}
+function MAKE_FUNCTION(numDefaults) {
+}
+function BUILD_SLICE(numItems) {
+}
+function MAKE_CLOSURE(numFreeVars) {
+}
+function LOAD_CLOSURE() {
+}
+function LOAD_DEREF() {
+}
+function STORE_DEREF() {
+}
+
+/* The next 3 opcodes must be contiguous and satisfy
+(CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
+function CALL_FUNCTION_VAR() {
+}
+function CALL_FUNCTION_KW() {
+}
+function CALL_FUNCTION_VAR_KW() {
+}
+function SETUP_WITH() {
+}
+
+/* Support for opargs more than 16 bits long */
+function EXTENDED_ARG() {
+}
+function SET_ADD() {
+}
+function MAP_ADD() {
+}
+
 function parseBytecode(bytecode) {
     var len = bytecode.length;
 
@@ -311,7 +542,6 @@ function interpretBytecode(bytecode) {
     // Parse Bytecode and Return Op Codes:
     // http://daeken.com/2010-02-20_Python_Marshal_Format.html
     // http://nedbatchelder.com/blog/200804/the_structure_of_pyc_files.html
-    // var byteObject:any = {};
     parseBytecode(bytecode);
 
     // console.log(byteObject);
@@ -321,8 +551,8 @@ function interpretBytecode(bytecode) {
     console.log(byteObject.interned_list);
     // Execute Op Codes
 }
-class Main{
 
+//initalize object to store information of various types
 var byteObject = {};
 
 var readByType = {};
@@ -349,14 +579,140 @@ readByType['{'] = readDict;
 readByType['>'] = readTuple;
 readByType['c'] = readCodeObject;
 
+//https://android.googlesource.com/platform/prebuilts/python/darwin-x86/2.7.5/+/master/include/python2.7/opcode.h
+var opCodeList = {};
+opCodeList[0] = STOP_CODE;
+opCodeList[1] = POP_TOP;
+opCodeList[2] = ROT_TWO;
+opCodeList[3] = ROT_THREE;
+opCodeList[4] = DUP_TOP;
+opCodeList[5] = ROT_FOUR;
+opCodeList[9] = NOP;
+opCodeList[10] = UNARY_POSITIVE;
+opCodeList[11] = UNARY_NEGATIVE;
+opCodeList[12] = UNARY_NOT;
+opCodeList[13] = UNARY_CONVERT;
+opCodeList[15] = UNARY_INVERT;
+opCodeList[19] = BINARY_POWER;
+opCodeList[20] = BINARY_MULTIPLY;
+opCodeList[21] = BINARY_DIVIDE;
+opCodeList[22] = BINARY_MODULO;
+opCodeList[23] = BINARY_ADD;
+opCodeList[24] = BINARY_SUBTRACT;
+opCodeList[25] = BINARY_SUBSCR;
+opCodeList[26] = BINARY_FLOOR_DIVIDE;
+opCodeList[27] = BINARY_TRUE_DIVIDE;
+opCodeList[28] = INPLACE_FLOOR_DIVIDE;
+opCodeList[29] = INPLACE_TRUE_DIVIDE;
+opCodeList[30] = SLICE;
+opCodeList[31] = SLICE;
+opCodeList[32] = SLICE;
+opCodeList[33] = SLICE;
+opCodeList[40] = STORE_SLICE;
+opCodeList[41] = STORE_SLICE;
+opCodeList[42] = STORE_SLICE;
+opCodeList[43] = STORE_SLICE;
+opCodeList[50] = DELETE_SLICE;
+opCodeList[51] = DELETE_SLICE;
+opCodeList[52] = DELETE_SLICE;
+opCodeList[53] = DELETE_SLICE;
+opCodeList[54] = STORE_MAP;
+opCodeList[55] = INPLACE_ADD;
+opCodeList[56] = INPLACE_SUBTRACT;
+opCodeList[57] = INPLACE_MULTIPY;
+opCodeList[58] = INPLACE_DIVIDE;
+opCodeList[59] = INPLACE_MODULO;
+opCodeList[60] = STORE_SUBSCR;
+opCodeList[61] = DELETE_SUBSCR;
+opCodeList[62] = BINARY_LSHIFT;
+opCodeList[63] = BINARY_RSHIFT;
+opCodeList[64] = BINARY_AND;
+opCodeList[65] = BINARY_XOR;
+opCodeList[66] = BINARY_OR;
+opCodeList[67] = INPLACE_POWER;
+opCodeList[68] = GET_ITER;
+opCodeList[70] = PRINT_EXPR;
+opCodeList[71] = PRINT_ITEM;
+opCodeList[72] = PRINT_NEWLINE;
+opCodeList[73] = PRINT_ITEM_TO;
+opCodeList[74] = PRINT_NEWLINE_TO;
+opCodeList[75] = INPLACE_LSHIFT;
+opCodeList[76] = INPLACE_RSHIFT;
+opCodeList[77] = INPLACE_AND;
+opCodeList[78] = INPLACE_XOR;
+opCodeList[79] = INPLACE_OR;
+opCodeList[80] = BREAK_LOOP;
+opCodeList[81] = WITH_CLEANUP;
+opCodeList[82] = LOAD_LOCALS;
+opCodeList[83] = RETURN_VALUE;
+opCodeList[84] = IMPORT_STAR;
+opCodeList[85] = EXEC_STMT;
+opCodeList[86] = YIELD_VALUE;
+opCodeList[87] = POP_BLOCK;
+opCodeList[88] = END_FINALLY;
+opCodeList[89] = BUILD_CLASS;
 
+//Opcodes from here have an argument HAVE_ARGUMENT 90
+opCodeList[90] = STORE_NAME; //index in name list
+opCodeList[91] = DELETE_NAME; //index in name list
+opCodeList[92] = UNPACK_SEQUENCE; //number of sequence items
+opCodeList[93] = FOR_ITER;
+opCodeList[94] = LIST_APPEND;
+opCodeList[95] = STORE_ATTR; //index in name list
+opCodeList[96] = DELETE_ATTR; //index in name list
+opCodeList[97] = STORE_GLOBAL; //index in name list
+opCodeList[98] = DELETE_GLOBAL; //index in name list
+opCodeList[99] = DUP_TOPX; //number of items to duplicate
+opCodeList[100] = LOAD_CONST; //index in const list
+opCodeList[101] = LOAD_NAME; //index in name list
+opCodeList[102] = BUILD_TUPLE; //number of tuple items
+opCodeList[103] = BUILD_LIST; //number of list items
+opCodeList[104] = BUILD_SET; //number of set items
+opCodeList[105] = BUILD_MAP; //always 0 for now?
+opCodeList[106] = LOAD_ATTR; //index in name list
+opCodeList[107] = COMPARE_OP; //comparison operator
+opCodeList[108] = IMPORT_NAME; //index in name list
+opCodeList[109] = IMPORT_FROM; //index in name list
+opCodeList[110] = JUMP_FORWARD; //number of bytes to skip
+opCodeList[111] = JUMP_IF_FALSE_OR_POP; //target byte offset from beginning of code
+opCodeList[112] = JUMP_IF_TRUE_OR_POP; //target byte offset from beginning of code
+opCodeList[113] = JUMP_ABSOLUTE; //target byte offset from beginning of code
+opCodeList[114] = POP_JUMP_IF_FALSE; //target byte offset from beginning of code
+opCodeList[115] = POP_JUMP_IF_TRUE; //target byte offset from beginning of code
+opCodeList[116] = LOAD_GLOBAL; //index in name list
+opCodeList[119] = CONTINUE_LOOP; //start of loop(absolute)
+opCodeList[120] = SETUP_LOOP; //target address(relative)
+opCodeList[121] = SETUP_EXCEPT; //target address(relative)
+opCodeList[122] = SETUP_FINALLY; //target address(relative)
+opCodeList[124] = LOAD_FAST; //local variable number
+opCodeList[125] = STORE_FAST; //local variable number
+opCodeList[126] = DELETE_FAST; //local variable number
+opCodeList[130] = RAISE_VARARGS; //number of raise arguments(1,2 or 3)
 
+/* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
+opCodeList[131] = CALL_FUNCTION; //number of args + (number kwargs<<8)
+opCodeList[132] = MAKE_FUNCTION; //number defaults
+opCodeList[133] = BUILD_SLICE; //number of items
+opCodeList[134] = MAKE_CLOSURE; //number free vars
+opCodeList[135] = LOAD_CLOSURE; //load free variable from closure
+opCodeList[136] = LOAD_DEREF; //load and deference from closure cell
+opCodeList[137] = STORE_DEREF; //store into cell
+
+/* The next 3 opcodes must be contiguous and satisfy
+(CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
+opCodeList[140] = CALL_FUNCTION_VAR; //number args + (number kwargs<<8)
+opCodeList[141] = CALL_FUNCTION_KW; //number args + (number kwargs<<8)
+opCodeList[142] = CALL_FUNCTION_VAR_KW; //number args + (number kwargs<<8)
+opCodeList[143] = SETUP_WITH;
+
+/* Support for opargs more than 16 bits long */
+opCodeList[145] = EXTENDED_ARG;
+opCodeList[146] = SET_ADD;
+opCodeList[147] = MAP_ADD;
 
 var fs = require('fs');
-fs.readFile('foo2.pyc', function doneReading(err, bytecode) {
+fs.readFile(process.argv[2], function doneReading(err, bytecode) {
     if (err)
         throw err;
     interpretBytecode(bytecode);
 });
-}
-var main:Main = new Main();
