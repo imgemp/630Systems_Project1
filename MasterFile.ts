@@ -82,7 +82,7 @@ function readString(bytecode:NodeBuffer, ptr:number, level:number) {
     var obj = '';
     var size = bytecode.readUInt32LE(ptr);
     for (var j = 0; j < size; j++) {
-        obj = obj + bytecode.toString('utf8', ptr + 4 + j, ptr + 4 + j + 1);
+        obj = obj + bytecode.toString('ascii', ptr + 4 + j, ptr + 4 + j + 1);
     }
     console.log(Array(level).join('\t') + obj);
     return [ptr + 4 + size, obj];
@@ -92,7 +92,7 @@ function readStringInterned(bytecode:NodeBuffer, ptr:number, level:number) {
     var obj = '';
     var size = bytecode.readUInt32LE(ptr);
     for (var j = 0; j < size; j++) {
-        obj = obj + bytecode.toString('utf8', ptr + 4 + j, ptr + 4 + j + 1);
+        obj = obj + bytecode.toString('ascii', ptr + 4 + j, ptr + 4 + j + 1);
     }
     console.log(Array(level).join('\t') + '(interned)' + obj);
     byteObject.interned_list.push(obj);
@@ -165,7 +165,7 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     ptr = ptr + 4;
     console.log(prefix + 'flags:\n' + prefix + String(obj.flags));
 
-    var type = bytecode.toString('utf8', ptr, ptr + 1);
+    var type = bytecode.toString('ascii', ptr, ptr + 1);
     ptr = ptr + 1; // should be 's'
     var codelen = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
@@ -173,14 +173,18 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     // Start Reading Op Codes
     obj.code = [];
     console.log(prefix + 'code: (' + String(codelen) + ')');
+    var colon = ': ';
+    if (codelen > 9) { colon = ':  '; }
     var ptr0 = ptr;
     while (ptr < ptr0 + codelen) {
+        if (ptr - ptr0 > 9) { colon = ': '; }
         var opcode = bytecode.readUInt8(ptr);
-        var logout = '\t' + String(ptr - ptr0) + ': ' + String(opcode);
+        var logout = '\t' + String(ptr - ptr0) + colon + String(opcode);
         if (opcode >= 90) {
-            var arg = bytecode.readUInt8(ptr + 1);
-            logout = logout + ' (' + String(arg) + ')';
-            ptr = ptr + 2;
+            var arg = bytecode.readUInt16LE(ptr + 1);
+            if (opcode > 99) { logout = logout + ' (' + String(arg) + ')'; }
+            else { logout = logout + '  (' + String(arg) + ')'; }
+            ptr = ptr + 3;
             obj.code.push([opcode, arg]);
         } else {
             ptr = ptr + 1;
@@ -221,7 +225,7 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
 
     // Read Filename
     console.log(prefix + 'filename:');
-    type = bytecode.toString('utf8', ptr, ptr + 1);
+    type = bytecode.toString('ascii', ptr, ptr + 1);
     if (type in readByType) {
         out = readByType[type](bytecode, ptr + 1, level);
         ptr = out[0];
@@ -232,7 +236,7 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
 
     // Read Function Name
     console.log(prefix + 'name:');
-    type = bytecode.toString('utf8', ptr, ptr + 1);
+    type = bytecode.toString('ascii', ptr, ptr + 1);
     if (type in readByType) {
         out = readByType[type](bytecode, ptr + 1, level);
         ptr = out[0];
@@ -341,8 +345,8 @@ function UNARY_INVERT(){
 }
 function BINARY_POWER(){
     console.log('BINARY_POWER');
+    var TOS = Stack.pop();
     var TOS1 = Stack.pop();
-    var TOS2 = Stack.pop();
     TOS = Math.pow(TOS1,TOS);
     Stack.push(TOS);
 }
@@ -491,7 +495,7 @@ function parseBytecode(bytecode) {
     // Start Parsing Bytecode
     var ptr = 8;
     while (ptr < len) {
-        var type = bytecode.toString('utf8', ptr, ptr + 1);
+        var type = bytecode.toString('ascii', ptr, ptr + 1);
         if (type in readByType) {
             var out = readByType[type](bytecode, ptr + 1, 1);
             ptr = out[0];

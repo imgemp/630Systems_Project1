@@ -81,7 +81,7 @@ function readString(bytecode, ptr, level) {
     var obj = '';
     var size = bytecode.readUInt32LE(ptr);
     for (var j = 0; j < size; j++) {
-        obj = obj + bytecode.toString('utf8', ptr + 4 + j, ptr + 4 + j + 1);
+        obj = obj + bytecode.toString('ascii', ptr + 4 + j, ptr + 4 + j + 1);
     }
     console.log(Array(level).join('\t') + obj);
     return [ptr + 4 + size, obj];
@@ -91,7 +91,7 @@ function readStringInterned(bytecode, ptr, level) {
     var obj = '';
     var size = bytecode.readUInt32LE(ptr);
     for (var j = 0; j < size; j++) {
-        obj = obj + bytecode.toString('utf8', ptr + 4 + j, ptr + 4 + j + 1);
+        obj = obj + bytecode.toString('ascii', ptr + 4 + j, ptr + 4 + j + 1);
     }
     console.log(Array(level).join('\t') + '(interned)' + obj);
     byteObject.interned_list.push(obj);
@@ -164,7 +164,7 @@ function readCodeObject(bytecode, ptr, level) {
     ptr = ptr + 4;
     console.log(prefix + 'flags:\n' + prefix + String(obj.flags));
 
-    var type = bytecode.toString('utf8', ptr, ptr + 1);
+    var type = bytecode.toString('ascii', ptr, ptr + 1);
     ptr = ptr + 1; // should be 's'
     var codelen = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
@@ -172,14 +172,25 @@ function readCodeObject(bytecode, ptr, level) {
     // Start Reading Op Codes
     obj.code = [];
     console.log(prefix + 'code: (' + String(codelen) + ')');
+    var colon = ': ';
+    if (codelen > 9) {
+        colon = ':  ';
+    }
     var ptr0 = ptr;
     while (ptr < ptr0 + codelen) {
+        if (ptr - ptr0 > 9) {
+            colon = ': ';
+        }
         var opcode = bytecode.readUInt8(ptr);
-        var logout = '\t' + String(ptr - ptr0) + ': ' + String(opcode);
+        var logout = '\t' + String(ptr - ptr0) + colon + String(opcode);
         if (opcode >= 90) {
-            var arg = bytecode.readUInt8(ptr + 1);
-            logout = logout + ' (' + String(arg) + ')';
-            ptr = ptr + 2;
+            var arg = bytecode.readUInt16LE(ptr + 1);
+            if (opcode > 99) {
+                logout = logout + ' (' + String(arg) + ')';
+            } else {
+                logout = logout + '  (' + String(arg) + ')';
+            }
+            ptr = ptr + 3;
             obj.code.push([opcode, arg]);
         } else {
             ptr = ptr + 1;
@@ -220,7 +231,7 @@ function readCodeObject(bytecode, ptr, level) {
 
     // Read Filename
     console.log(prefix + 'filename:');
-    type = bytecode.toString('utf8', ptr, ptr + 1);
+    type = bytecode.toString('ascii', ptr, ptr + 1);
     if (type in readByType) {
         out = readByType[type](bytecode, ptr + 1, level);
         ptr = out[0];
@@ -231,7 +242,7 @@ function readCodeObject(bytecode, ptr, level) {
 
     // Read Function Name
     console.log(prefix + 'name:');
-    type = bytecode.toString('utf8', ptr, ptr + 1);
+    type = bytecode.toString('ascii', ptr, ptr + 1);
     if (type in readByType) {
         out = readByType[type](bytecode, ptr + 1, level);
         ptr = out[0];
@@ -266,30 +277,85 @@ function readCodeObject(bytecode, ptr, level) {
 
 //Implemented bytecode functions
 function STOP_CODE() {
+    console.log('STOP_CODE');
 }
 function POP_TOP() {
+    console.log('POP_TOP');
+    return Stack.pop();
 }
 function ROT_TWO() {
+    console.log('ROT_TWO');
+    var TOS = Stack.pop();
+    var TOS1 = Stack.pop();
+    Stack.push(TOS);
+    Stack.push(TOS1);
 }
 function ROT_THREE() {
+    console.log('ROT_THREE');
+    var TOS = Stack.pop();
+    var TOS2 = Stack.pop();
+    var TOS3 = Stack.pop();
+    Stack.push(TOS);
+    Stack.push(TOS3);
+    Stack.push(TOS2);
 }
 function DUP_TOP() {
+    console.log('DUP_TOP');
+    var TOS = Stack.pop();
+    Stack.push(TOS);
+    Stack.push(TOS);
 }
 function ROT_FOUR() {
+    console.log('ROT_FOUR');
+    console.log('ROT_THREE');
+    var TOS = Stack.pop();
+    var TOS2 = Stack.pop();
+    var TOS3 = Stack.pop();
+    var TOS4 = Stack.pop();
+    Stack.push(TOS);
+    Stack.push(TOS4);
+    Stack.push(TOS3);
+    Stack.push(TOS2);
 }
 function NOP() {
+    console.log('NOP');
 }
 function UNARY_POSITIVE() {
+    console.log('UNARY_POSITIVE');
+    var TOS = Stack.pop();
+    TOS = +TOS;
+    Stack.push(TOS);
 }
 function UNARY_NEGATIVE() {
+    console.log('UNARY_NEGATIVE');
+    var TOS = Stack.pop();
+    TOS = -TOS;
+    Stack.push(TOS);
 }
 function UNARY_NOT() {
+    console.log('UNARY_NOT');
+    var TOS = Stack.pop();
+    TOS = !TOS;
+    Stack.push(TOS);
 }
 function UNARY_CONVERT() {
+    console.log('UNARY_CONVERT');
+    var TOS = Stack.pop();
+    TOS = String(TOS); // Not completely accurate
+    Stack.push(TOS);
 }
 function UNARY_INVERT() {
+    console.log('UNARY_INVERT');
+    var TOS = Stack.pop();
+    TOS = ~TOS;
+    Stack.push(TOS);
 }
 function BINARY_POWER() {
+    console.log('BINARY_POWER');
+    var TOS = Stack.pop();
+    var TOS1 = Stack.pop();
+    TOS = Math.pow(TOS1, TOS);
+    Stack.push(TOS);
 }
 function BINARY_MULTIPLY() {
 }
@@ -346,12 +412,19 @@ function BINARY_OR() {
 function INPLACE_POWER() {
 }
 function GET_ITER() {
+    console.log('GET_ITER'); // Objects already iterable?
 }
 function PRINT_EXPR() {
 }
 function PRINT_ITEM() {
+    console.log('PRINT_ITEM');
+    var TOS = Stack.pop();
+    console.log(TOS);
+    Stack.push(TOS);
 }
 function PRINT_NEWLINE() {
+    console.log('PRINT_NEWLINE');
+    console.log('\n');
 }
 function PRINT_ITEM_TO() {
 }
@@ -527,7 +600,7 @@ function parseBytecode(bytecode) {
     // Start Parsing Bytecode
     var ptr = 8;
     while (ptr < len) {
-        var type = bytecode.toString('utf8', ptr, ptr + 1);
+        var type = bytecode.toString('ascii', ptr, ptr + 1);
         if (type in readByType) {
             var out = readByType[type](bytecode, ptr + 1, 1);
             ptr = out[0];
@@ -554,6 +627,8 @@ function interpretBytecode(bytecode) {
 
 //initalize object to store information of various types
 var byteObject = {};
+
+var Stack = [];
 
 var readByType = {};
 readByType['0'] = readNull;
