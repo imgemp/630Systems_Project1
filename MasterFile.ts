@@ -265,19 +265,87 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     return [ptr, obj];
 }
 //Implemented bytecode functions
-function STOP_CODE(){}
-function POP_TOP(){}
-function ROT_TWO(){}
-function ROT_THREE(){}
-function DUP_TOP(){}
-function ROT_FOUR(){}
-function NOP(){}
-function UNARY_POSITIVE(){}
-function UNARY_NEGATIVE(){}
-function UNARY_NOT(){}
-function UNARY_CONVERT(){}
-function UNARY_INVERT(){}
-function BINARY_POWER(){}
+function STOP_CODE(){
+    console.log('STOP_CODE');
+}
+function POP_TOP(){
+    console.log('POP_TOP');
+    return Stack.pop();
+}
+function ROT_TWO(){
+    console.log('ROT_TWO');
+    var TOS = Stack.pop();
+    var TOS1 = Stack.pop();
+    Stack.push(TOS);
+    Stack.push(TOS1);
+}
+function ROT_THREE(){
+    console.log('ROT_THREE');
+    var TOS = Stack.pop();
+    var TOS2 = Stack.pop();
+    var TOS3 = Stack.pop();
+    Stack.push(TOS);
+    Stack.push(TOS3);
+    Stack.push(TOS2);
+}
+function DUP_TOP(){
+    console.log('DUP_TOP');
+    var TOS = Stack.pop();
+    Stack.push(TOS);
+    Stack.push(TOS);
+}
+function ROT_FOUR(){
+    console.log('ROT_FOUR');
+    console.log('ROT_THREE');
+    var TOS = Stack.pop();
+    var TOS2 = Stack.pop();
+    var TOS3 = Stack.pop();
+    var TOS4 = Stack.pop();
+    Stack.push(TOS);
+    Stack.push(TOS4);
+    Stack.push(TOS3);
+    Stack.push(TOS2);
+}
+function NOP(){
+    console.log('NOP');
+}
+function UNARY_POSITIVE(){
+    console.log('UNARY_POSITIVE');
+    var TOS = Stack.pop();
+    TOS = +TOS;
+    Stack.push(TOS);
+}
+function UNARY_NEGATIVE(){
+    console.log('UNARY_NEGATIVE');
+    var TOS = Stack.pop();
+    TOS = -TOS;
+    Stack.push(TOS);
+}
+function UNARY_NOT(){
+    console.log('UNARY_NOT');
+    var TOS = Stack.pop();
+    TOS = !TOS;
+    Stack.push(TOS);
+}
+function UNARY_CONVERT(){
+    console.log('UNARY_CONVERT');
+    var TOS = Stack.pop();
+    TOS = String(TOS); // Not completely accurate
+    Stack.push(TOS);
+}
+function UNARY_INVERT(){
+    console.log('UNARY_INVERT');
+    var TOS = Stack.pop();
+    TOS = ~TOS;
+    Stack.push(TOS);
+}
+function BINARY_POWER(){
+    console.log('BINARY_POWER');
+    var TOS1 = Stack.pop();
+    var TOS2 = Stack.pop();
+    TOS = Math.pow(TOS1,TOS);
+    Stack.push(TOS);
+}
 function BINARY_MULTIPLY(){}
 function BINARY_DIVIDE(){}
 function BINARY_MODULO(){}
@@ -305,10 +373,20 @@ function BINARY_AND(){}
 function BINARY_XOR(){}
 function BINARY_OR(){}
 function INPLACE_POWER(){}
-function GET_ITER(){}
+function GET_ITER(){
+    console.log('GET_ITER'); // Objects already iterable?
+}
 function PRINT_EXPR(){}
-function PRINT_ITEM(){}
-function PRINT_NEWLINE(){}
+function PRINT_ITEM(){
+    console.log('PRINT_ITEM');
+    var TOS = Stack.pop();
+    console.log(TOS);
+    Stack.push(TOS);
+}
+function PRINT_NEWLINE(){
+    console.log('PRINT_NEWLINE');
+    console.log('\n');
+}
 function PRINT_ITEM_TO(){}
 function PRINT_NEWLINE_TO(){}
 function INPLACE_LSHIFT(){}
@@ -440,6 +518,8 @@ function interpretBytecode(bytecode) {
 
 //initalize object to store information of various types 
 var byteObject:any = {};
+
+var Stack = [];
 
 var readByType = {};
 readByType['0'] = readNull;
