@@ -402,7 +402,7 @@ class OpCodeFunctions {
         console.log('BINARY_FLOOR_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(Math.floor(TOS1/TOS);
+        Stack.push(Math.floor(TOS1/TOS));
 
     }
     //implements TOS = TOS1/TOS (with from_future_import division)
@@ -417,7 +417,7 @@ class OpCodeFunctions {
         console.log('INPLACE_FLOOR_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(Math.floor(TOS1/TOS);
+        Stack.push(Math.floor(TOS1/TOS));
     }
     //with from_future_import division
     public static INPLACE_TRUE_DIVIDE(){
@@ -619,14 +619,14 @@ readByType['c'] = readCodeObject;
 
 //https://android.googlesource.com/platform/prebuilts/python/darwin-x86/2.7.5/+/master/include/python2.7/opcode.h
 //enum list of all opcodes
-enum OpCodeList {
-    STOP_CODE: 0,
-    POP_TOP : 1,
-    ROT_TWO: 2,
-    ROT_THREE: 3,
-    DUP_TOP: 4,
-    ROT_FOUR :5,
-    NOP: 9,
+var OpCodeList = new Enum({
+    STOP_CODE:0, 
+    POP_TOP:1,
+    ROT_TWO:2,
+    ROT_THREE:3,
+    DUP_TOP:4,
+    ROT_FOUR:5,
+    NOP:9,
     UNARY_POSITIVE:10,
     UNARY_NEGATIVE:11,
     UNARY_NOT:12,
@@ -643,18 +643,18 @@ enum OpCodeList {
     BINARY_TRUE_DIVIDE:27,
     INPLACE_FLOOR_DIVIDE:28,
     INPLACE_TRUE_DIVIDE:29,
-    SLICE:30
-    SLICE:31,
-    SLICE:32,
-    SLICE:33,
+    SLICE:30,
+    //SLICE:31,
+    //SLICE:32,
+    //SLICE:33,
     STORE_SLICE:40,
-    STORE_SLICE:41,
-    STORE_SLICE:42,
-    STORE_SLICE:43,
+    //STORE_SLICE:41,
+    //STORE_SLICE:42,
+   // STORE_SLICE:43,
     DELETE_SLICE:50,
-    DELETE_SLICE:51,
-    DELETE_SLICE:52,
-    DELETE_SLICE:53,
+   // DELETE_SLICE:51,
+    //DELETE_SLICE:52,
+    //DELETE_SLICE:53,
     STORE_MAP:54,
     INPLACE_ADD:55,
     INPLACE_SUBTRACT:56,
@@ -744,11 +744,12 @@ enum OpCodeList {
     EXTENDED_ARG:145,
     SET_ADD:146,
     MAP_ADD:147
-}
+});
 
 
 
 var fs = require('fs');
+var Enum = require('enum');
 fs.readFile(process.argv[2], function doneReading(err, bytecode) {
     if (err)
         throw err;

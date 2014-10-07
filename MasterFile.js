@@ -275,299 +275,365 @@ function readCodeObject(bytecode, ptr, level) {
     return [ptr, obj];
 }
 
-//Implemented bytecode functions
-function STOP_CODE() {
-    console.log('STOP_CODE');
-}
-function POP_TOP() {
-    console.log('POP_TOP');
-    return Stack.pop();
-}
-function ROT_TWO() {
-    console.log('ROT_TWO');
-    var TOS = Stack.pop();
-    var TOS1 = Stack.pop();
-    Stack.push(TOS);
-    Stack.push(TOS1);
-}
-function ROT_THREE() {
-    console.log('ROT_THREE');
-    var TOS = Stack.pop();
-    var TOS2 = Stack.pop();
-    var TOS3 = Stack.pop();
-    Stack.push(TOS);
-    Stack.push(TOS3);
-    Stack.push(TOS2);
-}
-function DUP_TOP() {
-    console.log('DUP_TOP');
-    var TOS = Stack.pop();
-    Stack.push(TOS);
-    Stack.push(TOS);
-}
-function ROT_FOUR() {
-    console.log('ROT_FOUR');
-    console.log('ROT_THREE');
-    var TOS = Stack.pop();
-    var TOS2 = Stack.pop();
-    var TOS3 = Stack.pop();
-    var TOS4 = Stack.pop();
-    Stack.push(TOS);
-    Stack.push(TOS4);
-    Stack.push(TOS3);
-    Stack.push(TOS2);
-}
-function NOP() {
-    console.log('NOP');
-}
-function UNARY_POSITIVE() {
-    console.log('UNARY_POSITIVE');
-    var TOS = Stack.pop();
-    TOS = +TOS;
-    Stack.push(TOS);
-}
-function UNARY_NEGATIVE() {
-    console.log('UNARY_NEGATIVE');
-    var TOS = Stack.pop();
-    TOS = -TOS;
-    Stack.push(TOS);
-}
-function UNARY_NOT() {
-    console.log('UNARY_NOT');
-    var TOS = Stack.pop();
-    TOS = !TOS;
-    Stack.push(TOS);
-}
-function UNARY_CONVERT() {
-    console.log('UNARY_CONVERT');
-    var TOS = Stack.pop();
-    TOS = String(TOS); // Not completely accurate
-    Stack.push(TOS);
-}
-function UNARY_INVERT() {
-    console.log('UNARY_INVERT');
-    var TOS = Stack.pop();
-    TOS = ~TOS;
-    Stack.push(TOS);
-}
-function BINARY_POWER() {
-    console.log('BINARY_POWER');
-    var TOS = Stack.pop();
-    var TOS1 = Stack.pop();
-    TOS = Math.pow(TOS1, TOS);
-    Stack.push(TOS);
-}
-function BINARY_MULTIPLY() {
-}
-function BINARY_DIVIDE() {
-}
-function BINARY_MODULO() {
-}
-function BINARY_ADD() {
-}
-function BINARY_SUBTRACT() {
-}
-function BINARY_SUBSCR() {
-}
-function BINARY_FLOOR_DIVIDE() {
-}
-function BINARY_TRUE_DIVIDE() {
-}
-function INPLACE_FLOOR_DIVIDE() {
-}
-function INPLACE_TRUE_DIVIDE() {
-}
-function SLICE() {
-}
-function STORE_SLICE() {
-}
-function DELETE_SLICE() {
-}
-function STORE_MAP() {
-}
-function INPLACE_ADD() {
-}
-function INPLACE_SUBTRACT() {
-}
-function INPLACE_MULTIPY() {
-}
-function INPLACE_DIVIDE() {
-}
-function INPLACE_MODULO() {
-}
-function STORE_SUBSCR() {
-}
-function DELETE_SUBSCR() {
-}
-function BINARY_LSHIFT() {
-}
-function BINARY_RSHIFT() {
-}
-function BINARY_AND() {
-}
-function BINARY_XOR() {
-}
-function BINARY_OR() {
-}
-function INPLACE_POWER() {
-}
-function GET_ITER() {
-    console.log('GET_ITER'); // Objects already iterable?
-}
-function PRINT_EXPR() {
-}
-function PRINT_ITEM() {
-    console.log('PRINT_ITEM');
-    var TOS = Stack.pop();
-    console.log(TOS);
-    Stack.push(TOS);
-}
-function PRINT_NEWLINE() {
-    console.log('PRINT_NEWLINE');
-    console.log('\n');
-}
-function PRINT_ITEM_TO() {
-}
-function PRINT_NEWLINE_TO() {
-}
-function INPLACE_LSHIFT() {
-}
-function INPLACE_RSHIFT() {
-}
-function INPLACE_AND() {
-}
-function INPLACE_XOR() {
-}
-function INPLACE_OR() {
-}
-function BREAK_LOOP() {
-}
-function WITH_CLEANUP() {
-}
-function LOAD_LOCALS() {
-}
-function RETURN_VALUE() {
-}
-function IMPORT_STAR() {
-}
-function EXEC_STMT() {
-}
-function YIELD_VALUE() {
-}
-function POP_BLOCK() {
-}
-function END_FINALLY() {
-}
-function BUILD_CLASS() {
-}
+//Implemented bytecode functions in a OpCode class
+var OpCodeFunctions = (function () {
+    function OpCodeFunctions() {
+    }
+    OpCodeFunctions.STOP_CODE = function () {
+        //do nothing
+        console.log('STOP_CODE');
+    };
+    OpCodeFunctions.POP_TOP = function () {
+        console.log('POP_TOP');
+        return Stack.pop();
+    };
+    OpCodeFunctions.ROT_TWO = function () {
+        console.log('ROT_TWO');
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS);
+        Stack.push(TOS1);
+    };
+    OpCodeFunctions.ROT_THREE = function () {
+        console.log('ROT_THREE');
+        var TOS = Stack.pop();
+        var TOS2 = Stack.pop();
+        var TOS3 = Stack.pop();
+        Stack.push(TOS);
+        Stack.push(TOS3);
+        Stack.push(TOS2);
+    };
+    OpCodeFunctions.DUP_TOP = function () {
+        console.log('DUP_TOP');
+        var TOS = Stack.pop();
+        Stack.push(TOS);
+        Stack.push(TOS);
+    };
+    OpCodeFunctions.ROT_FOUR = function () {
+        console.log('ROT_FOUR');
+        console.log('ROT_THREE');
+        var TOS = Stack.pop();
+        var TOS2 = Stack.pop();
+        var TOS3 = Stack.pop();
+        var TOS4 = Stack.pop();
+        Stack.push(TOS);
+        Stack.push(TOS4);
+        Stack.push(TOS3);
+        Stack.push(TOS2);
+    };
+    OpCodeFunctions.NOP = function () {
+        console.log('NOP');
+    };
+    OpCodeFunctions.UNARY_POSITIVE = function () {
+        console.log('UNARY_POSITIVE');
+        var TOS = Stack.pop();
+        TOS = +TOS;
+        Stack.push(TOS);
+    };
+    OpCodeFunctions.UNARY_NEGATIVE = function () {
+        console.log('UNARY_NEGATIVE');
+        var TOS = Stack.pop();
+        TOS = -TOS;
+        Stack.push(TOS);
+    };
+    OpCodeFunctions.UNARY_NOT = function () {
+        console.log('UNARY_NOT');
+        var TOS = Stack.pop();
+        TOS = !TOS;
+        Stack.push(TOS);
+    };
+    OpCodeFunctions.UNARY_CONVERT = function () {
+        console.log('UNARY_CONVERT');
+        var TOS = Stack.pop();
+        TOS = String(TOS); // Not completely accurate
+        Stack.push(TOS);
+    };
+    OpCodeFunctions.UNARY_INVERT = function () {
+        console.log('UNARY_INVERT');
+        var TOS = Stack.pop();
+        TOS = ~TOS;
+        Stack.push(TOS);
+    };
+    OpCodeFunctions.BINARY_POWER = function () {
+        console.log('BINARY_POWER');
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        TOS = Math.pow(TOS1, TOS);
+        Stack.push(TOS);
+    };
 
-//Opcodes from here have an argument
-function STORE_NAME(index) {
-}
-function DELETE_NAME(index) {
-}
-function UNPACK_SEQUENCE(numItems) {
-}
-function FOR_ITER() {
-}
-function LIST_APPEND() {
-}
-function STORE_ATTR(index) {
-}
-function DELETE_ATTR(index) {
-}
-function STORE_GLOBAL(index) {
-}
-function DELETE_GLOBAL(index) {
-}
-function DUP_TOPX(numItemsDup) {
-}
-function LOAD_CONST(index) {
-}
-function LOAD_NAME(index) {
-}
-function BUILD_TUPLE(numItems) {
-}
-function BUILD_LIST(numItems) {
-}
-function BUILD_SET(numItems) {
-}
-function BUILD_MAP() {
-}
-function LOAD_ATTR(index) {
-}
-function COMPARE_OP() {
-}
-function IMPORT_NAME(index) {
-}
-function IMPORT_FROM(index) {
-}
-function JUMP_FORWARD(numBytes) {
-}
-function JUMP_IF_FALSE_OR_POP(offest) {
-}
-function JUMP_IF_TRUE_OR_POP(offset) {
-}
-function JUMP_ABSOLUTE(offset) {
-}
-function POP_JUMP_IF_FALSE(offset) {
-}
-function POP_JUMP_IF_TRUE(offset) {
-}
-function LOAD_GLOBAL(index) {
-}
-function CONTINUE_LOOP(start) {
-}
-function SETUP_LOOP(addr) {
-}
-function SETUP_EXCEPT(addr) {
-}
-function SETUP_FINALLY(addr) {
-}
-function LOAD_FAST(varNum) {
-}
-function STORE_FAST(varNum) {
-}
-function DELETE_FAST(varNum) {
-}
-function RAISE_VARARGS(numArg) {
-}
+    //implements TOS = TOS1 * TOS
+    OpCodeFunctions.BINARY_MULTIPLY = function () {
+        console.log('BINARY_MULTIPY');
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1 * TOS);
+    };
 
-/* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
-function CALL_FUNCTION(arg) {
-}
-function MAKE_FUNCTION(numDefaults) {
-}
-function BUILD_SLICE(numItems) {
-}
-function MAKE_CLOSURE(numFreeVars) {
-}
-function LOAD_CLOSURE() {
-}
-function LOAD_DEREF() {
-}
-function STORE_DEREF() {
-}
+    //implements TOS = TOS1/TOS (without from_future_import division)
+    OpCodeFunctions.BINARY_DIVIDE = function () {
+        console.log('BINARY_DIVIDE');
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
 
-/* The next 3 opcodes must be contiguous and satisfy
-(CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
-function CALL_FUNCTION_VAR() {
-}
-function CALL_FUNCTION_KW() {
-}
-function CALL_FUNCTION_VAR_KW() {
-}
-function SETUP_WITH() {
-}
+        //*** need to make this so floors ints & longs but gives approx with floats or complex ***/
+        Stack.push(TOS1 / TOS);
+    };
 
-/* Support for opargs more than 16 bits long */
-function EXTENDED_ARG() {
-}
-function SET_ADD() {
-}
-function MAP_ADD() {
-}
+    //implements TOS = TOS1 % TOS
+    OpCodeFunctions.BINARY_MODULO = function () {
+        console.log('BINARY_MODULO');
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1 % TOS);
+    };
 
+    //implemsnts TOS = TOS1 + TOS
+    OpCodeFunctions.BINARY_ADD = function () {
+        console.log('BINARY_ADD');
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1 + TOS);
+    };
+
+    //implements TOS = TOS1 - TOS
+    OpCodeFunctions.BINARY_SUBTRACT = function () {
+        console.log('BINARY_SUBTRACT');
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1 - TOS);
+    };
+
+    //implements TOS = TOS1[TOS]
+    OpCodeFunctions.BINARY_SUBSCR = function () {
+        console.log('BINARY_SUBSCR');
+    };
+
+    //implements TOS = TOS1 // TOS
+    OpCodeFunctions.BINARY_FLOOR_DIVIDE = function () {
+        console.log('BINARY_FLOOR_DIVIDE');
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(Math.floor(TOS1 / TOS));
+    };
+
+    //implements TOS = TOS1/TOS (with from_future_import division)
+    OpCodeFunctions.BINARY_TRUE_DIVIDE = function () {
+        console.log('BINARY_TRUE_DIVIDE');
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1 / TOS);
+    };
+
+    //DIFFERENCE OF THESE FROM BINARY?
+    OpCodeFunctions.INPLACE_FLOOR_DIVIDE = function () {
+        console.log('INPLACE_FLOOR_DIVIDE');
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(Math.floor(TOS1 / TOS));
+    };
+
+    //with from_future_import division
+    OpCodeFunctions.INPLACE_TRUE_DIVIDE = function () {
+        console.log('INPLACE_TRUE_DIVIDE');
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1 / TOS);
+    };
+    OpCodeFunctions.SLICE = function () {
+    };
+    OpCodeFunctions.STORE_SLICE = function () {
+    };
+    OpCodeFunctions.DELETE_SLICE = function () {
+    };
+    OpCodeFunctions.STORE_MAP = function () {
+    };
+    OpCodeFunctions.INPLACE_ADD = function () {
+    };
+    OpCodeFunctions.INPLACE_SUBTRACT = function () {
+    };
+    OpCodeFunctions.INPLACE_MULTIPY = function () {
+    };
+    OpCodeFunctions.INPLACE_DIVIDE = function () {
+    };
+    OpCodeFunctions.INPLACE_MODULO = function () {
+    };
+    OpCodeFunctions.STORE_SUBSCR = function () {
+    };
+    OpCodeFunctions.DELETE_SUBSCR = function () {
+    };
+    OpCodeFunctions.BINARY_LSHIFT = function () {
+    };
+    OpCodeFunctions.BINARY_RSHIFT = function () {
+    };
+    OpCodeFunctions.BINARY_AND = function () {
+    };
+    OpCodeFunctions.BINARY_XOR = function () {
+    };
+    OpCodeFunctions.BINARY_OR = function () {
+    };
+    OpCodeFunctions.INPLACE_POWER = function () {
+    };
+    OpCodeFunctions.GET_ITER = function () {
+        console.log('GET_ITER'); // Objects already iterable?
+    };
+    OpCodeFunctions.PRINT_EXPR = function () {
+    };
+    OpCodeFunctions.PRINT_ITEM = function () {
+        console.log('PRINT_ITEM');
+        var TOS = Stack.pop();
+        console.log(TOS);
+        Stack.push(TOS);
+    };
+    OpCodeFunctions.PRINT_NEWLINE = function () {
+        console.log('PRINT_NEWLINE');
+        console.log('\n');
+    };
+    OpCodeFunctions.PRINT_ITEM_TO = function () {
+    };
+    OpCodeFunctions.PRINT_NEWLINE_TO = function () {
+    };
+    OpCodeFunctions.INPLACE_LSHIFT = function () {
+    };
+    OpCodeFunctions.INPLACE_RSHIFT = function () {
+    };
+    OpCodeFunctions.INPLACE_AND = function () {
+    };
+    OpCodeFunctions.INPLACE_XOR = function () {
+    };
+    OpCodeFunctions.INPLACE_OR = function () {
+    };
+    OpCodeFunctions.BREAK_LOOP = function () {
+    };
+    OpCodeFunctions.WITH_CLEANUP = function () {
+    };
+    OpCodeFunctions.LOAD_LOCALS = function () {
+    };
+    OpCodeFunctions.RETURN_VALUE = function () {
+    };
+    OpCodeFunctions.IMPORT_STAR = function () {
+    };
+    OpCodeFunctions.EXEC_STMT = function () {
+    };
+    OpCodeFunctions.YIELD_VALUE = function () {
+    };
+    OpCodeFunctions.POP_BLOCK = function () {
+    };
+    OpCodeFunctions.END_FINALLY = function () {
+    };
+    OpCodeFunctions.BUILD_CLASS = function () {
+    };
+
+    //Opcodes from here have an argument
+    OpCodeFunctions.STORE_NAME = function (index) {
+    };
+    OpCodeFunctions.DELETE_NAME = function (index) {
+    };
+    OpCodeFunctions.UNPACK_SEQUENCE = function (numItems) {
+    };
+    OpCodeFunctions.FOR_ITER = function (incrCounter) {
+    };
+    OpCodeFunctions.LIST_APPEND = function (value) {
+    };
+    OpCodeFunctions.STORE_ATTR = function (index) {
+    };
+    OpCodeFunctions.DELETE_ATTR = function (index) {
+    };
+    OpCodeFunctions.STORE_GLOBAL = function (index) {
+    };
+    OpCodeFunctions.DELETE_GLOBAL = function (index) {
+    };
+    OpCodeFunctions.DUP_TOPX = function (numItemsDup) {
+    };
+    OpCodeFunctions.LOAD_CONST = function (index) {
+    };
+    OpCodeFunctions.LOAD_NAME = function (index) {
+    };
+    OpCodeFunctions.BUILD_TUPLE = function (numItems) {
+    };
+    OpCodeFunctions.BUILD_LIST = function (numItems) {
+    };
+    OpCodeFunctions.BUILD_SET = function (numItems) {
+    };
+    OpCodeFunctions.BUILD_MAP = function (numEntries) {
+    };
+    OpCodeFunctions.LOAD_ATTR = function (index) {
+    };
+    OpCodeFunctions.COMPARE_OP = function (opname) {
+    };
+    OpCodeFunctions.IMPORT_NAME = function (index) {
+    };
+    OpCodeFunctions.IMPORT_FROM = function (index) {
+    };
+    OpCodeFunctions.JUMP_FORWARD = function (numBytes) {
+    };
+    OpCodeFunctions.JUMP_IF_FALSE_OR_POP = function (offest) {
+    };
+    OpCodeFunctions.JUMP_IF_TRUE_OR_POP = function (offset) {
+    };
+    OpCodeFunctions.JUMP_ABSOLUTE = function (offset) {
+    };
+    OpCodeFunctions.POP_JUMP_IF_FALSE = function (offset) {
+    };
+    OpCodeFunctions.POP_JUMP_IF_TRUE = function (offset) {
+    };
+    OpCodeFunctions.LOAD_GLOBAL = function (index) {
+    };
+    OpCodeFunctions.CONTINUE_LOOP = function (start) {
+    };
+    OpCodeFunctions.SETUP_LOOP = function (addr) {
+    };
+    OpCodeFunctions.SETUP_EXCEPT = function (addr) {
+    };
+    OpCodeFunctions.SETUP_FINALLY = function (addr) {
+    };
+    OpCodeFunctions.LOAD_FAST = function (varNum) {
+    };
+    OpCodeFunctions.STORE_FAST = function (varNum) {
+    };
+    OpCodeFunctions.DELETE_FAST = function (varNum) {
+    };
+    OpCodeFunctions.RAISE_VARARGS = function (numArg) {
+    };
+
+    /* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
+    OpCodeFunctions.CALL_FUNCTION = function (arg) {
+    };
+    OpCodeFunctions.MAKE_FUNCTION = function (numDefaults) {
+    };
+    OpCodeFunctions.BUILD_SLICE = function (numItems) {
+    };
+    OpCodeFunctions.MAKE_CLOSURE = function (numFreeVars) {
+    };
+    OpCodeFunctions.LOAD_CLOSURE = function (index) {
+    };
+    OpCodeFunctions.LOAD_DEREF = function (index) {
+    };
+    OpCodeFunctions.STORE_DEREF = function (index) {
+    };
+
+    /* The next 3 opcodes must be contiguous and satisfy
+    (CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
+    OpCodeFunctions.CALL_FUNCTION_VAR = function (argc) {
+    };
+    OpCodeFunctions.CALL_FUNCTION_KW = function (argc) {
+    };
+    OpCodeFunctions.CALL_FUNCTION_VAR_KW = function (argc) {
+    };
+    OpCodeFunctions.SETUP_WITH = function (delta) {
+    };
+
+    /* Support for opargs more than 16 bits long */
+    OpCodeFunctions.EXTENDED_ARG = function (ext) {
+    };
+
+    /***** have to determine what type of arguments these take *****/
+    OpCodeFunctions.SET_ADD = function () {
+    };
+    OpCodeFunctions.MAP_ADD = function () {
+    };
+    return OpCodeFunctions;
+})();
 function parseBytecode(bytecode) {
     var len = bytecode.length;
 
@@ -628,6 +694,7 @@ function interpretBytecode(bytecode) {
 //initalize object to store information of various types
 var byteObject = {};
 
+//initalize the stack object
 var Stack = [];
 
 var readByType = {};
@@ -655,137 +722,136 @@ readByType['>'] = readTuple;
 readByType['c'] = readCodeObject;
 
 //https://android.googlesource.com/platform/prebuilts/python/darwin-x86/2.7.5/+/master/include/python2.7/opcode.h
-var opCodeList = {};
-opCodeList[0] = STOP_CODE;
-opCodeList[1] = POP_TOP;
-opCodeList[2] = ROT_TWO;
-opCodeList[3] = ROT_THREE;
-opCodeList[4] = DUP_TOP;
-opCodeList[5] = ROT_FOUR;
-opCodeList[9] = NOP;
-opCodeList[10] = UNARY_POSITIVE;
-opCodeList[11] = UNARY_NEGATIVE;
-opCodeList[12] = UNARY_NOT;
-opCodeList[13] = UNARY_CONVERT;
-opCodeList[15] = UNARY_INVERT;
-opCodeList[19] = BINARY_POWER;
-opCodeList[20] = BINARY_MULTIPLY;
-opCodeList[21] = BINARY_DIVIDE;
-opCodeList[22] = BINARY_MODULO;
-opCodeList[23] = BINARY_ADD;
-opCodeList[24] = BINARY_SUBTRACT;
-opCodeList[25] = BINARY_SUBSCR;
-opCodeList[26] = BINARY_FLOOR_DIVIDE;
-opCodeList[27] = BINARY_TRUE_DIVIDE;
-opCodeList[28] = INPLACE_FLOOR_DIVIDE;
-opCodeList[29] = INPLACE_TRUE_DIVIDE;
-opCodeList[30] = SLICE;
-opCodeList[31] = SLICE;
-opCodeList[32] = SLICE;
-opCodeList[33] = SLICE;
-opCodeList[40] = STORE_SLICE;
-opCodeList[41] = STORE_SLICE;
-opCodeList[42] = STORE_SLICE;
-opCodeList[43] = STORE_SLICE;
-opCodeList[50] = DELETE_SLICE;
-opCodeList[51] = DELETE_SLICE;
-opCodeList[52] = DELETE_SLICE;
-opCodeList[53] = DELETE_SLICE;
-opCodeList[54] = STORE_MAP;
-opCodeList[55] = INPLACE_ADD;
-opCodeList[56] = INPLACE_SUBTRACT;
-opCodeList[57] = INPLACE_MULTIPY;
-opCodeList[58] = INPLACE_DIVIDE;
-opCodeList[59] = INPLACE_MODULO;
-opCodeList[60] = STORE_SUBSCR;
-opCodeList[61] = DELETE_SUBSCR;
-opCodeList[62] = BINARY_LSHIFT;
-opCodeList[63] = BINARY_RSHIFT;
-opCodeList[64] = BINARY_AND;
-opCodeList[65] = BINARY_XOR;
-opCodeList[66] = BINARY_OR;
-opCodeList[67] = INPLACE_POWER;
-opCodeList[68] = GET_ITER;
-opCodeList[70] = PRINT_EXPR;
-opCodeList[71] = PRINT_ITEM;
-opCodeList[72] = PRINT_NEWLINE;
-opCodeList[73] = PRINT_ITEM_TO;
-opCodeList[74] = PRINT_NEWLINE_TO;
-opCodeList[75] = INPLACE_LSHIFT;
-opCodeList[76] = INPLACE_RSHIFT;
-opCodeList[77] = INPLACE_AND;
-opCodeList[78] = INPLACE_XOR;
-opCodeList[79] = INPLACE_OR;
-opCodeList[80] = BREAK_LOOP;
-opCodeList[81] = WITH_CLEANUP;
-opCodeList[82] = LOAD_LOCALS;
-opCodeList[83] = RETURN_VALUE;
-opCodeList[84] = IMPORT_STAR;
-opCodeList[85] = EXEC_STMT;
-opCodeList[86] = YIELD_VALUE;
-opCodeList[87] = POP_BLOCK;
-opCodeList[88] = END_FINALLY;
-opCodeList[89] = BUILD_CLASS;
-
-//Opcodes from here have an argument HAVE_ARGUMENT 90
-opCodeList[90] = STORE_NAME; //index in name list
-opCodeList[91] = DELETE_NAME; //index in name list
-opCodeList[92] = UNPACK_SEQUENCE; //number of sequence items
-opCodeList[93] = FOR_ITER;
-opCodeList[94] = LIST_APPEND;
-opCodeList[95] = STORE_ATTR; //index in name list
-opCodeList[96] = DELETE_ATTR; //index in name list
-opCodeList[97] = STORE_GLOBAL; //index in name list
-opCodeList[98] = DELETE_GLOBAL; //index in name list
-opCodeList[99] = DUP_TOPX; //number of items to duplicate
-opCodeList[100] = LOAD_CONST; //index in const list
-opCodeList[101] = LOAD_NAME; //index in name list
-opCodeList[102] = BUILD_TUPLE; //number of tuple items
-opCodeList[103] = BUILD_LIST; //number of list items
-opCodeList[104] = BUILD_SET; //number of set items
-opCodeList[105] = BUILD_MAP; //always 0 for now?
-opCodeList[106] = LOAD_ATTR; //index in name list
-opCodeList[107] = COMPARE_OP; //comparison operator
-opCodeList[108] = IMPORT_NAME; //index in name list
-opCodeList[109] = IMPORT_FROM; //index in name list
-opCodeList[110] = JUMP_FORWARD; //number of bytes to skip
-opCodeList[111] = JUMP_IF_FALSE_OR_POP; //target byte offset from beginning of code
-opCodeList[112] = JUMP_IF_TRUE_OR_POP; //target byte offset from beginning of code
-opCodeList[113] = JUMP_ABSOLUTE; //target byte offset from beginning of code
-opCodeList[114] = POP_JUMP_IF_FALSE; //target byte offset from beginning of code
-opCodeList[115] = POP_JUMP_IF_TRUE; //target byte offset from beginning of code
-opCodeList[116] = LOAD_GLOBAL; //index in name list
-opCodeList[119] = CONTINUE_LOOP; //start of loop(absolute)
-opCodeList[120] = SETUP_LOOP; //target address(relative)
-opCodeList[121] = SETUP_EXCEPT; //target address(relative)
-opCodeList[122] = SETUP_FINALLY; //target address(relative)
-opCodeList[124] = LOAD_FAST; //local variable number
-opCodeList[125] = STORE_FAST; //local variable number
-opCodeList[126] = DELETE_FAST; //local variable number
-opCodeList[130] = RAISE_VARARGS; //number of raise arguments(1,2 or 3)
-
-/* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
-opCodeList[131] = CALL_FUNCTION; //number of args + (number kwargs<<8)
-opCodeList[132] = MAKE_FUNCTION; //number defaults
-opCodeList[133] = BUILD_SLICE; //number of items
-opCodeList[134] = MAKE_CLOSURE; //number free vars
-opCodeList[135] = LOAD_CLOSURE; //load free variable from closure
-opCodeList[136] = LOAD_DEREF; //load and deference from closure cell
-opCodeList[137] = STORE_DEREF; //store into cell
-
-/* The next 3 opcodes must be contiguous and satisfy
-(CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
-opCodeList[140] = CALL_FUNCTION_VAR; //number args + (number kwargs<<8)
-opCodeList[141] = CALL_FUNCTION_KW; //number args + (number kwargs<<8)
-opCodeList[142] = CALL_FUNCTION_VAR_KW; //number args + (number kwargs<<8)
-opCodeList[143] = SETUP_WITH;
-
-/* Support for opargs more than 16 bits long */
-opCodeList[145] = EXTENDED_ARG;
-opCodeList[146] = SET_ADD;
-opCodeList[147] = MAP_ADD;
+//enum list of all opcodes
+var OpCodeList = new Enum({
+    STOP_CODE: 0,
+    POP_TOP: 1,
+    ROT_TWO: 2,
+    ROT_THREE: 3,
+    DUP_TOP: 4,
+    ROT_FOUR: 5,
+    NOP: 9,
+    UNARY_POSITIVE: 10,
+    UNARY_NEGATIVE: 11,
+    UNARY_NOT: 12,
+    UNARY_CONVERT: 13,
+    UNARY_INVERT: 15,
+    BINARY_POWER: 19,
+    BINARY_MULTIPLY: 20,
+    BINARY_DIVIDE: 21,
+    BINARY_MODULO: 22,
+    BINARY_ADD: 23,
+    BINARY_SUBTRACT: 24,
+    BINARY_SUBSCR: 25,
+    BINARY_FLOOR_DIVIDE: 26,
+    BINARY_TRUE_DIVIDE: 27,
+    INPLACE_FLOOR_DIVIDE: 28,
+    INPLACE_TRUE_DIVIDE: 29,
+    SLICE: 30,
+    //SLICE:31,
+    //SLICE:32,
+    //SLICE:33,
+    STORE_SLICE: 40,
+    //STORE_SLICE:41,
+    //STORE_SLICE:42,
+    // STORE_SLICE:43,
+    DELETE_SLICE: 50,
+    // DELETE_SLICE:51,
+    //DELETE_SLICE:52,
+    //DELETE_SLICE:53,
+    STORE_MAP: 54,
+    INPLACE_ADD: 55,
+    INPLACE_SUBTRACT: 56,
+    INPLACE_MULTIPY: 57,
+    INPLACE_DIVIDE: 58,
+    INPLACE_MODULO: 59,
+    STORE_SUBSCR: 60,
+    DELETE_SUBSCR: 61,
+    BINARY_LSHIFT: 62,
+    BINARY_RSHIFT: 63,
+    BINARY_AND: 64,
+    BINARY_XOR: 65,
+    BINARY_OR: 66,
+    INPLACE_POWER: 67,
+    GET_ITER: 68,
+    PRINT_EXPR: 70,
+    PRINT_ITEM: 71,
+    PRINT_NEWLINE: 72,
+    RINT_ITEM_TO: 73,
+    PRINT_NEWLINE_TO: 74,
+    INPLACE_LSHIFT: 75,
+    INPLACE_RSHIFT: 76,
+    INPLACE_AND: 77,
+    INPLACE_XOR: 78,
+    INPLACE_OR: 79,
+    BREAK_LOOP: 80,
+    WITH_CLEANUP: 81,
+    LOAD_LOCALS: 82,
+    RETURN_VALUE: 83,
+    IMPORT_STAR: 84,
+    EXEC_STMT: 85,
+    YIELD_VALUE: 86,
+    POP_BLOCK: 87,
+    END_FINALLY: 88,
+    BUILD_CLASS: 89,
+    //Opcodes from here have an argument HAVE_ARGUMENT 90
+    STORE_NAME: 90,
+    DELETE_NAME: 91,
+    UNPACK_SEQUENCE: 92,
+    FOR_ITER: 93,
+    LIST_APPEND: 94,
+    STORE_ATTR: 95,
+    DELETE_ATTR: 96,
+    STORE_GLOBAL: 97,
+    DELETE_GLOBAL: 98,
+    DUP_TOPX: 99,
+    LOAD_CONST: 100,
+    LOAD_NAME: 101,
+    BUILD_TUPLE: 102,
+    BUILD_LIST: 103,
+    BUILD_SET: 104,
+    BUILD_MAP: 105,
+    LOAD_ATTR: 106,
+    COMPARE_OP: 107,
+    IMPORT_NAME: 108,
+    IMPORT_FROM: 109,
+    JUMP_FORWARD: 110,
+    JUMP_IF_FALSE_OR_POP: 111,
+    JUMP_IF_TRUE_OR_POP: 112,
+    JUMP_ABSOLUTE: 113,
+    POP_JUMP_IF_FALSE: 114,
+    POP_JUMP_IF_TRUE: 115,
+    LOAD_GLOBAL: 116,
+    CONTINUE_LOOP: 119,
+    SETUP_LOOP: 120,
+    SETUP_EXCEPT: 121,
+    SETUP_FINALLY: 122,
+    LOAD_FAST: 124,
+    STORE_FAST: 125,
+    DELETE_FAST: 126,
+    RAISE_VARARGS: 130,
+    /* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
+    CALL_FUNCTION: 131,
+    MAKE_FUNCTION: 132,
+    BUILD_SLICE: 133,
+    MAKE_CLOSURE: 134,
+    LOAD_CLOSURE: 135,
+    LOAD_DEREF: 136,
+    STORE_DEREF: 137,
+    /* The next 3 opcodes must be contiguous and satisfy
+    (CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
+    CALL_FUNCTION_VAR: 140,
+    CALL_FUNCTION_KW: 141,
+    CALL_FUNCTION_VAR_KW: 142,
+    SETUP_WITH: 143,
+    /* Support for opargs more than 16 bits long */
+    EXTENDED_ARG: 145,
+    SET_ADD: 146,
+    MAP_ADD: 147
+});
 
 var fs = require('fs');
+var Enum = require('enum');
 fs.readFile(process.argv[2], function doneReading(err, bytecode) {
     if (err)
         throw err;
