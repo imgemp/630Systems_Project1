@@ -140,9 +140,10 @@ function readTuple(bytecode, ptr, level) {
     return [ptr, obj];
 }
 
+// Returns a CodeObject
 function readCodeObject(bytecode, ptr, level) {
     console.log(Array(level).join('\t') + 'code object:');
-    var obj = {};
+    var obj = new CodeObject();
     var out = [];
 
     level = level + 1;
@@ -276,26 +277,41 @@ function readCodeObject(bytecode, ptr, level) {
 }
 
 //Implemented bytecode functions in a OpCode class
-var OpCodeFunctions = (function () {
-    function OpCodeFunctions() {
+var CodeObject = (function () {
+    function CodeObject() {
+        this.argcount = undefined;
+        this.nlocals = undefined;
+        this.stacksize = undefined;
+        this.flags = undefined;
+        this.code = undefined;
+        this.consts = undefined;
+        this.names = undefined;
+        this.varnames = undefined;
+        this.freevars = undefined;
+        this.cellvars = undefined;
+        this.filename = undefined;
+        this.name = undefined;
+        this.firstlineno = undefined;
+        this.lnotab = undefined;
+        this.returnedValue = undefined;
     }
-    OpCodeFunctions.STOP_CODE = function () {
+    CodeObject.prototype.STOP_CODE = function () {
         //do nothing
-        console.log('STOP_CODE');
+        // console.log('STOP_CODE');
     };
-    OpCodeFunctions.POP_TOP = function () {
-        console.log('POP_TOP');
+    CodeObject.prototype.POP_TOP = function () {
+        // console.log('POP_TOP');
         return Stack.pop();
     };
-    OpCodeFunctions.ROT_TWO = function () {
-        console.log('ROT_TWO');
+    CodeObject.prototype.ROT_TWO = function () {
+        // console.log('ROT_TWO');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS);
         Stack.push(TOS1);
     };
-    OpCodeFunctions.ROT_THREE = function () {
-        console.log('ROT_THREE');
+    CodeObject.prototype.ROT_THREE = function () {
+        // console.log('ROT_THREE');
         var TOS = Stack.pop();
         var TOS2 = Stack.pop();
         var TOS3 = Stack.pop();
@@ -303,15 +319,14 @@ var OpCodeFunctions = (function () {
         Stack.push(TOS3);
         Stack.push(TOS2);
     };
-    OpCodeFunctions.DUP_TOP = function () {
-        console.log('DUP_TOP');
+    CodeObject.prototype.DUP_TOP = function () {
+        // console.log('DUP_TOP');
         var TOS = Stack.pop();
         Stack.push(TOS);
         Stack.push(TOS);
     };
-    OpCodeFunctions.ROT_FOUR = function () {
-        console.log('ROT_FOUR');
-        console.log('ROT_THREE');
+    CodeObject.prototype.ROT_FOUR = function () {
+        // console.log('ROT_FOUR');
         var TOS = Stack.pop();
         var TOS2 = Stack.pop();
         var TOS3 = Stack.pop();
@@ -321,41 +336,41 @@ var OpCodeFunctions = (function () {
         Stack.push(TOS3);
         Stack.push(TOS2);
     };
-    OpCodeFunctions.NOP = function () {
-        console.log('NOP');
+    CodeObject.prototype.NOP = function () {
+        // console.log('NOP');
     };
-    OpCodeFunctions.UNARY_POSITIVE = function () {
-        console.log('UNARY_POSITIVE');
+    CodeObject.prototype.UNARY_POSITIVE = function () {
+        // console.log('UNARY_POSITIVE');
         var TOS = Stack.pop();
         TOS = +TOS;
         Stack.push(TOS);
     };
-    OpCodeFunctions.UNARY_NEGATIVE = function () {
-        console.log('UNARY_NEGATIVE');
+    CodeObject.prototype.UNARY_NEGATIVE = function () {
+        // console.log('UNARY_NEGATIVE');
         var TOS = Stack.pop();
         TOS = -TOS;
         Stack.push(TOS);
     };
-    OpCodeFunctions.UNARY_NOT = function () {
-        console.log('UNARY_NOT');
+    CodeObject.prototype.UNARY_NOT = function () {
+        // console.log('UNARY_NOT');
         var TOS = Stack.pop();
         TOS = !TOS;
         Stack.push(TOS);
     };
-    OpCodeFunctions.UNARY_CONVERT = function () {
-        console.log('UNARY_CONVERT');
+    CodeObject.prototype.UNARY_CONVERT = function () {
+        // console.log('UNARY_CONVERT');
         var TOS = Stack.pop();
         TOS = String(TOS); // Not completely accurate
         Stack.push(TOS);
     };
-    OpCodeFunctions.UNARY_INVERT = function () {
-        console.log('UNARY_INVERT');
+    CodeObject.prototype.UNARY_INVERT = function () {
+        // console.log('UNARY_INVERT');
         var TOS = Stack.pop();
         TOS = ~TOS;
         Stack.push(TOS);
     };
-    OpCodeFunctions.BINARY_POWER = function () {
-        console.log('BINARY_POWER');
+    CodeObject.prototype.BINARY_POWER = function () {
+        // console.log('BINARY_POWER');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         TOS = Math.pow(TOS1, TOS);
@@ -363,16 +378,16 @@ var OpCodeFunctions = (function () {
     };
 
     //implements TOS = TOS1 * TOS
-    OpCodeFunctions.BINARY_MULTIPLY = function () {
-        console.log('BINARY_MULTIPY');
+    CodeObject.prototype.BINARY_MULTIPLY = function () {
+        // console.log('BINARY_MULTIPY');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 * TOS);
     };
 
     //implements TOS = TOS1/TOS (without from_future_import division)
-    OpCodeFunctions.BINARY_DIVIDE = function () {
-        console.log('BINARY_DIVIDE');
+    CodeObject.prototype.BINARY_DIVIDE = function () {
+        // console.log('BINARY_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
 
@@ -381,271 +396,333 @@ var OpCodeFunctions = (function () {
     };
 
     //implements TOS = TOS1 % TOS
-    OpCodeFunctions.BINARY_MODULO = function () {
-        console.log('BINARY_MODULO');
+    CodeObject.prototype.BINARY_MODULO = function () {
+        // console.log('BINARY_MODULO');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 % TOS);
     };
 
     //implemsnts TOS = TOS1 + TOS
-    OpCodeFunctions.BINARY_ADD = function () {
-        console.log('BINARY_ADD');
+    CodeObject.prototype.BINARY_ADD = function () {
+        // console.log('BINARY_ADD');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 + TOS);
     };
 
     //implements TOS = TOS1 - TOS
-    OpCodeFunctions.BINARY_SUBTRACT = function () {
-        console.log('BINARY_SUBTRACT');
+    CodeObject.prototype.BINARY_SUBTRACT = function () {
+        // console.log('BINARY_SUBTRACT');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 - TOS);
     };
 
     //implements TOS = TOS1[TOS]
-    OpCodeFunctions.BINARY_SUBSCR = function () {
-        console.log('BINARY_SUBSCR');
+    CodeObject.prototype.BINARY_SUBSCR = function () {
+        // console.log('BINARY_SUBSCR');
     };
 
     //implements TOS = TOS1 // TOS
-    OpCodeFunctions.BINARY_FLOOR_DIVIDE = function () {
-        console.log('BINARY_FLOOR_DIVIDE');
+    CodeObject.prototype.BINARY_FLOOR_DIVIDE = function () {
+        // console.log('BINARY_FLOOR_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(Math.floor(TOS1 / TOS));
     };
 
     //implements TOS = TOS1/TOS (with from_future_import division)
-    OpCodeFunctions.BINARY_TRUE_DIVIDE = function () {
-        console.log('BINARY_TRUE_DIVIDE');
+    CodeObject.prototype.BINARY_TRUE_DIVIDE = function () {
+        // console.log('BINARY_TRUE_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 / TOS);
     };
 
     //DIFFERENCE OF THESE FROM BINARY?
-    OpCodeFunctions.INPLACE_FLOOR_DIVIDE = function () {
-        console.log('INPLACE_FLOOR_DIVIDE');
+    CodeObject.prototype.INPLACE_FLOOR_DIVIDE = function () {
+        // console.log('INPLACE_FLOOR_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(Math.floor(TOS1 / TOS));
     };
 
     //with from_future_import division
-    OpCodeFunctions.INPLACE_TRUE_DIVIDE = function () {
-        console.log('INPLACE_TRUE_DIVIDE');
+    CodeObject.prototype.INPLACE_TRUE_DIVIDE = function () {
+        // console.log('INPLACE_TRUE_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 / TOS);
     };
-    OpCodeFunctions.SLICE = function () {
+    CodeObject.prototype.SLICE = function () {
     };
-    OpCodeFunctions.STORE_SLICE = function () {
+    CodeObject.prototype.STORE_SLICE = function () {
     };
-    OpCodeFunctions.DELETE_SLICE = function () {
+    CodeObject.prototype.DELETE_SLICE = function () {
     };
-    OpCodeFunctions.STORE_MAP = function () {
+    CodeObject.prototype.STORE_MAP = function () {
     };
-    OpCodeFunctions.INPLACE_ADD = function () {
+    CodeObject.prototype.INPLACE_ADD = function () {
     };
-    OpCodeFunctions.INPLACE_SUBTRACT = function () {
+    CodeObject.prototype.INPLACE_SUBTRACT = function () {
     };
-    OpCodeFunctions.INPLACE_MULTIPY = function () {
+    CodeObject.prototype.INPLACE_MULTIPY = function () {
     };
-    OpCodeFunctions.INPLACE_DIVIDE = function () {
+    CodeObject.prototype.INPLACE_DIVIDE = function () {
     };
-    OpCodeFunctions.INPLACE_MODULO = function () {
+    CodeObject.prototype.INPLACE_MODULO = function () {
     };
-    OpCodeFunctions.STORE_SUBSCR = function () {
+    CodeObject.prototype.STORE_SUBSCR = function () {
     };
-    OpCodeFunctions.DELETE_SUBSCR = function () {
+    CodeObject.prototype.DELETE_SUBSCR = function () {
     };
-    OpCodeFunctions.BINARY_LSHIFT = function () {
+    CodeObject.prototype.BINARY_LSHIFT = function () {
     };
-    OpCodeFunctions.BINARY_RSHIFT = function () {
+    CodeObject.prototype.BINARY_RSHIFT = function () {
     };
-    OpCodeFunctions.BINARY_AND = function () {
+    CodeObject.prototype.BINARY_AND = function () {
     };
-    OpCodeFunctions.BINARY_XOR = function () {
+    CodeObject.prototype.BINARY_XOR = function () {
     };
-    OpCodeFunctions.BINARY_OR = function () {
+    CodeObject.prototype.BINARY_OR = function () {
     };
-    OpCodeFunctions.INPLACE_POWER = function () {
+    CodeObject.prototype.INPLACE_POWER = function () {
     };
-    OpCodeFunctions.GET_ITER = function () {
-        console.log('GET_ITER'); // Objects already iterable?
+    CodeObject.prototype.GET_ITER = function () {
+        // console.log('GET_ITER'); // Objects already iterable?
     };
-    OpCodeFunctions.PRINT_EXPR = function () {
+    CodeObject.prototype.PRINT_EXPR = function () {
     };
-    OpCodeFunctions.PRINT_ITEM = function () {
-        console.log('PRINT_ITEM');
+    CodeObject.prototype.PRINT_ITEM = function () {
+        // console.log('PRINT_ITEM');
         var TOS = Stack.pop();
-        console.log(TOS);
-        Stack.push(TOS);
+        console.log('LOGGED TO CONSOLE: --------------------- ' + TOS);
     };
-    OpCodeFunctions.PRINT_NEWLINE = function () {
-        console.log('PRINT_NEWLINE');
-        console.log('\n');
+    CodeObject.prototype.PRINT_NEWLINE = function () {
+        // console.log('PRINT_NEWLINE');
+        console.log('LOGGED TO CONSOLE: --------------------- '); // or process.stdout.write('\n');
     };
-    OpCodeFunctions.PRINT_ITEM_TO = function () {
+    CodeObject.prototype.PRINT_ITEM_TO = function () {
     };
-    OpCodeFunctions.PRINT_NEWLINE_TO = function () {
+    CodeObject.prototype.PRINT_NEWLINE_TO = function () {
     };
-    OpCodeFunctions.INPLACE_LSHIFT = function () {
+    CodeObject.prototype.INPLACE_LSHIFT = function () {
     };
-    OpCodeFunctions.INPLACE_RSHIFT = function () {
+    CodeObject.prototype.INPLACE_RSHIFT = function () {
     };
-    OpCodeFunctions.INPLACE_AND = function () {
+    CodeObject.prototype.INPLACE_AND = function () {
     };
-    OpCodeFunctions.INPLACE_XOR = function () {
+    CodeObject.prototype.INPLACE_XOR = function () {
     };
-    OpCodeFunctions.INPLACE_OR = function () {
+    CodeObject.prototype.INPLACE_OR = function () {
     };
-    OpCodeFunctions.BREAK_LOOP = function () {
+    CodeObject.prototype.BREAK_LOOP = function () {
     };
-    OpCodeFunctions.WITH_CLEANUP = function () {
+    CodeObject.prototype.WITH_CLEANUP = function () {
     };
-    OpCodeFunctions.LOAD_LOCALS = function () {
+    CodeObject.prototype.LOAD_LOCALS = function () {
     };
-    OpCodeFunctions.RETURN_VALUE = function () {
+    CodeObject.prototype.RETURN_VALUE = function () {
+        this.returnedValue = Stack.pop();
     };
-    OpCodeFunctions.IMPORT_STAR = function () {
+    CodeObject.prototype.IMPORT_STAR = function () {
     };
-    OpCodeFunctions.EXEC_STMT = function () {
+    CodeObject.prototype.EXEC_STMT = function () {
     };
-    OpCodeFunctions.YIELD_VALUE = function () {
+    CodeObject.prototype.YIELD_VALUE = function () {
     };
-    OpCodeFunctions.POP_BLOCK = function () {
+    CodeObject.prototype.POP_BLOCK = function () {
     };
-    OpCodeFunctions.END_FINALLY = function () {
+    CodeObject.prototype.END_FINALLY = function () {
     };
-    OpCodeFunctions.BUILD_CLASS = function () {
+    CodeObject.prototype.BUILD_CLASS = function () {
     };
 
     //Opcodes from here have an argument
-    OpCodeFunctions.STORE_NAME = function (index) {
-        console.log('STORE_NAME');
+    CodeObject.prototype.STORE_NAME = function (index) {
+        // console.log('STORE_NAME');
         var name = Stack.pop();
+
         /*** need access to this ***/
-        //obj.names[index] = name;
+        this.names[index] = name;
     };
-    OpCodeFunctions.DELETE_NAME = function (index) {
+    CodeObject.prototype.DELETE_NAME = function (index) {
     };
-    OpCodeFunctions.UNPACK_SEQUENCE = function (numItems) {
+    CodeObject.prototype.UNPACK_SEQUENCE = function (numItems) {
     };
-    OpCodeFunctions.FOR_ITER = function (incrCounter) {
+    CodeObject.prototype.FOR_ITER = function (incrCounter) {
     };
-    OpCodeFunctions.LIST_APPEND = function (value) {
+    CodeObject.prototype.LIST_APPEND = function (value) {
     };
-    OpCodeFunctions.STORE_ATTR = function (index) {
+    CodeObject.prototype.STORE_ATTR = function (index) {
     };
-    OpCodeFunctions.DELETE_ATTR = function (index) {
+    CodeObject.prototype.DELETE_ATTR = function (index) {
     };
-    OpCodeFunctions.STORE_GLOBAL = function (index) {
+    CodeObject.prototype.STORE_GLOBAL = function (index) {
     };
-    OpCodeFunctions.DELETE_GLOBAL = function (index) {
+    CodeObject.prototype.DELETE_GLOBAL = function (index) {
     };
-    OpCodeFunctions.DUP_TOPX = function (numItemsDup) {
+    CodeObject.prototype.DUP_TOPX = function (numItemsDup) {
     };
 
     //pushes co_consts onto the stack
-    OpCodeFunctions.LOAD_CONST = function (index) {
-        console.log("LOAD_CONST");
+    CodeObject.prototype.LOAD_CONST = function (index) {
+        // console.log("LOAD_CONST")
         //need to be able to access the consts list
-        //Stack.push(obj.consts[index]);
+        Stack.push(this.consts[index]);
     };
-    OpCodeFunctions.LOAD_NAME = function (index) {
-        console.log("LOAD_NAME");
+    CodeObject.prototype.LOAD_NAME = function (index) {
+        // console.log("LOAD_NAME")
         //need to be able to access the name list
-        //Stack.push(obj.names[index]);
+        Stack.push(this.names[index]);
     };
-    OpCodeFunctions.BUILD_TUPLE = function (numItems) {
+    CodeObject.prototype.BUILD_TUPLE = function (numItems) {
     };
-    OpCodeFunctions.BUILD_LIST = function (numItems) {
+    CodeObject.prototype.BUILD_LIST = function (numItems) {
     };
-    OpCodeFunctions.BUILD_SET = function (numItems) {
+    CodeObject.prototype.BUILD_SET = function (numItems) {
     };
-    OpCodeFunctions.BUILD_MAP = function (numEntries) {
+    CodeObject.prototype.BUILD_MAP = function (numEntries) {
     };
-    OpCodeFunctions.LOAD_ATTR = function (index) {
+    CodeObject.prototype.LOAD_ATTR = function (index) {
     };
-    OpCodeFunctions.COMPARE_OP = function (opname) {
+    CodeObject.prototype.COMPARE_OP = function (opname) {
     };
-    OpCodeFunctions.IMPORT_NAME = function (index) {
+    CodeObject.prototype.IMPORT_NAME = function (index) {
     };
-    OpCodeFunctions.IMPORT_FROM = function (index) {
+    CodeObject.prototype.IMPORT_FROM = function (index) {
     };
-    OpCodeFunctions.JUMP_FORWARD = function (numBytes) {
+    CodeObject.prototype.JUMP_FORWARD = function (numBytes) {
     };
-    OpCodeFunctions.JUMP_IF_FALSE_OR_POP = function (offest) {
+    CodeObject.prototype.JUMP_IF_FALSE_OR_POP = function (offest) {
     };
-    OpCodeFunctions.JUMP_IF_TRUE_OR_POP = function (offset) {
+    CodeObject.prototype.JUMP_IF_TRUE_OR_POP = function (offset) {
     };
-    OpCodeFunctions.JUMP_ABSOLUTE = function (offset) {
+    CodeObject.prototype.JUMP_ABSOLUTE = function (offset) {
     };
-    OpCodeFunctions.POP_JUMP_IF_FALSE = function (offset) {
+    CodeObject.prototype.POP_JUMP_IF_FALSE = function (offset) {
     };
-    OpCodeFunctions.POP_JUMP_IF_TRUE = function (offset) {
+    CodeObject.prototype.POP_JUMP_IF_TRUE = function (offset) {
     };
-    OpCodeFunctions.LOAD_GLOBAL = function (index) {
+    CodeObject.prototype.LOAD_GLOBAL = function (index) {
     };
-    OpCodeFunctions.CONTINUE_LOOP = function (start) {
+    CodeObject.prototype.CONTINUE_LOOP = function (start) {
     };
-    OpCodeFunctions.SETUP_LOOP = function (addr) {
+    CodeObject.prototype.SETUP_LOOP = function (addr) {
     };
-    OpCodeFunctions.SETUP_EXCEPT = function (addr) {
+    CodeObject.prototype.SETUP_EXCEPT = function (addr) {
     };
-    OpCodeFunctions.SETUP_FINALLY = function (addr) {
+    CodeObject.prototype.SETUP_FINALLY = function (addr) {
     };
-    OpCodeFunctions.LOAD_FAST = function (varNum) {
+    CodeObject.prototype.LOAD_FAST = function (varNum) {
+        Stack.push(this.varnames[varNum]);
     };
-    OpCodeFunctions.STORE_FAST = function (varNum) {
+    CodeObject.prototype.STORE_FAST = function (varNum) {
+        this.varnames[varNum] = Stack.pop();
     };
-    OpCodeFunctions.DELETE_FAST = function (varNum) {
+    CodeObject.prototype.DELETE_FAST = function (varNum) {
     };
-    OpCodeFunctions.RAISE_VARARGS = function (numArg) {
+    CodeObject.prototype.RAISE_VARARGS = function (numArg) {
     };
 
     /* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
-    OpCodeFunctions.CALL_FUNCTION = function (arg) {
+    CodeObject.prototype.CALL_FUNCTION = function (argc) {
+        var binStr = argc.toString(2);
+        var numArgs = parseInt(binStr.slice(0, 8), 2);
+        var numKwargs = parseInt(binStr.slice(8, 16), 2);
+        var args = [];
+        var kwargs = {};
+
+        for (var i = 0; i < numKwargs; i++) {
+            var val = Stack.pop();
+            kwargs[Stack.pop()] = val;
+        }
+        for (i = 0; i < numArgs; i++) {
+            args[numArgs - 1 - i] = Stack.pop();
+        }
+        var function_object = Stack.pop();
+
+        // how to defaults and args combine
+        function_object.func_code.varnames = args;
+        var argcount = function_object.func_code.argcount;
+        for (i = 0; i < argcount - argc; i++) {
+            function_object.func_code.varnames.push(function_object.func_defaults[i]);
+        }
+        function_object.func_code.cellvars = kwargs;
+
+        for (i = 0; i < function_object.func_code.code.length; i++) {
+            //op code
+            var opcode = function_object.func_code.code[i][0];
+
+            //arguments to op code function
+            var operand = function_object.func_code.code[i][1];
+
+            //debugg this...something 'undefined' after PRINT_LINEs...
+            console.log(OpCodeList[opcode]);
+            function_object.func_code[OpCodeList[opcode]](operand);
+            console.log(Stack);
+        }
+
+        // console.log(function_object.func_code.returnedValue);
+        Stack.push(function_object.func_code.returnedValue);
     };
-    OpCodeFunctions.MAKE_FUNCTION = function (numDefaults) {
+    CodeObject.prototype.MAKE_FUNCTION = function (argc) {
+        var code_object = Stack.pop();
+        var defaults = [];
+        for (var i = 0; i < argc; i++) {
+            defaults[i] = Stack.pop();
+        }
+        var newFunction = new FunctionObject(code_object, defaults);
+
+        // console.log('about to add function object to stack');
+        // console.log(Stack);
+        Stack.push(newFunction);
+        // console.log('did it work');
+        // console.log(Stack);
     };
-    OpCodeFunctions.BUILD_SLICE = function (numItems) {
+    CodeObject.prototype.BUILD_SLICE = function (numItems) {
     };
-    OpCodeFunctions.MAKE_CLOSURE = function (numFreeVars) {
+    CodeObject.prototype.MAKE_CLOSURE = function (numFreeVars) {
     };
-    OpCodeFunctions.LOAD_CLOSURE = function (index) {
+    CodeObject.prototype.LOAD_CLOSURE = function (index) {
     };
-    OpCodeFunctions.LOAD_DEREF = function (index) {
+    CodeObject.prototype.LOAD_DEREF = function (index) {
     };
-    OpCodeFunctions.STORE_DEREF = function (index) {
+    CodeObject.prototype.STORE_DEREF = function (index) {
     };
 
     /* The next 3 opcodes must be contiguous and satisfy
     (CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
-    OpCodeFunctions.CALL_FUNCTION_VAR = function (argc) {
+    CodeObject.prototype.CALL_FUNCTION_VAR = function (argc) {
     };
-    OpCodeFunctions.CALL_FUNCTION_KW = function (argc) {
+    CodeObject.prototype.CALL_FUNCTION_KW = function (argc) {
     };
-    OpCodeFunctions.CALL_FUNCTION_VAR_KW = function (argc) {
+    CodeObject.prototype.CALL_FUNCTION_VAR_KW = function (argc) {
     };
-    OpCodeFunctions.SETUP_WITH = function (delta) {
+    CodeObject.prototype.SETUP_WITH = function (delta) {
     };
 
     /* Support for opargs more than 16 bits long */
-    OpCodeFunctions.EXTENDED_ARG = function (ext) {
+    CodeObject.prototype.EXTENDED_ARG = function (ext) {
     };
 
     /***** have to determine what type of arguments these take *****/
-    OpCodeFunctions.SET_ADD = function () {
+    CodeObject.prototype.SET_ADD = function () {
     };
-    OpCodeFunctions.MAP_ADD = function () {
+    CodeObject.prototype.MAP_ADD = function () {
     };
-    return OpCodeFunctions;
+    return CodeObject;
 })();
+
+var FunctionObject = (function () {
+    function FunctionObject(code_object, defaults) {
+        this.func_code = code_object;
+        this.func_defaults = defaults;
+    }
+    return FunctionObject;
+})();
+
 function parseBytecode(bytecode) {
     var len = bytecode.length;
 
@@ -705,6 +782,8 @@ var Stack = [];
 
 //function to execute the op code commands in code object
 function execBytecode() {
+    var obj = byteObject;
+
     for (var i = 0; i < byteObject.code_object.code.length; i++) {
         //op code
         var opcode = byteObject.code_object.code[i][0];
@@ -714,7 +793,8 @@ function execBytecode() {
 
         //debugg this...something 'undefined' after PRINT_LINEs...
         console.log(OpCodeList[opcode]);
-        OpCodeFunctions[OpCodeList[opcode]](operand);
+        byteObject.code_object[OpCodeList[opcode]](operand);
+        console.log(Stack);
     }
 
     return Stack.pop();

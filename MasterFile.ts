@@ -141,9 +141,10 @@ function readTuple(bytecode:NodeBuffer, ptr:number, level:number) {
     return [ptr, obj];
 }
 
+// Returns a CodeObject
 function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     console.log(Array(level).join('\t') + 'code object:');
-    var obj:any = {};
+    var obj = new CodeObject();
     var out = [];
 
     level = level + 1;
@@ -269,25 +270,59 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     return [ptr, obj];
 }
 //Implemented bytecode functions in a OpCode class
-class OpCodeFunctions {
+class CodeObject {
 
-    public static STOP_CODE(){
-        //do nothing
-        console.log('STOP_CODE');
+    argcount: number;
+    nlocals: number;
+    stacksize: number;
+    flags: number;
+    code: any;
+    consts: any;
+    names: any;
+    varnames: any;
+    freevars: any;
+    cellvars: any;
+    filename: string;
+    name: string;
+    firstlineno: number;
+    lnotab: any;
+    returnedValue: any;
+
+    constructor() {
+        this.argcount = undefined;
+        this.nlocals = undefined;
+        this.stacksize = undefined;
+        this.flags = undefined;
+        this.code = undefined;
+        this.consts = undefined;
+        this.names = undefined;
+        this.varnames = undefined;
+        this.freevars = undefined;
+        this.cellvars = undefined;
+        this.filename = undefined;
+        this.name = undefined;
+        this.firstlineno = undefined;
+        this.lnotab = undefined;
+        this.returnedValue = undefined;
     }
-    public static POP_TOP(){
-        console.log('POP_TOP');
+
+    public STOP_CODE(){
+        //do nothing
+        // console.log('STOP_CODE');
+    }
+    public POP_TOP(){
+        // console.log('POP_TOP');
         return Stack.pop();
     }
-    public static ROT_TWO(){
-        console.log('ROT_TWO');
+    public ROT_TWO(){
+        // console.log('ROT_TWO');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS);
         Stack.push(TOS1);
     }
-    public static ROT_THREE(){
-        console.log('ROT_THREE');
+    public ROT_THREE(){
+        // console.log('ROT_THREE');
         var TOS = Stack.pop();
         var TOS2 = Stack.pop();
         var TOS3 = Stack.pop();
@@ -295,15 +330,14 @@ class OpCodeFunctions {
         Stack.push(TOS3);
         Stack.push(TOS2);
     }
-    public static DUP_TOP(){
-        console.log('DUP_TOP');
+    public DUP_TOP(){
+        // console.log('DUP_TOP');
         var TOS = Stack.pop();
         Stack.push(TOS);
         Stack.push(TOS);
     }
-    public static ROT_FOUR(){
-        console.log('ROT_FOUR');
-        console.log('ROT_THREE');
+    public ROT_FOUR(){
+        // console.log('ROT_FOUR');
         var TOS = Stack.pop();
         var TOS2 = Stack.pop();
         var TOS3 = Stack.pop();
@@ -313,56 +347,56 @@ class OpCodeFunctions {
         Stack.push(TOS3);
         Stack.push(TOS2);
     }
-    public static NOP(){
-        console.log('NOP');
+    public NOP(){
+        // console.log('NOP');
     }
-    public static UNARY_POSITIVE(){
-        console.log('UNARY_POSITIVE');
+    public UNARY_POSITIVE(){
+        // console.log('UNARY_POSITIVE');
         var TOS = Stack.pop();
         TOS = +TOS;
         Stack.push(TOS);
     }
-    public static UNARY_NEGATIVE(){
-        console.log('UNARY_NEGATIVE');
+    public UNARY_NEGATIVE(){
+        // console.log('UNARY_NEGATIVE');
         var TOS = Stack.pop();
         TOS = -TOS;
         Stack.push(TOS);
     }
-    public static UNARY_NOT(){
-        console.log('UNARY_NOT');
+    public UNARY_NOT(){
+        // console.log('UNARY_NOT');
         var TOS = Stack.pop();
         TOS = !TOS;
         Stack.push(TOS);
     }
-    public static UNARY_CONVERT(){
-        console.log('UNARY_CONVERT');
+    public UNARY_CONVERT(){
+        // console.log('UNARY_CONVERT');
         var TOS = Stack.pop();
         TOS = String(TOS); // Not completely accurate
         Stack.push(TOS);
     }
-    public static UNARY_INVERT(){
-        console.log('UNARY_INVERT');
+    public UNARY_INVERT(){
+        // console.log('UNARY_INVERT');
         var TOS = Stack.pop();
         TOS = ~TOS;
         Stack.push(TOS);
     }
-    public static BINARY_POWER(){
-        console.log('BINARY_POWER');
+    public BINARY_POWER(){
+        // console.log('BINARY_POWER');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         TOS = Math.pow(TOS1,TOS);
         Stack.push(TOS);
     }
     //implements TOS = TOS1 * TOS
-    public static BINARY_MULTIPLY(){
-        console.log('BINARY_MULTIPY');
+    public BINARY_MULTIPLY(){
+        // console.log('BINARY_MULTIPY');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 * TOS);
     }
     //implements TOS = TOS1/TOS (without from_future_import division)
-    public static BINARY_DIVIDE(){
-        console.log('BINARY_DIVIDE');
+    public BINARY_DIVIDE(){
+        // console.log('BINARY_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         //*** need to make this so floors ints & longs but gives approx with floats or complex ***/
@@ -370,185 +404,239 @@ class OpCodeFunctions {
 
     }
     //implements TOS = TOS1 % TOS
-    public static BINARY_MODULO(){
-        console.log('BINARY_MODULO');
+    public BINARY_MODULO(){
+        // console.log('BINARY_MODULO');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 % TOS);
 
     }
     //implemsnts TOS = TOS1 + TOS
-    public static BINARY_ADD(){
-        console.log('BINARY_ADD');
+    public BINARY_ADD(){
+        // console.log('BINARY_ADD');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 + TOS);
 
     }
     //implements TOS = TOS1 - TOS
-    public static BINARY_SUBTRACT(){
-        console.log('BINARY_SUBTRACT');
+    public BINARY_SUBTRACT(){
+        // console.log('BINARY_SUBTRACT');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 - TOS);
 
     }
     //implements TOS = TOS1[TOS]
-    public static BINARY_SUBSCR(){
-        console.log('BINARY_SUBSCR');
+    public BINARY_SUBSCR(){
+        // console.log('BINARY_SUBSCR');
 
     }
     //implements TOS = TOS1 // TOS
-    public static BINARY_FLOOR_DIVIDE(){
-        console.log('BINARY_FLOOR_DIVIDE');
+    public BINARY_FLOOR_DIVIDE(){
+        // console.log('BINARY_FLOOR_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(Math.floor(TOS1/TOS));
 
     }
     //implements TOS = TOS1/TOS (with from_future_import division)
-    public static BINARY_TRUE_DIVIDE(){
-        console.log('BINARY_TRUE_DIVIDE');
+    public BINARY_TRUE_DIVIDE(){
+        // console.log('BINARY_TRUE_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1/TOS);
     }
     //DIFFERENCE OF THESE FROM BINARY?
-    public static INPLACE_FLOOR_DIVIDE(){
-        console.log('INPLACE_FLOOR_DIVIDE');
+    public INPLACE_FLOOR_DIVIDE(){
+        // console.log('INPLACE_FLOOR_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(Math.floor(TOS1/TOS));
     }
     //with from_future_import division
-    public static INPLACE_TRUE_DIVIDE(){
-        console.log('INPLACE_TRUE_DIVIDE');
+    public INPLACE_TRUE_DIVIDE(){
+        // console.log('INPLACE_TRUE_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1/TOS);
     }
-    public static SLICE(){}
-    public static STORE_SLICE(){}
-    public static DELETE_SLICE(){}
-    public static STORE_MAP(){}
-    public static INPLACE_ADD(){}
-    public static INPLACE_SUBTRACT(){}
-    public static INPLACE_MULTIPY(){}
-    public static INPLACE_DIVIDE(){}
-    public static INPLACE_MODULO(){}
-    public static STORE_SUBSCR(){}
-    public static DELETE_SUBSCR(){}
-    public static BINARY_LSHIFT(){}
-    public static BINARY_RSHIFT(){}
-    public static BINARY_AND(){}
-    public static BINARY_XOR(){}
-    public static BINARY_OR(){}
-    public static INPLACE_POWER(){}
-    public static GET_ITER(){
-        console.log('GET_ITER'); // Objects already iterable?
+    public SLICE(){}
+    public STORE_SLICE(){}
+    public DELETE_SLICE(){}
+    public STORE_MAP(){}
+    public INPLACE_ADD(){}
+    public INPLACE_SUBTRACT(){}
+    public INPLACE_MULTIPY(){}
+    public INPLACE_DIVIDE(){}
+    public INPLACE_MODULO(){}
+    public STORE_SUBSCR(){}
+    public DELETE_SUBSCR(){}
+    public BINARY_LSHIFT(){}
+    public BINARY_RSHIFT(){}
+    public BINARY_AND(){}
+    public BINARY_XOR(){}
+    public BINARY_OR(){}
+    public INPLACE_POWER(){}
+    public GET_ITER(){
+        // console.log('GET_ITER'); // Objects already iterable?
     }
-    public static PRINT_EXPR(){}
-    public static PRINT_ITEM(){
-        console.log('PRINT_ITEM');
+    public PRINT_EXPR(){}
+    public PRINT_ITEM(){
+        // console.log('PRINT_ITEM');
         var TOS = Stack.pop();
-        console.log(TOS);
-        Stack.push(TOS);
+        console.log('LOGGED TO CONSOLE: --------------------- '+TOS);
     }
-    public static PRINT_NEWLINE(){
-        console.log('PRINT_NEWLINE');
-        console.log('\n');
+    public PRINT_NEWLINE(){
+        // console.log('PRINT_NEWLINE');
+        console.log('LOGGED TO CONSOLE: --------------------- '); // or process.stdout.write('\n');
     }
-    public static PRINT_ITEM_TO(){}
-    public static PRINT_NEWLINE_TO(){}
-    public static INPLACE_LSHIFT(){}
-    public static INPLACE_RSHIFT(){}
-    public static INPLACE_AND(){}
-    public static INPLACE_XOR(){}
-    public static INPLACE_OR(){}
-    public static BREAK_LOOP(){}
-    public static WITH_CLEANUP(){}
-    public static LOAD_LOCALS(){}
-    public static RETURN_VALUE(){}
-    public static IMPORT_STAR(){}
-    public static EXEC_STMT(){}
-    public static YIELD_VALUE(){}
-    public static POP_BLOCK(){}
-    public static END_FINALLY(){}
-    public static BUILD_CLASS(){}
+    public PRINT_ITEM_TO(){}
+    public PRINT_NEWLINE_TO(){}
+    public INPLACE_LSHIFT(){}
+    public INPLACE_RSHIFT(){}
+    public INPLACE_AND(){}
+    public INPLACE_XOR(){}
+    public INPLACE_OR(){}
+    public BREAK_LOOP(){}
+    public WITH_CLEANUP(){}
+    public LOAD_LOCALS(){}
+    public RETURN_VALUE(){
+        this.returnedValue = Stack.pop();
+    }
+    public IMPORT_STAR(){}
+    public EXEC_STMT(){}
+    public YIELD_VALUE(){}
+    public POP_BLOCK(){}
+    public END_FINALLY(){}
+    public BUILD_CLASS(){}
     //Opcodes from here have an argument 
-    public static STORE_NAME(index:number){
-        console.log('STORE_NAME');
+    public STORE_NAME(index:number){
+        // console.log('STORE_NAME');
         var name = Stack.pop();
         /*** need access to this ***/
-        //obj.names[index] = name;
+        this.names[index] = name;
     }
-    public static DELETE_NAME(index:number){} 
-    public static UNPACK_SEQUENCE(numItems:number){} 
-    public static FOR_ITER(incrCounter:number){}
-    public static LIST_APPEND(value:number){}
-    public static STORE_ATTR(index:number){} 
-    public static DELETE_ATTR(index:number){} 
-    public static STORE_GLOBAL(index:number){} 
-    public static DELETE_GLOBAL(index:number){}
-    public static DUP_TOPX(numItemsDup:number){} 
+    public DELETE_NAME(index:number){} 
+    public UNPACK_SEQUENCE(numItems:number){} 
+    public FOR_ITER(incrCounter:number){}
+    public LIST_APPEND(value:number){}
+    public STORE_ATTR(index:number){} 
+    public DELETE_ATTR(index:number){} 
+    public STORE_GLOBAL(index:number){} 
+    public DELETE_GLOBAL(index:number){}
+    public DUP_TOPX(numItemsDup:number){} 
      //pushes co_consts onto the stack
-    public static LOAD_CONST(index:number){
-        console.log("LOAD_CONST")
+    public LOAD_CONST(index:number){
+        // console.log("LOAD_CONST")
         //need to be able to access the consts list
-        //Stack.push(obj.consts[index]);
+        Stack.push(this.consts[index]);
     }
-    public static LOAD_NAME(index:number){
-         console.log("LOAD_NAME")
+    public LOAD_NAME(index:number){
+        // console.log("LOAD_NAME")
         //need to be able to access the name list
-        //Stack.push(obj.names[index]);
+        Stack.push(this.names[index]);
     }
-    public static BUILD_TUPLE(numItems:number){} 
-    public static BUILD_LIST(numItems:number){} 
-    public static BUILD_SET(numItems:number){}
-    public static BUILD_MAP(numEntries:number){} 
-    public static LOAD_ATTR(index:number){}
-    public static COMPARE_OP (opname){} //comparison operator
-    public static IMPORT_NAME (index:number){}
-    public static IMPORT_FROM(index:number){} 
-    public static JUMP_FORWARD(numBytes:number){}
-    public static JUMP_IF_FALSE_OR_POP(offest:number){} 
-    public static JUMP_IF_TRUE_OR_POP(offset:number){} 
-    public static JUMP_ABSOLUTE(offset:number){}
-    public static POP_JUMP_IF_FALSE(offset:number){} 
-    public static POP_JUMP_IF_TRUE(offset:number){} 
-    public static LOAD_GLOBAL(index:number){} 
-    public static CONTINUE_LOOP(start:number){}//start of loop(absolute)
-    public static SETUP_LOOP(addr:number){}//target address(relative)
-    public static SETUP_EXCEPT(addr:number){}//target address(relative)
-    public static SETUP_FINALLY(addr:number){}//target address(relative)
-    public static LOAD_FAST(varNum:number){} //local variable number
-    public static STORE_FAST(varNum:number){} 
-    public static DELETE_FAST(varNum:number){} 
-    public static RAISE_VARARGS(numArg:number){} //number of raise arguments(1,2 or 3)
+    public BUILD_TUPLE(numItems:number){} 
+    public BUILD_LIST(numItems:number){} 
+    public BUILD_SET(numItems:number){}
+    public BUILD_MAP(numEntries:number){} 
+    public LOAD_ATTR(index:number){}
+    public COMPARE_OP (opname){} //comparison operator
+    public IMPORT_NAME (index:number){}
+    public IMPORT_FROM(index:number){} 
+    public JUMP_FORWARD(numBytes:number){}
+    public JUMP_IF_FALSE_OR_POP(offest:number){} 
+    public JUMP_IF_TRUE_OR_POP(offset:number){} 
+    public JUMP_ABSOLUTE(offset:number){}
+    public POP_JUMP_IF_FALSE(offset:number){} 
+    public POP_JUMP_IF_TRUE(offset:number){} 
+    public LOAD_GLOBAL(index:number){} 
+    public CONTINUE_LOOP(start:number){}//start of loop(absolute)
+    public SETUP_LOOP(addr:number){}//target address(relative)
+    public SETUP_EXCEPT(addr:number){}//target address(relative)
+    public SETUP_FINALLY(addr:number){}//target address(relative)
+    public LOAD_FAST(varNum:number){
+        Stack.push(this.varnames[varNum]);
+    } //local variable number
+    public STORE_FAST(varNum:number){
+        this.varnames[varNum] = Stack.pop();
+    } 
+    public DELETE_FAST(varNum:number){} 
+    public RAISE_VARARGS(numArg:number){} //number of raise arguments(1,2 or 3)
     /* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
-    public static CALL_FUNCTION(arg:number){
-
+    public CALL_FUNCTION(argc:number){
+        var binStr = argc.toString(2);
+        var numArgs = parseInt(binStr.slice(0,8),2);
+        var numKwargs = parseInt(binStr.slice(8,16),2);
+        var args = [];
+        var kwargs = {};
+        // console.log('printing stack');
+        // console.log(Stack);
+        // console.log('thats everything');
+        for (var i=0; i< numKwargs; i++) { var val = Stack.pop(); kwargs[Stack.pop()] = val; }
+        for (i=0; i< numArgs; i++) { args[numArgs-1-i] = Stack.pop(); } // args[0] = leftmost argument
+        var function_object = Stack.pop();
+        // how to defaults and args combine
+        function_object.func_code.varnames = args;
+        var argcount = function_object.func_code.argcount;
+        for (i=0; i< argcount - argc; i++) { function_object.func_code.varnames.push(function_object.func_defaults[i]); }
+        function_object.func_code.cellvars = kwargs;
+        // console.log(function_object.func_code);
+        for(i=0; i < function_object.func_code.code.length; i++){
+            //op code
+            var opcode = function_object.func_code.code[i][0];
+            //arguments to op code function
+            var operand = function_object.func_code.code[i][1];
+            //debugg this...something 'undefined' after PRINT_LINEs...
+            console.log(OpCodeList[opcode]);
+            function_object.func_code[OpCodeList[opcode]](operand);
+            console.log(Stack);
+        }
+        // console.log(function_object.func_code.returnedValue);
+        Stack.push(function_object.func_code.returnedValue);
     }//number of args + (number kwargs<<8)
-    public static MAKE_FUNCTION(numDefaults:number){
-
+    public MAKE_FUNCTION(argc:number){
+        var code_object = Stack.pop();
+        var defaults = [];
+        for (var i=0; i<argc; i++) { defaults[i] = Stack.pop(); }
+        var newFunction = new FunctionObject(code_object,defaults);
+        // console.log('about to add function object to stack');
+        // console.log(Stack);
+        Stack.push(newFunction);
+        // console.log('did it work');
+        // console.log(Stack);
     }
-    public static BUILD_SLICE(numItems:number){} 
-    public static MAKE_CLOSURE(numFreeVars:number){} 
-    public static LOAD_CLOSURE(index:number){}//load free variable from closure
-    public static LOAD_DEREF(index:number){}//load and deference from closure cell
-    public static STORE_DEREF(index:number){} //store into cell
+    public BUILD_SLICE(numItems:number){} 
+    public MAKE_CLOSURE(numFreeVars:number){} 
+    public LOAD_CLOSURE(index:number){}//load free variable from closure
+    public LOAD_DEREF(index:number){}//load and deference from closure cell
+    public STORE_DEREF(index:number){} //store into cell
     /* The next 3 opcodes must be contiguous and satisfy
        (CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
-    public static CALL_FUNCTION_VAR(argc){} //number args + (number kwargs<<8)
-    public static CALL_FUNCTION_KW(argc){} //number args + (number kwargs<<8)
-    public static CALL_FUNCTION_VAR_KW(argc){} //number args + (number kwargs<<8)
-    public static SETUP_WITH(delta){}
+    public CALL_FUNCTION_VAR(argc){} //number args + (number kwargs<<8)
+    public CALL_FUNCTION_KW(argc){} //number args + (number kwargs<<8)
+    public CALL_FUNCTION_VAR_KW(argc){} //number args + (number kwargs<<8)
+    public SETUP_WITH(delta){}
     /* Support for opargs more than 16 bits long */
-    public static EXTENDED_ARG(ext){}
+    public EXTENDED_ARG(ext){}
     /***** have to determine what type of arguments these take *****/
-    public static SET_ADD(){}
-    public static MAP_ADD(){}
+    public SET_ADD(){}
+    public MAP_ADD(){}
 }
+
+class FunctionObject {
+    func_closure: number;
+    func_code: CodeObject;
+    func_defaults: any;
+    func_dict: any;
+    func_doc: string;
+    func_globals: any;
+    func_name: string;
+
+    constructor(code_object: CodeObject, defaults: any) { this.func_code = code_object; this.func_defaults = defaults; }
+}
+
 function parseBytecode(bytecode) {
     var len = bytecode.length;
 
@@ -608,7 +696,8 @@ var Stack = [];
 
 //function to execute the op code commands in code object
 function execBytecode(){
-  // Execute Op Codes
+    var obj = byteObject;
+    // Execute Op Codes
     for(var i=0; i < byteObject.code_object.code.length; i++){
         //op code
         var opcode = byteObject.code_object.code[i][0];
@@ -616,7 +705,8 @@ function execBytecode(){
         var operand = byteObject.code_object.code[i][1];
         //debugg this...something 'undefined' after PRINT_LINEs...
         console.log(OpCodeList[opcode]);
-        OpCodeFunctions[OpCodeList[opcode]](operand);
+        byteObject.code_object[OpCodeList[opcode]](operand);
+        console.log(Stack);
     }
 
     return Stack.pop();
