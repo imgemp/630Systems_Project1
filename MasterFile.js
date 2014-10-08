@@ -526,6 +526,10 @@ var OpCodeFunctions = (function () {
 
     //Opcodes from here have an argument
     OpCodeFunctions.STORE_NAME = function (index) {
+        console.log('STORE_NAME');
+        var name = Stack.pop();
+        /*** need access to this ***/
+        //obj.names[index] = name;
     };
     OpCodeFunctions.DELETE_NAME = function (index) {
     };
@@ -545,9 +549,17 @@ var OpCodeFunctions = (function () {
     };
     OpCodeFunctions.DUP_TOPX = function (numItemsDup) {
     };
+
+    //pushes co_consts onto the stack
     OpCodeFunctions.LOAD_CONST = function (index) {
+        console.log("LOAD_CONST");
+        //need to be able to access the consts list
+        //Stack.push(obj.consts[index]);
     };
     OpCodeFunctions.LOAD_NAME = function (index) {
+        console.log("LOAD_NAME");
+        //need to be able to access the name list
+        //Stack.push(obj.names[index]);
     };
     OpCodeFunctions.BUILD_TUPLE = function (numItems) {
     };
@@ -690,11 +702,19 @@ function interpretBytecode(bytecode) {
 
 //initalize the stack object
 var Stack = [];
+
+//function to execute the op code commands in code object
 function execBytecode() {
     for (var i = 0; i < byteObject.code_object.code.length; i++) {
+        //op code
         var opcode = byteObject.code_object.code[i][0];
+
+        //arguments to op code function
         var operand = byteObject.code_object.code[i][1];
-        OpCodeFunctions[enums.OpCodeList[opcode](operand)];
+
+        //debugg this...something 'undefined' after PRINT_LINEs...
+        console.log(OpCodeList[opcode]);
+        OpCodeFunctions[OpCodeList[opcode]](operand);
     }
 
     return Stack.pop();

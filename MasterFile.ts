@@ -476,7 +476,12 @@ class OpCodeFunctions {
     public static END_FINALLY(){}
     public static BUILD_CLASS(){}
     //Opcodes from here have an argument 
-    public static STORE_NAME(index:number){}
+    public static STORE_NAME(index:number){
+        console.log('STORE_NAME');
+        var name = Stack.pop();
+        /*** need access to this ***/
+        //obj.names[index] = name;
+    }
     public static DELETE_NAME(index:number){} 
     public static UNPACK_SEQUENCE(numItems:number){} 
     public static FOR_ITER(incrCounter:number){}
@@ -486,10 +491,17 @@ class OpCodeFunctions {
     public static STORE_GLOBAL(index:number){} 
     public static DELETE_GLOBAL(index:number){}
     public static DUP_TOPX(numItemsDup:number){} 
+     //pushes co_consts onto the stack
     public static LOAD_CONST(index:number){
-
+        console.log("LOAD_CONST")
+        //need to be able to access the consts list
+        //Stack.push(obj.consts[index]);
     }
-    public static LOAD_NAME(index:number){}
+    public static LOAD_NAME(index:number){
+         console.log("LOAD_NAME")
+        //need to be able to access the name list
+        //Stack.push(obj.names[index]);
+    }
     public static BUILD_TUPLE(numItems:number){} 
     public static BUILD_LIST(numItems:number){} 
     public static BUILD_SET(numItems:number){}
@@ -514,8 +526,12 @@ class OpCodeFunctions {
     public static DELETE_FAST(varNum:number){} 
     public static RAISE_VARARGS(numArg:number){} //number of raise arguments(1,2 or 3)
     /* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
-    public static CALL_FUNCTION(arg:number){}//number of args + (number kwargs<<8)
-    public static MAKE_FUNCTION(numDefaults:number){}
+    public static CALL_FUNCTION(arg:number){
+
+    }//number of args + (number kwargs<<8)
+    public static MAKE_FUNCTION(numDefaults:number){
+
+    }
     public static BUILD_SLICE(numItems:number){} 
     public static MAKE_CLOSURE(numFreeVars:number){} 
     public static LOAD_CLOSURE(index:number){}//load free variable from closure
@@ -589,12 +605,18 @@ function interpretBytecode(bytecode) {
 }
 //initalize the stack object
 var Stack = [];
+
+//function to execute the op code commands in code object
 function execBytecode(){
   // Execute Op Codes
     for(var i=0; i < byteObject.code_object.code.length; i++){
+        //op code
         var opcode = byteObject.code_object.code[i][0];
+        //arguments to op code function
         var operand = byteObject.code_object.code[i][1];
-        OpCodeFunctions[enums.OpCodeList[opcode](operand)];
+        //debugg this...something 'undefined' after PRINT_LINEs...
+        console.log(OpCodeList[opcode]);
+        OpCodeFunctions[OpCodeList[opcode]](operand);
     }
 
     return Stack.pop();
