@@ -628,24 +628,45 @@ class CodeObject {
     public RAISE_VARARGS(){ var numArg = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } //number of raise arguments(1,2 or 3)
     /* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
     public CALL_FUNCTION(){
-        var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
-        var binStr = argc.toString(2);
-        var numArgs = parseInt(binStr.slice(0,8),2);
-        var numKwargs = parseInt(binStr.slice(8,16),2);
+        // Parse Operand Bytecode
+        // argc is the operand from the bytecode (low bit = number of positional args, high bit = number of keyword args)
+        var numArgs = this.code[this.pc+1]; // # of positional args
+        var numKwargs = this.code[this.pc+2]; // # of keyword args
+        // Retrieve arguments from Stack and add to varnames
         var args = [];
-        var kwargs = {};
-        // console.log('printing stack');
-        // console.log(Stack);
-        // console.log('thats everything');
-        for (var i=0; i< numKwargs; i++) { var val = Stack.pop(); kwargs[Stack.pop()] = val; }
-        for (i=0; i< numArgs; i++) { args[numArgs-1-i] = Stack.pop(); } // args[0] = leftmost argument
-        var function_object = Stack.pop();
-        // how to defaults and args combine
-        function_object.func_code.varnames = args;
+        var kwargs = [];
+        for (var i=0; i< numKwargs; i++){ var val = Stack.pop(); kwargs[i] = [Stack.pop(),val]; } // grab keyword args off stack first
+        for (i=0; i< numArgs; i++) { args[numArgs-1-i] = Stack.pop(); } // next grab positional args, args[0] = leftmost argument
+        var function_object = Stack.pop(); // last grab function object
+        // Replace function object's variable names with arguments from Stack & default arguments
+        var varnamesOriginal = function_object.func_code.varnames.slice(0); // record varnames for later use and set to empty list
+        function_object.func_code.varnames = [];
         var argcount = function_object.func_code.argcount;
-        for (i=0; i< argcount - argc; i++) { function_object.func_code.varnames.push(function_object.func_defaults[i]); }
-        function_object.func_code.cellvars = kwargs;
-        // console.log(function_object.func_code);
+        for (var i=0; i< numKwargs; i++) {
+            function_object.func_code.varnames[kwargs[i][0]] = kwargs[i][1];
+        }
+        var counter = 0;
+        for (i=0; i< argcount; i++) {
+            if ((function_object.func_code.varnames[i] == undefined) && (counter < args.length)) {
+                function_object.func_code.varnames[i] = args[counter];
+                counter += 1;
+            }
+        }
+        counter = function_object.func_defaults.length;
+        for (i=argcount; i>=0; i--) {
+            if (function_object.func_code.varnames[i-1] == undefined) {
+                function_object.func_code.varnames[i-1] = function_object.func_defaults[counter-1];
+                counter -= 1;
+            }
+        }
+
+
+
+        // for (i=0; i<numArgs; i++) { function_object.func_code.varnames[i] = args; } // replace with positional args
+        // var argcount = function_object.func_code.argcount;
+        // for (i=numArgs; i< argcount; i++) { function_object.func_code.varnames[i] = function_object.func_defaults[i]; } // replace with default args
+        // function_object.func_code.cellvars = kwargs; // replace with kwargs
+        // Execute the function's bytecode
         while (function_object.func_code.pc < function_object.func_code.code.length){
             //op code
             var opcode = function_object.func_code.code[function_object.func_code.pc];
@@ -654,8 +675,13 @@ class CodeObject {
             function_object.func_code[OpCodeList[opcode]]();
             console.log(Stack);
         }
-        // console.log(function_object.func_code.returnedValue);
+        // Reset varnames
+        function_object.func_code.varnames = varnamesOriginal.slice(0);
+        // Push the return value onto the stack (could be a None? value)
         Stack.push(function_object.func_code.returnedValue);
+        // Reset function object's counter
+        function_object.func_code.pc = 0;
+        // Increment parent's program counter
         this.pc += 3;
     }//number of args + (number kwargs<<8)
     public MAKE_FUNCTION(){
@@ -664,11 +690,7 @@ class CodeObject {
         var defaults = [];
         for (var i=0; i<argc; i++) { defaults[i] = Stack.pop(); }
         var newFunction = new FunctionObject(code_object,defaults);
-        // console.log('about to add function object to stack');
-        // console.log(Stack);
         Stack.push(newFunction);
-        // console.log('did it work');
-        // console.log(Stack);
         this.pc += 3;
     }
     public BUILD_SLICE(){ var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } 
