@@ -782,29 +782,54 @@ var CodeObject = (function () {
 
     /* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
     CodeObject.prototype.CALL_FUNCTION = function () {
-        var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
-        var binStr = argc.toString(2);
-        var numArgs = parseInt(binStr.slice(0, 8), 2);
-        var numKwargs = parseInt(binStr.slice(8, 16), 2);
-        var args = [];
-        var kwargs = {};
+        // Parse Operand Bytecode
+        // argc is the operand from the bytecode (low bit = number of positional args, high bit = number of keyword args)
+        // var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        // var binStr = argc.toString(2);
+        // Record original varnames
+        var numArgs = this.code[this.pc + 1];
+        var numKwargs = this.code[this.pc + 2];
+        console.log('numArgs = ' + numArgs);
+        console.log('numKwargs = ' + numKwargs);
 
+        // Retrieve arguments from Stack and add to varnames
+        var args = [];
+        var kwargs = [];
         for (var i = 0; i < numKwargs; i++) {
             var val = Stack.pop();
-            kwargs[Stack.pop()] = val;
+            kwargs[i] = [Stack.pop(), val];
         }
         for (i = 0; i < numArgs; i++) {
             args[numArgs - 1 - i] = Stack.pop();
         }
         var function_object = Stack.pop();
 
-        // how to defaults and args combine
-        function_object.func_code.varnames = args;
+        // Replace function object's variable names with arguments from Stack & default arguments
+        var varnamesOriginal = function_object.func_code.varnames.slice(0);
+        function_object.func_code.varnames = [];
         var argcount = function_object.func_code.argcount;
-        for (i = 0; i < argcount - argc; i++) {
-            function_object.func_code.varnames.push(function_object.func_defaults[i]);
+        for (var i = 0; i < numKwargs; i++) {
+            function_object.func_code.varnames[kwargs[i][0]] = kwargs[i][1];
         }
-        function_object.func_code.cellvars = kwargs;
+        var counter = 0;
+        for (i = 0; i < argcount; i++) {
+            if ((function_object.func_code.varnames[i] == undefined) && (counter < args.length)) {
+                function_object.func_code.varnames[i] = args[counter];
+                counter += 1;
+            }
+        }
+        counter = function_object.func_defaults.length;
+        console.log('counter = ' + counter);
+        console.log('argcount = ' + argcount);
+        for (i = argcount; i >= 0; i--) {
+            console.log('got here');
+            if (function_object.func_code.varnames[i - 1] == undefined) {
+                console.log('got her 2');
+                function_object.func_code.varnames[i - 1] = function_object.func_defaults[counter - 1];
+                counter -= 1;
+            }
+        }
+        console.log('varnames = ' + function_object.func_code.varnames);
 
         while (function_object.func_code.pc < function_object.func_code.code.length) {
             //op code
@@ -816,8 +841,16 @@ var CodeObject = (function () {
             console.log(Stack);
         }
 
-        // console.log(function_object.func_code.returnedValue);
+        // Reset varnames
+        function_object.func_code.varnames = varnamesOriginal.slice(0);
+
+        // Push the return value onto the stack (could be a None? value)
         Stack.push(function_object.func_code.returnedValue);
+
+        // Reset function object's counter
+        function_object.func_code.pc = 0;
+
+        // Increment parent's program counter
         this.pc += 3;
     };
     CodeObject.prototype.MAKE_FUNCTION = function () {
@@ -828,13 +861,7 @@ var CodeObject = (function () {
             defaults[i] = Stack.pop();
         }
         var newFunction = new FunctionObject(code_object, defaults);
-
-        // console.log('about to add function object to stack');
-        // console.log(Stack);
         Stack.push(newFunction);
-
-        // console.log('did it work');
-        // console.log(Stack);
         this.pc += 3;
     };
     CodeObject.prototype.BUILD_SLICE = function () {
