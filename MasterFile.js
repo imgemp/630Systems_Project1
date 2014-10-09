@@ -784,13 +784,8 @@ var CodeObject = (function () {
     CodeObject.prototype.CALL_FUNCTION = function () {
         // Parse Operand Bytecode
         // argc is the operand from the bytecode (low bit = number of positional args, high bit = number of keyword args)
-        // var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
-        // var binStr = argc.toString(2);
-        // Record original varnames
         var numArgs = this.code[this.pc + 1];
         var numKwargs = this.code[this.pc + 2];
-        console.log('numArgs = ' + numArgs);
-        console.log('numKwargs = ' + numKwargs);
 
         // Retrieve arguments from Stack and add to varnames
         var args = [];
@@ -819,17 +814,12 @@ var CodeObject = (function () {
             }
         }
         counter = function_object.func_defaults.length;
-        console.log('counter = ' + counter);
-        console.log('argcount = ' + argcount);
         for (i = argcount; i >= 0; i--) {
-            console.log('got here');
             if (function_object.func_code.varnames[i - 1] == undefined) {
-                console.log('got her 2');
                 function_object.func_code.varnames[i - 1] = function_object.func_defaults[counter - 1];
                 counter -= 1;
             }
         }
-        console.log('varnames = ' + function_object.func_code.varnames);
 
         while (function_object.func_code.pc < function_object.func_code.code.length) {
             //op code

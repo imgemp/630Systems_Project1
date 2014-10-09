@@ -150,18 +150,22 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     level = level + 1;
     var prefix = Array(level).join('\t');
 
+    // Read Argcount
     obj.argcount = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
     console.log(prefix + 'argcount:\n' + prefix + String(obj.argcount));
 
+    // Read Nlocals
     obj.nlocals = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
     console.log(prefix + 'nlocals:\n' + prefix + String(obj.nlocals));
 
+    // Read Stacksize
     obj.stacksize = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
     console.log(prefix + 'stacksize:\n' + prefix + String(obj.stacksize));
 
+    // Read Flags
     obj.flags = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
     console.log(prefix + 'flags:\n' + prefix + String(obj.flags));
@@ -257,7 +261,7 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
 
     // Read Line Number Tab: http://nedbatchelder.com/blog/200804/wicked_hack_python_bytecode_tracing.html
     obj.lnotab = [];
-    ptr = ptr + 1; // skipping the 's' byte
+    ptr = ptr + 1; // Skipping the 's' byte
     var npairs = bytecode.readUInt32LE(ptr) / 2;
     ptr = ptr + 4;
     console.log(prefix + 'lnotab: (' + String(npairs) + ')');
@@ -272,7 +276,8 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
 
     return [ptr, obj];
 }
-//Implemented bytecode functions in a OpCode class
+
+// Implemented bytecode functions in a OpCode class
 class CodeObject {
 
     argcount: number;
@@ -313,15 +318,12 @@ class CodeObject {
 
     public STOP_CODE(){
         //do nothing
-        // console.log('STOP_CODE');
         this.pc += 1;
     }
     public POP_TOP(){
-        // console.log('POP_TOP');
         return Stack.pop();
     }
     public ROT_TWO(){
-        // console.log('ROT_TWO');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS);
@@ -329,7 +331,6 @@ class CodeObject {
         this.pc += 1;
     }
     public ROT_THREE(){
-        // console.log('ROT_THREE');
         var TOS = Stack.pop();
         var TOS2 = Stack.pop();
         var TOS3 = Stack.pop();
@@ -339,14 +340,12 @@ class CodeObject {
         this.pc += 1;
     }
     public DUP_TOP(){
-        // console.log('DUP_TOP');
         var TOS = Stack.pop();
         Stack.push(TOS);
         Stack.push(TOS);
         this.pc += 1;
     }
     public ROT_FOUR(){
-        // console.log('ROT_FOUR');
         var TOS = Stack.pop();
         var TOS2 = Stack.pop();
         var TOS3 = Stack.pop();
@@ -358,46 +357,39 @@ class CodeObject {
         this.pc += 1;
     }
     public NOP(){
-        // console.log('NOP');
         this.pc += 1;
     }
     public UNARY_POSITIVE(){
-        // console.log('UNARY_POSITIVE');
         var TOS = Stack.pop();
         TOS = +TOS;
         Stack.push(TOS);
         this.pc += 1;
     }
     public UNARY_NEGATIVE(){
-        // console.log('UNARY_NEGATIVE');
         var TOS = Stack.pop();
         TOS = -TOS;
         Stack.push(TOS);
         this.pc += 1;
     }
     public UNARY_NOT(){
-        // console.log('UNARY_NOT');
         var TOS = Stack.pop();
         TOS = !TOS;
         Stack.push(TOS);
         this.pc += 1;
     }
     public UNARY_CONVERT(){
-        // console.log('UNARY_CONVERT');
         var TOS = Stack.pop();
         TOS = String(TOS); // Not completely accurate
         Stack.push(TOS);
         this.pc += 1;
     }
     public UNARY_INVERT(){
-        // console.log('UNARY_INVERT');
         var TOS = Stack.pop();
         TOS = ~TOS;
         Stack.push(TOS);
         this.pc += 1;
     }
     public BINARY_POWER(){
-        // console.log('BINARY_POWER');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         TOS = Math.pow(TOS1,TOS);
@@ -406,7 +398,6 @@ class CodeObject {
     }
     //implements TOS = TOS1 * TOS
     public BINARY_MULTIPLY(){
-        // console.log('BINARY_MULTIPY');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 * TOS);
@@ -414,7 +405,6 @@ class CodeObject {
     }
     //implements TOS = TOS1/TOS (without from_future_import division)
     public BINARY_DIVIDE(){
-        // console.log('BINARY_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         //*** need to make this so floors ints & longs but gives approx with floats or complex ***/
@@ -424,7 +414,6 @@ class CodeObject {
     }
     //implements TOS = TOS1 % TOS
     public BINARY_MODULO(){
-        // console.log('BINARY_MODULO');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 % TOS);
@@ -432,7 +421,6 @@ class CodeObject {
     }
     //implemsnts TOS = TOS1 + TOS
     public BINARY_ADD(){
-        // console.log('BINARY_ADD');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 + TOS);
@@ -440,7 +428,6 @@ class CodeObject {
     }
     //implements TOS = TOS1 - TOS
     public BINARY_SUBTRACT(){
-        // console.log('BINARY_SUBTRACT');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 - TOS);
@@ -448,12 +435,10 @@ class CodeObject {
     }
     //implements TOS = TOS1[TOS]
     public BINARY_SUBSCR(){
-        // console.log('BINARY_SUBSCR');
         this.pc += 1;
     }
     //implements TOS = TOS1 // TOS
     public BINARY_FLOOR_DIVIDE(){
-        // console.log('BINARY_FLOOR_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(Math.floor(TOS1/TOS));
@@ -461,7 +446,6 @@ class CodeObject {
     }
     //implements TOS = TOS1/TOS (with from_future_import division)
     public BINARY_TRUE_DIVIDE(){
-        // console.log('BINARY_TRUE_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1/TOS);
@@ -469,7 +453,6 @@ class CodeObject {
     }
     //DIFFERENCE OF THESE FROM BINARY?
     public INPLACE_FLOOR_DIVIDE(){
-        // console.log('INPLACE_FLOOR_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(Math.floor(TOS1/TOS));
@@ -477,7 +460,6 @@ class CodeObject {
     }
     //with from_future_import division
     public INPLACE_TRUE_DIVIDE(){
-        // console.log('INPLACE_TRUE_DIVIDE');
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1/TOS);
@@ -501,18 +483,16 @@ class CodeObject {
     public BINARY_OR(){ this.pc += 1; }
     public INPLACE_POWER(){ this.pc += 1; }
     public GET_ITER(){
-        // console.log('GET_ITER'); // Objects already iterable?
+        // Objects already iterable?
         this.pc += 1;
     }
     public PRINT_EXPR(){ this.pc += 1; }
     public PRINT_ITEM(){
-        // console.log('PRINT_ITEM');
         var TOS = Stack.pop();
         console.log('LOGGED TO CONSOLE: --------------------- '+TOS);
         this.pc += 1;
     }
     public PRINT_NEWLINE(){
-        // console.log('PRINT_NEWLINE');
         console.log('LOGGED TO CONSOLE: --------------------- '); // or process.stdout.write('\n');
         this.pc += 1;
     }
@@ -536,7 +516,7 @@ class CodeObject {
     public POP_BLOCK(){ this.pc += 1; }
     public END_FINALLY(){ this.pc += 1; }
     public BUILD_CLASS(){ this.pc += 1; }
-    //Opcodes from here have an argument 
+    // Opcodes from here have an argument 
     public STORE_NAME(){
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var name = Stack.pop();
@@ -557,7 +537,6 @@ class CodeObject {
     public STORE_GLOBAL(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
     public DELETE_GLOBAL(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
     public DUP_TOPX(){ var numItemsDup = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
-     //pushes co_consts onto the stack
     public LOAD_CONST(){
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         Stack.push(this.consts[index]);
@@ -659,13 +638,6 @@ class CodeObject {
                 counter -= 1;
             }
         }
-
-
-
-        // for (i=0; i<numArgs; i++) { function_object.func_code.varnames[i] = args; } // replace with positional args
-        // var argcount = function_object.func_code.argcount;
-        // for (i=numArgs; i< argcount; i++) { function_object.func_code.varnames[i] = function_object.func_defaults[i]; } // replace with default args
-        // function_object.func_code.cellvars = kwargs; // replace with kwargs
         // Execute the function's bytecode
         while (function_object.func_code.pc < function_object.func_code.code.length){
             //op code
@@ -711,6 +683,7 @@ class CodeObject {
     public MAP_ADD(){ this.pc += 3; }
 }
 
+// Define function object
 class FunctionObject {
     func_closure: number;
     func_code: CodeObject;
@@ -745,7 +718,7 @@ function parseBytecode(bytecode) {
     for (var j = 0; j < 4; j++) {
         if (magic_number[j] != my_version[j]) {
             console.log('Not right version!');
-            // exit program
+            return false;
         }
     }
 
@@ -764,28 +737,16 @@ function parseBytecode(bytecode) {
             ptr = ptr + 1;
         }
     }
+
+    return true;
 }
 
-function interpretBytecode(bytecode) {
-    // Parse Bytecode and Return Op Codes:
-    // http://daeken.com/2010-02-20_Python_Marshal_Format.html
-    // http://nedbatchelder.com/blog/200804/the_structure_of_pyc_files.html
-    parseBytecode(bytecode);
-    console.log(byteObject.interned_list);
-    //execute the initial opcodes in the code object
-    execBytecode();
-    
-  
-}
-//initalize the stack object
-var Stack = [];
-
-//function to execute the op code commands in code object
+// Function to execute the op code commands in code object
 function execBytecode(){
     var obj = byteObject;
     // Execute Op Codes
     while (byteObject.code_object.pc < byteObject.code_object.code.length){
-        //op code
+        // Retrieve op code
         var opcode = byteObject.code_object.code[byteObject.code_object.pc];
         console.log(OpCodeList[opcode]);
         byteObject.code_object[OpCodeList[opcode]]();
@@ -793,7 +754,19 @@ function execBytecode(){
     }
 }
 
-//initalize object to store information of various types 
+function interpretBytecode(bytecode) {
+    // Parse Bytecode and Return Op Codes:
+    if (parseBytecode(bytecode)) {
+        console.log(byteObject.interned_list);
+        // Execute the initial opcodes in the code object
+        execBytecode();
+    }
+}
+
+// Initalize the stack object
+var Stack = [];
+
+// Initalize object to store information of various types 
 var byteObject:any = {};
 
 var readByType = {};
@@ -820,8 +793,7 @@ readByType['{'] = readDict;
 readByType['>'] = readTuple;
 readByType['c'] = readCodeObject;
 
-//https://android.googlesource.com/platform/prebuilts/python/darwin-x86/2.7.5/+/master/include/python2.7/opcode.h
-//enum list of all opcodes
+// Enum list of all opcodes
 enum OpCodeList {
     STOP_CODE = 0,
     POP_TOP = 1,
@@ -948,8 +920,6 @@ enum OpCodeList {
     SET_ADD = 146,
     MAP_ADD = 147
 };
-
-
 
 var fs = require('fs');
 fs.readFile(process.argv[2], function doneReading(err, bytecode) {
