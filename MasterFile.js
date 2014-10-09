@@ -185,17 +185,20 @@ function readCodeObject(bytecode, ptr, level) {
         var opcode = bytecode.readUInt8(ptr);
         var logout = '\t' + String(ptr - ptr0) + colon + String(opcode);
         if (opcode >= 90) {
-            var arg = bytecode.readUInt16LE(ptr + 1);
+            var arg1 = bytecode.readUInt8(ptr + 1);
+            var arg2 = bytecode.readUInt8(ptr + 2);
             if (opcode > 99) {
-                logout = logout + ' (' + String(arg) + ')';
+                logout = logout + ' (' + String(arg1) + ',' + String(arg2) + ')';
             } else {
-                logout = logout + '  (' + String(arg) + ')';
+                logout = logout + '  (' + String(arg1) + ',' + String(arg2) + ')';
             }
             ptr = ptr + 3;
-            obj.code.push([opcode, arg]);
+            obj.code.push(opcode);
+            obj.code.push(arg1);
+            obj.code.push(arg2);
         } else {
             ptr = ptr + 1;
-            obj.code.push([opcode, null]);
+            obj.code.push(opcode);
         }
         console.log(prefix + logout);
     }
@@ -294,10 +297,12 @@ var CodeObject = (function () {
         this.firstlineno = undefined;
         this.lnotab = undefined;
         this.returnedValue = undefined;
+        this.pc = 0;
     }
     CodeObject.prototype.STOP_CODE = function () {
         //do nothing
         // console.log('STOP_CODE');
+        this.pc += 1;
     };
     CodeObject.prototype.POP_TOP = function () {
         // console.log('POP_TOP');
@@ -309,6 +314,7 @@ var CodeObject = (function () {
         var TOS1 = Stack.pop();
         Stack.push(TOS);
         Stack.push(TOS1);
+        this.pc += 1;
     };
     CodeObject.prototype.ROT_THREE = function () {
         // console.log('ROT_THREE');
@@ -318,12 +324,14 @@ var CodeObject = (function () {
         Stack.push(TOS);
         Stack.push(TOS3);
         Stack.push(TOS2);
+        this.pc += 1;
     };
     CodeObject.prototype.DUP_TOP = function () {
         // console.log('DUP_TOP');
         var TOS = Stack.pop();
         Stack.push(TOS);
         Stack.push(TOS);
+        this.pc += 1;
     };
     CodeObject.prototype.ROT_FOUR = function () {
         // console.log('ROT_FOUR');
@@ -335,39 +343,46 @@ var CodeObject = (function () {
         Stack.push(TOS4);
         Stack.push(TOS3);
         Stack.push(TOS2);
+        this.pc += 1;
     };
     CodeObject.prototype.NOP = function () {
         // console.log('NOP');
+        this.pc += 1;
     };
     CodeObject.prototype.UNARY_POSITIVE = function () {
         // console.log('UNARY_POSITIVE');
         var TOS = Stack.pop();
         TOS = +TOS;
         Stack.push(TOS);
+        this.pc += 1;
     };
     CodeObject.prototype.UNARY_NEGATIVE = function () {
         // console.log('UNARY_NEGATIVE');
         var TOS = Stack.pop();
         TOS = -TOS;
         Stack.push(TOS);
+        this.pc += 1;
     };
     CodeObject.prototype.UNARY_NOT = function () {
         // console.log('UNARY_NOT');
         var TOS = Stack.pop();
         TOS = !TOS;
         Stack.push(TOS);
+        this.pc += 1;
     };
     CodeObject.prototype.UNARY_CONVERT = function () {
         // console.log('UNARY_CONVERT');
         var TOS = Stack.pop();
         TOS = String(TOS); // Not completely accurate
         Stack.push(TOS);
+        this.pc += 1;
     };
     CodeObject.prototype.UNARY_INVERT = function () {
         // console.log('UNARY_INVERT');
         var TOS = Stack.pop();
         TOS = ~TOS;
         Stack.push(TOS);
+        this.pc += 1;
     };
     CodeObject.prototype.BINARY_POWER = function () {
         // console.log('BINARY_POWER');
@@ -375,6 +390,7 @@ var CodeObject = (function () {
         var TOS1 = Stack.pop();
         TOS = Math.pow(TOS1, TOS);
         Stack.push(TOS);
+        this.pc += 1;
     };
 
     //implements TOS = TOS1 * TOS
@@ -383,6 +399,7 @@ var CodeObject = (function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 * TOS);
+        this.pc += 1;
     };
 
     //implements TOS = TOS1/TOS (without from_future_import division)
@@ -393,6 +410,7 @@ var CodeObject = (function () {
 
         //*** need to make this so floors ints & longs but gives approx with floats or complex ***/
         Stack.push(TOS1 / TOS);
+        this.pc += 1;
     };
 
     //implements TOS = TOS1 % TOS
@@ -401,6 +419,7 @@ var CodeObject = (function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 % TOS);
+        this.pc += 1;
     };
 
     //implemsnts TOS = TOS1 + TOS
@@ -409,6 +428,7 @@ var CodeObject = (function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 + TOS);
+        this.pc += 1;
     };
 
     //implements TOS = TOS1 - TOS
@@ -417,11 +437,13 @@ var CodeObject = (function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 - TOS);
+        this.pc += 1;
     };
 
     //implements TOS = TOS1[TOS]
     CodeObject.prototype.BINARY_SUBSCR = function () {
         // console.log('BINARY_SUBSCR');
+        this.pc += 1;
     };
 
     //implements TOS = TOS1 // TOS
@@ -430,6 +452,7 @@ var CodeObject = (function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(Math.floor(TOS1 / TOS));
+        this.pc += 1;
     };
 
     //implements TOS = TOS1/TOS (with from_future_import division)
@@ -438,6 +461,7 @@ var CodeObject = (function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 / TOS);
+        this.pc += 1;
     };
 
     //DIFFERENCE OF THESE FROM BINARY?
@@ -446,6 +470,7 @@ var CodeObject = (function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(Math.floor(TOS1 / TOS));
+        this.pc += 1;
     };
 
     //with from_future_import division
@@ -454,263 +479,442 @@ var CodeObject = (function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 / TOS);
+        this.pc += 1;
     };
     CodeObject.prototype.SLICE = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.STORE_SLICE = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.DELETE_SLICE = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.STORE_MAP = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.INPLACE_ADD = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.INPLACE_SUBTRACT = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.INPLACE_MULTIPY = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.INPLACE_DIVIDE = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.INPLACE_MODULO = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.STORE_SUBSCR = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.DELETE_SUBSCR = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.BINARY_LSHIFT = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.BINARY_RSHIFT = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.BINARY_AND = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.BINARY_XOR = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.BINARY_OR = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.INPLACE_POWER = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.GET_ITER = function () {
         // console.log('GET_ITER'); // Objects already iterable?
+        this.pc += 1;
     };
     CodeObject.prototype.PRINT_EXPR = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.PRINT_ITEM = function () {
         // console.log('PRINT_ITEM');
         var TOS = Stack.pop();
         console.log('LOGGED TO CONSOLE: --------------------- ' + TOS);
+        this.pc += 1;
     };
     CodeObject.prototype.PRINT_NEWLINE = function () {
         // console.log('PRINT_NEWLINE');
         console.log('LOGGED TO CONSOLE: --------------------- '); // or process.stdout.write('\n');
+        this.pc += 1;
     };
     CodeObject.prototype.PRINT_ITEM_TO = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.PRINT_NEWLINE_TO = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.INPLACE_LSHIFT = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.INPLACE_RSHIFT = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.INPLACE_AND = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.INPLACE_XOR = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.INPLACE_OR = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.BREAK_LOOP = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.WITH_CLEANUP = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.LOAD_LOCALS = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.RETURN_VALUE = function () {
         this.returnedValue = Stack.pop();
+        this.pc += 1;
     };
     CodeObject.prototype.IMPORT_STAR = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.EXEC_STMT = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.YIELD_VALUE = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.POP_BLOCK = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.END_FINALLY = function () {
+        this.pc += 1;
     };
     CodeObject.prototype.BUILD_CLASS = function () {
+        this.pc += 1;
     };
 
     //Opcodes from here have an argument
-    CodeObject.prototype.STORE_NAME = function (index) {
-        // console.log('STORE_NAME');
+    CodeObject.prototype.STORE_NAME = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var name = Stack.pop();
-
-        /*** need access to this ***/
         this.names[index] = name;
+        this.pc += 3;
     };
-    CodeObject.prototype.DELETE_NAME = function (index) {
+    CodeObject.prototype.DELETE_NAME = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.UNPACK_SEQUENCE = function (numItems) {
+    CodeObject.prototype.UNPACK_SEQUENCE = function () {
+        var numItems = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var TOS = Stack.pop();
+        for (var i = numItems - 1; i >= 0; i--) {
+            Stack.push(TOS[i]);
+        }
+        this.pc += 3;
     };
-    CodeObject.prototype.FOR_ITER = function (incrCounter) {
+    CodeObject.prototype.FOR_ITER = function () {
+        var incrCounter = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.LIST_APPEND = function (value) {
+    CodeObject.prototype.LIST_APPEND = function () {
+        var value = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.STORE_ATTR = function (index) {
+    CodeObject.prototype.STORE_ATTR = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.DELETE_ATTR = function (index) {
+    CodeObject.prototype.DELETE_ATTR = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.STORE_GLOBAL = function (index) {
+    CodeObject.prototype.STORE_GLOBAL = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.DELETE_GLOBAL = function (index) {
+    CodeObject.prototype.DELETE_GLOBAL = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.DUP_TOPX = function (numItemsDup) {
+    CodeObject.prototype.DUP_TOPX = function () {
+        var numItemsDup = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
 
     //pushes co_consts onto the stack
-    CodeObject.prototype.LOAD_CONST = function (index) {
-        // console.log("LOAD_CONST")
-        //need to be able to access the consts list
+    CodeObject.prototype.LOAD_CONST = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         Stack.push(this.consts[index]);
+        this.pc += 3;
     };
-    CodeObject.prototype.LOAD_NAME = function (index) {
-        // console.log("LOAD_NAME")
-        //need to be able to access the name list
+    CodeObject.prototype.LOAD_NAME = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         Stack.push(this.names[index]);
+        this.pc += 3;
     };
-    CodeObject.prototype.BUILD_TUPLE = function (numItems) {
+    CodeObject.prototype.BUILD_TUPLE = function () {
+        var numItems = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.BUILD_LIST = function (numItems) {
+    CodeObject.prototype.BUILD_LIST = function () {
+        var numItems = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.BUILD_SET = function (numItems) {
+    CodeObject.prototype.BUILD_SET = function () {
+        var numItems = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.BUILD_MAP = function (numEntries) {
+    CodeObject.prototype.BUILD_MAP = function () {
+        var numnumEntries = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.LOAD_ATTR = function (index) {
+    CodeObject.prototype.LOAD_ATTR = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.COMPARE_OP = function (opname) {
+    CodeObject.prototype.COMPARE_OP = function () {
+        var opname = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.IMPORT_NAME = function (index) {
+    CodeObject.prototype.IMPORT_NAME = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.IMPORT_FROM = function (index) {
+    CodeObject.prototype.IMPORT_FROM = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.JUMP_FORWARD = function (numBytes) {
+    CodeObject.prototype.JUMP_FORWARD = function () {
+        var delta = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += delta + 3;
     };
-    CodeObject.prototype.JUMP_IF_FALSE_OR_POP = function (offest) {
+    CodeObject.prototype.JUMP_IF_FALSE_OR_POP = function () {
+        var target = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var TOS = Stack.pop();
+        if (!TOS) {
+            this.pc = target;
+            Stack.push(TOS);
+        } else {
+            this.pc += 3;
+        }
     };
-    CodeObject.prototype.JUMP_IF_TRUE_OR_POP = function (offset) {
+    CodeObject.prototype.JUMP_IF_TRUE_OR_POP = function () {
+        var target = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var TOS = Stack.pop();
+        if (TOS) {
+            this.pc = target;
+            Stack.push(TOS);
+        } else {
+            this.pc += 3;
+        }
     };
-    CodeObject.prototype.JUMP_ABSOLUTE = function (offset) {
+    CodeObject.prototype.JUMP_ABSOLUTE = function () {
+        var target = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc = target;
     };
-    CodeObject.prototype.POP_JUMP_IF_FALSE = function (offset) {
+    CodeObject.prototype.POP_JUMP_IF_FALSE = function () {
+        var target = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var TOS = Stack.pop();
+        if (!TOS) {
+            this.pc = target;
+        } else {
+            this.pc += 3;
+        }
     };
-    CodeObject.prototype.POP_JUMP_IF_TRUE = function (offset) {
+    CodeObject.prototype.POP_JUMP_IF_TRUE = function () {
+        var target = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var TOS = Stack.pop();
+        console.log(TOS);
+        if (TOS) {
+            this.pc = target;
+        } else {
+            this.pc += 3;
+        }
     };
-    CodeObject.prototype.LOAD_GLOBAL = function (index) {
+    CodeObject.prototype.LOAD_GLOBAL = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.CONTINUE_LOOP = function (start) {
+    CodeObject.prototype.CONTINUE_LOOP = function () {
+        var start = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.SETUP_LOOP = function (addr) {
+    CodeObject.prototype.SETUP_LOOP = function () {
+        var addr = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.SETUP_EXCEPT = function (addr) {
+    CodeObject.prototype.SETUP_EXCEPT = function () {
+        var addr = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.SETUP_FINALLY = function (addr) {
+    CodeObject.prototype.SETUP_FINALLY = function () {
+        var addr = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.LOAD_FAST = function (varNum) {
+    CodeObject.prototype.LOAD_FAST = function () {
+        var varNum = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         Stack.push(this.varnames[varNum]);
+        this.pc += 3;
     };
-    CodeObject.prototype.STORE_FAST = function (varNum) {
+    CodeObject.prototype.STORE_FAST = function () {
+        var varNum = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.varnames[varNum] = Stack.pop();
+        this.pc += 3;
     };
-    CodeObject.prototype.DELETE_FAST = function (varNum) {
+    CodeObject.prototype.DELETE_FAST = function () {
+        var varNum = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.RAISE_VARARGS = function (numArg) {
+    CodeObject.prototype.RAISE_VARARGS = function () {
+        var numArg = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
 
     /* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
-    CodeObject.prototype.CALL_FUNCTION = function (argc) {
-        var binStr = argc.toString(2);
-        var numArgs = parseInt(binStr.slice(0, 8), 2);
-        var numKwargs = parseInt(binStr.slice(8, 16), 2);
-        var args = [];
-        var kwargs = {};
+    CodeObject.prototype.CALL_FUNCTION = function () {
+        // Parse Operand Bytecode
+        // argc is the operand from the bytecode (low bit = number of positional args, high bit = number of keyword args)
+        // var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        // var binStr = argc.toString(2);
+        // Record original varnames
+        var numArgs = this.code[this.pc + 1];
+        var numKwargs = this.code[this.pc + 2];
+        console.log('numArgs = ' + numArgs);
+        console.log('numKwargs = ' + numKwargs);
 
+        // Retrieve arguments from Stack and add to varnames
+        var args = [];
+        var kwargs = [];
         for (var i = 0; i < numKwargs; i++) {
             var val = Stack.pop();
-            kwargs[Stack.pop()] = val;
+            kwargs[i] = [Stack.pop(), val];
         }
         for (i = 0; i < numArgs; i++) {
             args[numArgs - 1 - i] = Stack.pop();
         }
         var function_object = Stack.pop();
 
-        // how to defaults and args combine
-        function_object.func_code.varnames = args;
+        // Replace function object's variable names with arguments from Stack & default arguments
+        var varnamesOriginal = function_object.func_code.varnames.slice(0);
+        function_object.func_code.varnames = [];
         var argcount = function_object.func_code.argcount;
-        for (i = 0; i < argcount - argc; i++) {
-            function_object.func_code.varnames.push(function_object.func_defaults[i]);
+        for (var i = 0; i < numKwargs; i++) {
+            function_object.func_code.varnames[kwargs[i][0]] = kwargs[i][1];
         }
-        function_object.func_code.cellvars = kwargs;
+        var counter = 0;
+        for (i = 0; i < argcount; i++) {
+            if ((function_object.func_code.varnames[i] == undefined) && (counter < args.length)) {
+                function_object.func_code.varnames[i] = args[counter];
+                counter += 1;
+            }
+        }
+        counter = function_object.func_defaults.length;
+        console.log('counter = ' + counter);
+        console.log('argcount = ' + argcount);
+        for (i = argcount; i >= 0; i--) {
+            console.log('got here');
+            if (function_object.func_code.varnames[i - 1] == undefined) {
+                console.log('got her 2');
+                function_object.func_code.varnames[i - 1] = function_object.func_defaults[counter - 1];
+                counter -= 1;
+            }
+        }
+        console.log('varnames = ' + function_object.func_code.varnames);
 
-        for (i = 0; i < function_object.func_code.code.length; i++) {
+        while (function_object.func_code.pc < function_object.func_code.code.length) {
             //op code
-            var opcode = function_object.func_code.code[i][0];
+            var opcode = function_object.func_code.code[function_object.func_code.pc];
 
-            //arguments to op code function
-            var operand = function_object.func_code.code[i][1];
-
-            //debugg this...something 'undefined' after PRINT_LINEs...
+            // call opcode
             console.log(OpCodeList[opcode]);
-            function_object.func_code[OpCodeList[opcode]](operand);
+            function_object.func_code[OpCodeList[opcode]]();
             console.log(Stack);
         }
 
-        // console.log(function_object.func_code.returnedValue);
+        // Reset varnames
+        function_object.func_code.varnames = varnamesOriginal.slice(0);
+
+        // Push the return value onto the stack (could be a None? value)
         Stack.push(function_object.func_code.returnedValue);
+
+        // Reset function object's counter
+        function_object.func_code.pc = 0;
+
+        // Increment parent's program counter
+        this.pc += 3;
     };
-    CodeObject.prototype.MAKE_FUNCTION = function (argc) {
+    CodeObject.prototype.MAKE_FUNCTION = function () {
+        var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var code_object = Stack.pop();
         var defaults = [];
         for (var i = 0; i < argc; i++) {
             defaults[i] = Stack.pop();
         }
         var newFunction = new FunctionObject(code_object, defaults);
-
-        // console.log('about to add function object to stack');
-        // console.log(Stack);
         Stack.push(newFunction);
-        // console.log('did it work');
-        // console.log(Stack);
+        this.pc += 3;
     };
-    CodeObject.prototype.BUILD_SLICE = function (numItems) {
+    CodeObject.prototype.BUILD_SLICE = function () {
+        var numItems = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.MAKE_CLOSURE = function (numFreeVars) {
+    CodeObject.prototype.MAKE_CLOSURE = function () {
+        var numFreeVars = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.LOAD_CLOSURE = function (index) {
+    CodeObject.prototype.LOAD_CLOSURE = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.LOAD_DEREF = function (index) {
+    CodeObject.prototype.LOAD_DEREF = function () {
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.STORE_DEREF = function (index) {
+    CodeObject.prototype.STORE_DEREF = function () {
+        this.pc += 3;
     };
 
     /* The next 3 opcodes must be contiguous and satisfy
     (CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
-    CodeObject.prototype.CALL_FUNCTION_VAR = function (argc) {
+    CodeObject.prototype.CALL_FUNCTION_VAR = function () {
+        var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.CALL_FUNCTION_KW = function (argc) {
+    CodeObject.prototype.CALL_FUNCTION_KW = function () {
+        var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.CALL_FUNCTION_VAR_KW = function (argc) {
+    CodeObject.prototype.CALL_FUNCTION_VAR_KW = function () {
+        var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
-    CodeObject.prototype.SETUP_WITH = function (delta) {
+    CodeObject.prototype.SETUP_WITH = function () {
+        var delta = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
 
     /* Support for opargs more than 16 bits long */
-    CodeObject.prototype.EXTENDED_ARG = function (ext) {
+    CodeObject.prototype.EXTENDED_ARG = function () {
+        var ext = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.pc += 3;
     };
 
     /***** have to determine what type of arguments these take *****/
     CodeObject.prototype.SET_ADD = function () {
+        this.pc += 3;
     };
     CodeObject.prototype.MAP_ADD = function () {
+        this.pc += 3;
     };
     return CodeObject;
 })();
@@ -784,20 +988,13 @@ var Stack = [];
 function execBytecode() {
     var obj = byteObject;
 
-    for (var i = 0; i < byteObject.code_object.code.length; i++) {
+    while (byteObject.code_object.pc < byteObject.code_object.code.length) {
         //op code
-        var opcode = byteObject.code_object.code[i][0];
-
-        //arguments to op code function
-        var operand = byteObject.code_object.code[i][1];
-
-        //debugg this...something 'undefined' after PRINT_LINEs...
+        var opcode = byteObject.code_object.code[byteObject.code_object.pc];
         console.log(OpCodeList[opcode]);
-        byteObject.code_object[OpCodeList[opcode]](operand);
+        byteObject.code_object[OpCodeList[opcode]]();
         console.log(Stack);
     }
-
-    return Stack.pop();
 }
 
 //initalize object to store information of various types

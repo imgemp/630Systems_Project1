@@ -182,14 +182,17 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
         var opcode = bytecode.readUInt8(ptr);
         var logout = '\t' + String(ptr - ptr0) + colon + String(opcode);
         if (opcode >= 90) {
-            var arg = bytecode.readUInt16LE(ptr + 1);
-            if (opcode > 99) { logout = logout + ' (' + String(arg) + ')'; }
-            else { logout = logout + '  (' + String(arg) + ')'; }
+            var arg1 = bytecode.readUInt8(ptr + 1);
+            var arg2 = bytecode.readUInt8(ptr + 2);
+            if (opcode > 99) { logout = logout + ' (' + String(arg1) + ',' + String(arg2) + ')'; }
+            else { logout = logout + '  (' + String(arg1) + ',' + String(arg2) + ')'; }
             ptr = ptr + 3;
-            obj.code.push([opcode, arg]);
+            obj.code.push(opcode);
+            obj.code.push(arg1);
+            obj.code.push(arg2);
         } else {
             ptr = ptr + 1;
-            obj.code.push([opcode, null]);
+            obj.code.push(opcode);
         }
         console.log(prefix + logout);
     }
@@ -287,6 +290,7 @@ class CodeObject {
     firstlineno: number;
     lnotab: any;
     returnedValue: any;
+    pc: number;
 
     constructor() {
         this.argcount = undefined;
@@ -304,11 +308,13 @@ class CodeObject {
         this.firstlineno = undefined;
         this.lnotab = undefined;
         this.returnedValue = undefined;
+        this.pc = 0;
     }
 
     public STOP_CODE(){
         //do nothing
         // console.log('STOP_CODE');
+        this.pc += 1;
     }
     public POP_TOP(){
         // console.log('POP_TOP');
@@ -320,6 +326,7 @@ class CodeObject {
         var TOS1 = Stack.pop();
         Stack.push(TOS);
         Stack.push(TOS1);
+        this.pc += 1;
     }
     public ROT_THREE(){
         // console.log('ROT_THREE');
@@ -329,12 +336,14 @@ class CodeObject {
         Stack.push(TOS);
         Stack.push(TOS3);
         Stack.push(TOS2);
+        this.pc += 1;
     }
     public DUP_TOP(){
         // console.log('DUP_TOP');
         var TOS = Stack.pop();
         Stack.push(TOS);
         Stack.push(TOS);
+        this.pc += 1;
     }
     public ROT_FOUR(){
         // console.log('ROT_FOUR');
@@ -346,39 +355,46 @@ class CodeObject {
         Stack.push(TOS4);
         Stack.push(TOS3);
         Stack.push(TOS2);
+        this.pc += 1;
     }
     public NOP(){
         // console.log('NOP');
+        this.pc += 1;
     }
     public UNARY_POSITIVE(){
         // console.log('UNARY_POSITIVE');
         var TOS = Stack.pop();
         TOS = +TOS;
         Stack.push(TOS);
+        this.pc += 1;
     }
     public UNARY_NEGATIVE(){
         // console.log('UNARY_NEGATIVE');
         var TOS = Stack.pop();
         TOS = -TOS;
         Stack.push(TOS);
+        this.pc += 1;
     }
     public UNARY_NOT(){
         // console.log('UNARY_NOT');
         var TOS = Stack.pop();
         TOS = !TOS;
         Stack.push(TOS);
+        this.pc += 1;
     }
     public UNARY_CONVERT(){
         // console.log('UNARY_CONVERT');
         var TOS = Stack.pop();
         TOS = String(TOS); // Not completely accurate
         Stack.push(TOS);
+        this.pc += 1;
     }
     public UNARY_INVERT(){
         // console.log('UNARY_INVERT');
         var TOS = Stack.pop();
         TOS = ~TOS;
         Stack.push(TOS);
+        this.pc += 1;
     }
     public BINARY_POWER(){
         // console.log('BINARY_POWER');
@@ -386,6 +402,7 @@ class CodeObject {
         var TOS1 = Stack.pop();
         TOS = Math.pow(TOS1,TOS);
         Stack.push(TOS);
+        this.pc += 1;
     }
     //implements TOS = TOS1 * TOS
     public BINARY_MULTIPLY(){
@@ -393,6 +410,7 @@ class CodeObject {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 * TOS);
+        this.pc += 1;
     }
     //implements TOS = TOS1/TOS (without from_future_import division)
     public BINARY_DIVIDE(){
@@ -401,6 +419,7 @@ class CodeObject {
         var TOS1 = Stack.pop();
         //*** need to make this so floors ints & longs but gives approx with floats or complex ***/
         Stack.push(TOS1/TOS);
+        this.pc += 1;
 
     }
     //implements TOS = TOS1 % TOS
@@ -409,7 +428,7 @@ class CodeObject {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 % TOS);
-
+        this.pc += 1;
     }
     //implemsnts TOS = TOS1 + TOS
     public BINARY_ADD(){
@@ -417,7 +436,7 @@ class CodeObject {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 + TOS);
-
+        this.pc += 1;
     }
     //implements TOS = TOS1 - TOS
     public BINARY_SUBTRACT(){
@@ -425,12 +444,12 @@ class CodeObject {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1 - TOS);
-
+        this.pc += 1;
     }
     //implements TOS = TOS1[TOS]
     public BINARY_SUBSCR(){
         // console.log('BINARY_SUBSCR');
-
+        this.pc += 1;
     }
     //implements TOS = TOS1 // TOS
     public BINARY_FLOOR_DIVIDE(){
@@ -438,7 +457,7 @@ class CodeObject {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(Math.floor(TOS1/TOS));
-
+        this.pc += 1;
     }
     //implements TOS = TOS1/TOS (with from_future_import division)
     public BINARY_TRUE_DIVIDE(){
@@ -446,6 +465,7 @@ class CodeObject {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1/TOS);
+        this.pc += 1;
     }
     //DIFFERENCE OF THESE FROM BINARY?
     public INPLACE_FLOOR_DIVIDE(){
@@ -453,6 +473,7 @@ class CodeObject {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(Math.floor(TOS1/TOS));
+        this.pc += 1;
     }
     //with from_future_import division
     public INPLACE_TRUE_DIVIDE(){
@@ -460,169 +481,234 @@ class CodeObject {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         Stack.push(TOS1/TOS);
+        this.pc += 1;
     }
-    public SLICE(){}
-    public STORE_SLICE(){}
-    public DELETE_SLICE(){}
-    public STORE_MAP(){}
-    public INPLACE_ADD(){}
-    public INPLACE_SUBTRACT(){}
-    public INPLACE_MULTIPY(){}
-    public INPLACE_DIVIDE(){}
-    public INPLACE_MODULO(){}
-    public STORE_SUBSCR(){}
-    public DELETE_SUBSCR(){}
-    public BINARY_LSHIFT(){}
-    public BINARY_RSHIFT(){}
-    public BINARY_AND(){}
-    public BINARY_XOR(){}
-    public BINARY_OR(){}
-    public INPLACE_POWER(){}
+    public SLICE(){ this.pc += 1; }
+    public STORE_SLICE(){ this.pc += 1; }
+    public DELETE_SLICE(){ this.pc += 1; }
+    public STORE_MAP(){ this.pc += 1; }
+    public INPLACE_ADD(){ this.pc += 1; }
+    public INPLACE_SUBTRACT(){ this.pc += 1; }
+    public INPLACE_MULTIPY(){ this.pc += 1; }
+    public INPLACE_DIVIDE(){ this.pc += 1; }
+    public INPLACE_MODULO(){ this.pc += 1; }
+    public STORE_SUBSCR(){ this.pc += 1; }
+    public DELETE_SUBSCR(){ this.pc += 1; }
+    public BINARY_LSHIFT(){ this.pc += 1; }
+    public BINARY_RSHIFT(){ this.pc += 1; }
+    public BINARY_AND(){ this.pc += 1; }
+    public BINARY_XOR(){ this.pc += 1; }
+    public BINARY_OR(){ this.pc += 1; }
+    public INPLACE_POWER(){ this.pc += 1; }
     public GET_ITER(){
         // console.log('GET_ITER'); // Objects already iterable?
+        this.pc += 1;
     }
-    public PRINT_EXPR(){}
+    public PRINT_EXPR(){ this.pc += 1; }
     public PRINT_ITEM(){
         // console.log('PRINT_ITEM');
         var TOS = Stack.pop();
         console.log('LOGGED TO CONSOLE: --------------------- '+TOS);
+        this.pc += 1;
     }
     public PRINT_NEWLINE(){
         // console.log('PRINT_NEWLINE');
         console.log('LOGGED TO CONSOLE: --------------------- '); // or process.stdout.write('\n');
+        this.pc += 1;
     }
-    public PRINT_ITEM_TO(){}
-    public PRINT_NEWLINE_TO(){}
-    public INPLACE_LSHIFT(){}
-    public INPLACE_RSHIFT(){}
-    public INPLACE_AND(){}
-    public INPLACE_XOR(){}
-    public INPLACE_OR(){}
-    public BREAK_LOOP(){}
-    public WITH_CLEANUP(){}
-    public LOAD_LOCALS(){}
+    public PRINT_ITEM_TO(){ this.pc += 1; }
+    public PRINT_NEWLINE_TO(){ this.pc += 1; }
+    public INPLACE_LSHIFT(){ this.pc += 1; }
+    public INPLACE_RSHIFT(){ this.pc += 1; }
+    public INPLACE_AND(){ this.pc += 1; }
+    public INPLACE_XOR(){ this.pc += 1; }
+    public INPLACE_OR(){ this.pc += 1; }
+    public BREAK_LOOP(){ this.pc += 1; }
+    public WITH_CLEANUP(){ this.pc += 1; }
+    public LOAD_LOCALS(){ this.pc += 1; }
     public RETURN_VALUE(){
         this.returnedValue = Stack.pop();
+        this.pc += 1;
     }
-    public IMPORT_STAR(){}
-    public EXEC_STMT(){}
-    public YIELD_VALUE(){}
-    public POP_BLOCK(){}
-    public END_FINALLY(){}
-    public BUILD_CLASS(){}
+    public IMPORT_STAR(){ this.pc += 1; }
+    public EXEC_STMT(){ this.pc += 1; }
+    public YIELD_VALUE(){ this.pc += 1; }
+    public POP_BLOCK(){ this.pc += 1; }
+    public END_FINALLY(){ this.pc += 1; }
+    public BUILD_CLASS(){ this.pc += 1; }
     //Opcodes from here have an argument 
-    public STORE_NAME(index:number){
-        // console.log('STORE_NAME');
+    public STORE_NAME(){
+        var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var name = Stack.pop();
-        /*** need access to this ***/
         this.names[index] = name;
+        this.pc += 3;
     }
-    public DELETE_NAME(index:number){} 
-    public UNPACK_SEQUENCE(numItems:number){} 
-    public FOR_ITER(incrCounter:number){}
-    public LIST_APPEND(value:number){}
-    public STORE_ATTR(index:number){} 
-    public DELETE_ATTR(index:number){} 
-    public STORE_GLOBAL(index:number){} 
-    public DELETE_GLOBAL(index:number){}
-    public DUP_TOPX(numItemsDup:number){} 
-     //pushes co_consts onto the stack
-    public LOAD_CONST(index:number){
-        // console.log("LOAD_CONST")
-        //need to be able to access the consts list
-        Stack.push(this.consts[index]);
-    }
-    public LOAD_NAME(index:number){
-        // console.log("LOAD_NAME")
-        //need to be able to access the name list
-        Stack.push(this.names[index]);
-    }
-    public BUILD_TUPLE(numItems:number){} 
-    public BUILD_LIST(numItems:number){} 
-    public BUILD_SET(numItems:number){}
-    public BUILD_MAP(numEntries:number){} 
-    public LOAD_ATTR(index:number){}
-    public COMPARE_OP (opname){} //comparison operator
-    public IMPORT_NAME (index:number){}
-    public IMPORT_FROM(index:number){} 
-    public JUMP_FORWARD(numBytes:number){}
-    public JUMP_IF_FALSE_OR_POP(offest:number){} 
-    public JUMP_IF_TRUE_OR_POP(offset:number){} 
-    public JUMP_ABSOLUTE(offset:number){}
-    public POP_JUMP_IF_FALSE(offset:number){} 
-    public POP_JUMP_IF_TRUE(offset:number){} 
-    public LOAD_GLOBAL(index:number){} 
-    public CONTINUE_LOOP(start:number){}//start of loop(absolute)
-    public SETUP_LOOP(addr:number){}//target address(relative)
-    public SETUP_EXCEPT(addr:number){}//target address(relative)
-    public SETUP_FINALLY(addr:number){}//target address(relative)
-    public LOAD_FAST(varNum:number){
-        Stack.push(this.varnames[varNum]);
-    } //local variable number
-    public STORE_FAST(varNum:number){
-        this.varnames[varNum] = Stack.pop();
+    public DELETE_NAME(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } 
+    public UNPACK_SEQUENCE(){
+        var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var TOS = Stack.pop();
+        for (var i=numItems-1; i>=0; i--) { Stack.push(TOS[i]); }
+        this.pc += 3;
     } 
-    public DELETE_FAST(varNum:number){} 
-    public RAISE_VARARGS(numArg:number){} //number of raise arguments(1,2 or 3)
+    public FOR_ITER(){ var incrCounter = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
+    public LIST_APPEND(){ var value = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
+    public STORE_ATTR(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
+    public DELETE_ATTR(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
+    public STORE_GLOBAL(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
+    public DELETE_GLOBAL(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
+    public DUP_TOPX(){ var numItemsDup = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
+     //pushes co_consts onto the stack
+    public LOAD_CONST(){
+        var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        Stack.push(this.consts[index]);
+        this.pc += 3;
+    }
+    public LOAD_NAME(){
+        var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        Stack.push(this.names[index]);
+        this.pc += 3;
+    }
+    public BUILD_TUPLE(){ var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } 
+    public BUILD_LIST(){ var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } 
+    public BUILD_SET(){ var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
+    public BUILD_MAP(){ var numnumEntries = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } 
+    public LOAD_ATTR(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
+    public COMPARE_OP(){ var opname = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } //comparison operator
+    public IMPORT_NAME (){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
+    public IMPORT_FROM(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } 
+    public JUMP_FORWARD(){
+        var delta = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        this.pc += delta + 3;
+    }
+    public JUMP_IF_FALSE_OR_POP(){
+        var target = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var TOS = Stack.pop();
+        if (!TOS) { this.pc = target; Stack.push(TOS); }
+        else { this.pc += 3; }
+    } 
+    public JUMP_IF_TRUE_OR_POP(){
+        var target = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var TOS = Stack.pop();
+        if (TOS) { this.pc = target; Stack.push(TOS); }
+        else { this.pc += 3; }
+    } 
+    public JUMP_ABSOLUTE(){
+        var target = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        this.pc = target;
+    }
+    public POP_JUMP_IF_FALSE(){
+        var target = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var TOS = Stack.pop();
+        if (!TOS) { this.pc = target; }
+        else { this.pc += 3; }
+    } 
+    public POP_JUMP_IF_TRUE(){
+        var target = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var TOS = Stack.pop();
+        console.log(TOS);
+        if (TOS) { this.pc = target; }
+        else { this.pc += 3; }
+    } 
+    public LOAD_GLOBAL(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } 
+    public CONTINUE_LOOP(){ var start = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }//start of loop(absolute)
+    public SETUP_LOOP(){ var addr = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }//target address(relative)
+    public SETUP_EXCEPT(){ var addr = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }//target address(relative)
+    public SETUP_FINALLY(){ var addr = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }//target address(relative)
+    public LOAD_FAST(){
+        var varNum = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        Stack.push(this.varnames[varNum]);
+        this.pc += 3;
+    } //local variable number
+    public STORE_FAST(){
+        var varNum = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        this.varnames[varNum] = Stack.pop();
+        this.pc += 3;
+    } 
+    public DELETE_FAST(){ var varNum = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } 
+    public RAISE_VARARGS(){ var numArg = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } //number of raise arguments(1,2 or 3)
     /* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
-    public CALL_FUNCTION(argc:number){
-        var binStr = argc.toString(2);
-        var numArgs = parseInt(binStr.slice(0,8),2);
-        var numKwargs = parseInt(binStr.slice(8,16),2);
+    public CALL_FUNCTION(){
+        // Parse Operand Bytecode
+        // argc is the operand from the bytecode (low bit = number of positional args, high bit = number of keyword args)
+        var numArgs = this.code[this.pc+1]; // # of positional args
+        var numKwargs = this.code[this.pc+2]; // # of keyword args
+        // Retrieve arguments from Stack and add to varnames
         var args = [];
-        var kwargs = {};
-        // console.log('printing stack');
-        // console.log(Stack);
-        // console.log('thats everything');
-        for (var i=0; i< numKwargs; i++) { var val = Stack.pop(); kwargs[Stack.pop()] = val; }
-        for (i=0; i< numArgs; i++) { args[numArgs-1-i] = Stack.pop(); } // args[0] = leftmost argument
-        var function_object = Stack.pop();
-        // how to defaults and args combine
-        function_object.func_code.varnames = args;
+        var kwargs = [];
+        for (var i=0; i< numKwargs; i++){ var val = Stack.pop(); kwargs[i] = [Stack.pop(),val]; } // grab keyword args off stack first
+        for (i=0; i< numArgs; i++) { args[numArgs-1-i] = Stack.pop(); } // next grab positional args, args[0] = leftmost argument
+        var function_object = Stack.pop(); // last grab function object
+        // Replace function object's variable names with arguments from Stack & default arguments
+        var varnamesOriginal = function_object.func_code.varnames.slice(0); // record varnames for later use and set to empty list
+        function_object.func_code.varnames = [];
         var argcount = function_object.func_code.argcount;
-        for (i=0; i< argcount - argc; i++) { function_object.func_code.varnames.push(function_object.func_defaults[i]); }
-        function_object.func_code.cellvars = kwargs;
-        // console.log(function_object.func_code);
-        for(i=0; i < function_object.func_code.code.length; i++){
+        for (var i=0; i< numKwargs; i++) {
+            function_object.func_code.varnames[kwargs[i][0]] = kwargs[i][1];
+        }
+        var counter = 0;
+        for (i=0; i< argcount; i++) {
+            if ((function_object.func_code.varnames[i] == undefined) && (counter < args.length)) {
+                function_object.func_code.varnames[i] = args[counter];
+                counter += 1;
+            }
+        }
+        counter = function_object.func_defaults.length;
+        for (i=argcount; i>=0; i--) {
+            if (function_object.func_code.varnames[i-1] == undefined) {
+                function_object.func_code.varnames[i-1] = function_object.func_defaults[counter-1];
+                counter -= 1;
+            }
+        }
+
+
+
+        // for (i=0; i<numArgs; i++) { function_object.func_code.varnames[i] = args; } // replace with positional args
+        // var argcount = function_object.func_code.argcount;
+        // for (i=numArgs; i< argcount; i++) { function_object.func_code.varnames[i] = function_object.func_defaults[i]; } // replace with default args
+        // function_object.func_code.cellvars = kwargs; // replace with kwargs
+        // Execute the function's bytecode
+        while (function_object.func_code.pc < function_object.func_code.code.length){
             //op code
-            var opcode = function_object.func_code.code[i][0];
-            //arguments to op code function
-            var operand = function_object.func_code.code[i][1];
-            //debugg this...something 'undefined' after PRINT_LINEs...
+            var opcode = function_object.func_code.code[function_object.func_code.pc];
+            // call opcode
             console.log(OpCodeList[opcode]);
-            function_object.func_code[OpCodeList[opcode]](operand);
+            function_object.func_code[OpCodeList[opcode]]();
             console.log(Stack);
         }
-        // console.log(function_object.func_code.returnedValue);
+        // Reset varnames
+        function_object.func_code.varnames = varnamesOriginal.slice(0);
+        // Push the return value onto the stack (could be a None? value)
         Stack.push(function_object.func_code.returnedValue);
+        // Reset function object's counter
+        function_object.func_code.pc = 0;
+        // Increment parent's program counter
+        this.pc += 3;
     }//number of args + (number kwargs<<8)
-    public MAKE_FUNCTION(argc:number){
+    public MAKE_FUNCTION(){
+        var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var code_object = Stack.pop();
         var defaults = [];
         for (var i=0; i<argc; i++) { defaults[i] = Stack.pop(); }
         var newFunction = new FunctionObject(code_object,defaults);
-        // console.log('about to add function object to stack');
-        // console.log(Stack);
         Stack.push(newFunction);
-        // console.log('did it work');
-        // console.log(Stack);
+        this.pc += 3;
     }
-    public BUILD_SLICE(numItems:number){} 
-    public MAKE_CLOSURE(numFreeVars:number){} 
-    public LOAD_CLOSURE(index:number){}//load free variable from closure
-    public LOAD_DEREF(index:number){}//load and deference from closure cell
-    public STORE_DEREF(index:number){} //store into cell
+    public BUILD_SLICE(){ var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } 
+    public MAKE_CLOSURE(){ var numFreeVars = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } 
+    public LOAD_CLOSURE(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }//load free variable from closure
+    public LOAD_DEREF(){ var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }//load and deference from closure cell
+    public STORE_DEREF(){ this.pc += 3; } //store into cell
     /* The next 3 opcodes must be contiguous and satisfy
        (CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
-    public CALL_FUNCTION_VAR(argc){} //number args + (number kwargs<<8)
-    public CALL_FUNCTION_KW(argc){} //number args + (number kwargs<<8)
-    public CALL_FUNCTION_VAR_KW(argc){} //number args + (number kwargs<<8)
-    public SETUP_WITH(delta){}
+    public CALL_FUNCTION_VAR(){ var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } //number args + (number kwargs<<8)
+    public CALL_FUNCTION_KW(){ var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } //number args + (number kwargs<<8)
+    public CALL_FUNCTION_VAR_KW(){ var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; } //number args + (number kwargs<<8)
+    public SETUP_WITH(){ var delta = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
     /* Support for opargs more than 16 bits long */
-    public EXTENDED_ARG(ext){}
+    public EXTENDED_ARG(){ var ext = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; this.pc += 3; }
     /***** have to determine what type of arguments these take *****/
-    public SET_ADD(){}
-    public MAP_ADD(){}
+    public SET_ADD(){ this.pc += 3; }
+    public MAP_ADD(){ this.pc += 3; }
 }
 
 class FunctionObject {
@@ -698,18 +784,13 @@ var Stack = [];
 function execBytecode(){
     var obj = byteObject;
     // Execute Op Codes
-    for(var i=0; i < byteObject.code_object.code.length; i++){
+    while (byteObject.code_object.pc < byteObject.code_object.code.length){
         //op code
-        var opcode = byteObject.code_object.code[i][0];
-        //arguments to op code function
-        var operand = byteObject.code_object.code[i][1];
-        //debugg this...something 'undefined' after PRINT_LINEs...
+        var opcode = byteObject.code_object.code[byteObject.code_object.pc];
         console.log(OpCodeList[opcode]);
-        byteObject.code_object[OpCodeList[opcode]](operand);
+        byteObject.code_object[OpCodeList[opcode]]();
         console.log(Stack);
     }
-
-    return Stack.pop();
 }
 
 //initalize object to store information of various types 
