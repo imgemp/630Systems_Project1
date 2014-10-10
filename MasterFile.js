@@ -140,7 +140,7 @@ function readTuple(bytecode, ptr, level) {
     return [ptr, obj];
 }
 
-// Returns a CodeObject
+// Interprets and returns a CodeObject
 function readCodeObject(bytecode, ptr, level) {
     console.log(Array(level).join('\t') + 'code object:');
     var obj = new CodeObject();
@@ -283,7 +283,7 @@ function readCodeObject(bytecode, ptr, level) {
     return [ptr, obj];
 }
 
-// Implemented bytecode functions in a OpCode class
+// Implemented bytecode functions in a CodeObject class
 var CodeObject = (function () {
     function CodeObject() {
         this.argcount = undefined;
@@ -462,14 +462,32 @@ var CodeObject = (function () {
         Stack.push(TOS1 / TOS);
         this.pc += 1;
     };
-    CodeObject.prototype.SLICE = function () {
+    CodeObject.prototype.SLICE_0 = function () {
         this.pc += 1;
     };
-    CodeObject.prototype.STORE_SLICE = function () {
+    CodeObject.prototype.SLICE_1 = function () {
+    };
+    CodeObject.prototype.SLICE_2 = function () {
+    };
+    CodeObject.prototype.SLICE_3 = function () {
+    };
+    CodeObject.prototype.STORE_SLICE_0 = function () {
         this.pc += 1;
     };
-    CodeObject.prototype.DELETE_SLICE = function () {
+    CodeObject.prototype.STORE_SLICE_1 = function () {
+    };
+    CodeObject.prototype.STORE_SLICE_2 = function () {
+    };
+    CodeObject.prototype.STORE_SLICE_3 = function () {
+    };
+    CodeObject.prototype.DELETE_SLICE_0 = function () {
         this.pc += 1;
+    };
+    CodeObject.prototype.DELETE_SLICE_1 = function () {
+    };
+    CodeObject.prototype.DELETE_SLICE_2 = function () {
+    };
+    CodeObject.prototype.DELETE_SLICE_3 = function () {
     };
     CodeObject.prototype.STORE_MAP = function () {
         this.pc += 1;
@@ -502,12 +520,21 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.BINARY_AND = function () {
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push((TOS1 && TOS));
         this.pc += 1;
     };
     CodeObject.prototype.BINARY_XOR = function () {
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push((TOS1 ? 1 : 0) ^ (TOS ? 1 : 0));
         this.pc += 1;
     };
     CodeObject.prototype.BINARY_OR = function () {
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push((TOS1 || TOS));
         this.pc += 1;
     };
     CodeObject.prototype.INPLACE_POWER = function () {
@@ -559,10 +586,14 @@ var CodeObject = (function () {
     CodeObject.prototype.LOAD_LOCALS = function () {
         this.pc += 1;
     };
+
+    // Returns TOS to the caller function
     CodeObject.prototype.RETURN_VALUE = function () {
         this.returnedValue = Stack.pop();
         this.pc += 1;
     };
+
+    // Implements 'from module import *'
     CodeObject.prototype.IMPORT_STAR = function () {
         this.pc += 1;
     };
@@ -578,7 +609,17 @@ var CodeObject = (function () {
     CodeObject.prototype.END_FINALLY = function () {
         this.pc += 1;
     };
+
+    // Creates a new class object
     CodeObject.prototype.BUILD_CLASS = function () {
+        //methods dictionary
+        var TOS = Stack.pop();
+
+        //tuple lf the names for base classes
+        var TOS1 = Stack.pop();
+
+        //the class name
+        var TOS2 = Stack.pop();
         this.pc += 1;
     };
 
@@ -591,6 +632,7 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.DELETE_NAME = function () {
         var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        this.names[index] = null;
         this.pc += 3;
     };
     CodeObject.prototype.UNPACK_SEQUENCE = function () {
@@ -603,6 +645,10 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.FOR_ITER = function () {
         var incrCounter = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var TOS = Stack.pop();
+        var newVal = TOS.next();
+        Stack.push(TOS);
+        Stack.push(newVal);
         this.pc += 3;
     };
     CodeObject.prototype.LIST_APPEND = function () {
@@ -723,22 +769,27 @@ var CodeObject = (function () {
         this.pc += 3;
     };
     CodeObject.prototype.CONTINUE_LOOP = function () {
+        //start of loop(absolute)
         var start = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
     CodeObject.prototype.SETUP_LOOP = function () {
+        //target address(relative)
         var addr = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
     CodeObject.prototype.SETUP_EXCEPT = function () {
+        //target address(relative)
         var addr = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
     CodeObject.prototype.SETUP_FINALLY = function () {
+        //target address(relative)
         var addr = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
     CodeObject.prototype.LOAD_FAST = function () {
+        //local variable number
         var varNum = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         Stack.push(this.varnames[varNum]);
         this.pc += 3;
@@ -753,6 +804,7 @@ var CodeObject = (function () {
         this.pc += 3;
     };
     CodeObject.prototype.RAISE_VARARGS = function () {
+        //number of raise arguments(1,2 or 3)
         var numArg = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
@@ -780,9 +832,12 @@ var CodeObject = (function () {
         var varnamesOriginal = function_object.func_code.varnames.slice(0);
         function_object.func_code.varnames = [];
         var argcount = function_object.func_code.argcount;
+
         for (var i = 0; i < numKwargs; i++) {
             function_object.func_code.varnames[kwargs[i][0]] = kwargs[i][1];
         }
+
+        //Fill up remaining variable names using the positional arguments
         var counter = 0;
         for (i = 0; i < argcount; i++) {
             if ((function_object.func_code.varnames[i] == undefined) && (counter < args.length)) {
@@ -790,6 +845,8 @@ var CodeObject = (function () {
                 counter += 1;
             }
         }
+
+        // Get default values for any unspecified variable left
         counter = function_object.func_defaults.length;
         for (i = argcount; i >= 0; i--) {
             if (function_object.func_code.varnames[i - 1] == undefined) {
@@ -821,6 +878,7 @@ var CodeObject = (function () {
         this.pc += 3;
     };
     CodeObject.prototype.MAKE_FUNCTION = function () {
+        //number of defaults found below TOS
         var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var code_object = Stack.pop();
         var defaults = [];
@@ -840,31 +898,44 @@ var CodeObject = (function () {
         this.pc += 3;
     };
     CodeObject.prototype.LOAD_CLOSURE = function () {
+        //load free variable from closure
         var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
     CodeObject.prototype.LOAD_DEREF = function () {
+        //load and deference from closure cell
         var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
+
+    //Stores TOS into the cell contained in slot i of the cell and free variable storage.
     CodeObject.prototype.STORE_DEREF = function () {
+        //store into cell
+        var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var TOS = Stack.pop();
+        this.cellvars[index] = TOS;
+        this.freevars[index] = TOS;
         this.pc += 3;
     };
 
     /* The next 3 opcodes must be contiguous and satisfy
     (CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
     CodeObject.prototype.CALL_FUNCTION_VAR = function () {
+        //number args + (number kwargs<<8)
         var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
     CodeObject.prototype.CALL_FUNCTION_KW = function () {
+        //number args + (number kwargs<<8)
         var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
     CodeObject.prototype.CALL_FUNCTION_VAR_KW = function () {
+        //number args + (number kwargs<<8)
         var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
+
     CodeObject.prototype.SETUP_WITH = function () {
         var delta = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
@@ -886,7 +957,7 @@ var CodeObject = (function () {
     return CodeObject;
 })();
 
-// Define function object
+// Defines class for a function object
 var FunctionObject = (function () {
     function FunctionObject(code_object, defaults) {
         this.func_code = code_object;
@@ -895,6 +966,8 @@ var FunctionObject = (function () {
     return FunctionObject;
 })();
 
+/** Parses given bytecode object whose first 8 bytes are expected to be
+the magic number(Python verison) and a timestamp for the file **/
 function parseBytecode(bytecode) {
     var len = bytecode.length;
 
@@ -924,7 +997,7 @@ function parseBytecode(bytecode) {
     // Initialize Interned List
     byteObject.interned_list = [];
 
-    // Start Parsing Bytecode
+    // Start Parsing Bytecode by type
     var ptr = 8;
     while (ptr < len) {
         var type = bytecode.toString('ascii', ptr, ptr + 1);
@@ -942,10 +1015,8 @@ function parseBytecode(bytecode) {
 
 // Function to execute the op code commands in code object
 function execBytecode() {
-    var obj = byteObject;
-
     while (byteObject.code_object.pc < byteObject.code_object.code.length) {
-        // Retrieve op code
+        // Retrieve only the op code
         var opcode = byteObject.code_object.code[byteObject.code_object.pc];
         console.log(OpCodeList[opcode]);
         byteObject.code_object[OpCodeList[opcode]]();
@@ -953,6 +1024,7 @@ function execBytecode() {
     }
 }
 
+// First function called to parse and exectute bytecode
 function interpretBytecode(bytecode) {
     // Parse Bytecode and Return Op Codes:
     if (parseBytecode(bytecode)) {
@@ -969,6 +1041,7 @@ var Stack = [];
 // Initalize object to store information of various types
 var byteObject = {};
 
+// Dictionary of potential types to be read
 var readByType = {};
 readByType['0'] = readNull;
 readByType['N'] = readNone;
@@ -1127,6 +1200,7 @@ var OpCodeList;
 })(OpCodeList || (OpCodeList = {}));
 ;
 
+// Main function to read in file
 var fs = require('fs');
 fs.readFile(process.argv[2], function doneReading(err, bytecode) {
     if (err)
