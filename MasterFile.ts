@@ -615,6 +615,8 @@ class CodeObject {
         this.pc += 1;
     }
     public PRINT_EXPR(){ 
+        var TOS = Stack.pop();
+        console.log('LOGGED TO CONSOLE: --------------------- '+TOS);
         this.pc += 1; 
     }
     public PRINT_ITEM(){
@@ -698,7 +700,7 @@ class CodeObject {
     }
     public DELETE_NAME(){ 
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
-        this.names[index] = null; 
+        this.names.splice(index,1); 
         this.pc += 3; 
     } 
     public UNPACK_SEQUENCE(){
