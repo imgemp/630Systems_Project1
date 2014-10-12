@@ -468,43 +468,96 @@ class CodeObject {
     }
     // Implements TOS[:] = TOS1
     public SLICE_0(){ 
+        var TOS = Stack.pop();
+        Stack.push(TOS.slice(0,TOS.length));
         this.pc += 1;
     }
     //Implements TOS1[TOS:] = TOS2
     public SLICE_1(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1.slice(TOS,TOS1.length));
         this.pc += 1;
     }
     public SLICE_2(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1.slice(0,TOS));
         this.pc += 1;
     }
     public SLICE_3(){
-       this.pc += 1;
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        var TOS2 = Stack.pop();
+        Stack.push(TOS2.slice(TOS1,TOS));
+        this.pc += 1;
     }
     public STORE_SLICE_0(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        for (var i=0; i<TOS.length; i++) { TOS[i] = TOS1[i]; }
+        Stack.push(TOS);
         this.pc += 1; 
     }
     public STORE_SLICE_1(){
-         this.pc += 1;
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        var TOS2 = Stack.pop();
+        for (var i=TOS; i<TOS1.length; i++) { TOS1[i] = TOS2[i-TOS]; }
+        Stack.push(TOS1);
+        this.pc += 1;
     }
     public STORE_SLICE_2(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        var TOS2 = Stack.pop();
+        for (var i=0; i<TOS; i++) { TOS1[i] = TOS2[i]; }
+        Stack.push(TOS1);
         this.pc += 1;
     }
     public STORE_SLICE_3(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        var TOS2 = Stack.pop();
+        var TOS3 = Stack.pop();
+        for (var i=TOS1; i<TOS; i++) { TOS2[i] = TOS3[i-TOS1]; }
+        Stack.push(TOS2);
         this.pc += 1;
     }
-    public DELETE_SLICE_0(){ 
-        this.pc += 1; 
+    public DELETE_SLICE_0(){
+        var TOS = Stack.pop();
+        TOS.splice(0,TOS.length);
+        Stack.push(TOS);
+        this.pc += 1;
     }
-    public DELETE_SLICE_1(){ 
+    public DELETE_SLICE_1(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        TOS1.splice(TOS,TOS1.length);
+        Stack.push(TOS1);
         this.pc += 1;
     }
     public DELETE_SLICE_2(){ 
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        TOS1.splice(0,TOS);
+        Stack.push(TOS1);
         this.pc += 1;
     }
-    public DELETE_SLICE_3(){ 
-       this.pc += 1;
+    public DELETE_SLICE_3(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        var TOS2 = Stack.pop();
+        TOS2.splice(TOS1,TOS);
+        Stack.push(TOS2);
+        this.pc += 1;
     }
-    public STORE_MAP(){ 
+    public STORE_MAP(){
+        var val = Stack.pop();
+        var key = Stack.pop();
+        var dic = Stack.pop();
+        dic[key] = val;
+        Stack.push(dic);
         this.pc += 1; 
     }
     public INPLACE_ADD(){ 
@@ -627,7 +680,7 @@ class CodeObject {
     public BUILD_CLASS(){
         //methods dictionary
         var TOS = Stack.pop();
-        //tuple lf the names for base classes
+        //tuple of the names for base classes
         var TOS1 = Stack.pop();
         //the class name
         var TOS2 = Stack.pop();
@@ -664,14 +717,20 @@ class CodeObject {
     }
     public LIST_APPEND(){
         var value = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
-        this.pc += 3; 
+
+        this.pc += 3;
     }
     public STORE_ATTR(){
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        TOS[this.names[index]] = TOS1;
         this.pc += 3;
     }
     public DELETE_ATTR(){
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var TOS = Stack.pop();
+        delete TOS[this.names[index]];
         this.pc += 3;
     }
     public STORE_GLOBAL(){
@@ -684,6 +743,16 @@ class CodeObject {
     }
     public DUP_TOPX(){
         var numItemsDup = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var dupItems = []
+        if (numItemsDup <= 5) {
+            for (var i=0; i<numItemsDup; i++) {
+                dupItems[i] = Stack.pop();
+            }
+            for (i=numItemsDup; i>=0; i--) {
+                Stack.push(dupItems[i]);
+                Stack.push(dupItems[i]);
+            }
+        } else { print('Warning: Number of items to duplicate is greater than 5.')}
         this.pc += 3;
     }
     public LOAD_CONST(){
@@ -698,26 +767,54 @@ class CodeObject {
     }
     public BUILD_TUPLE(){
         var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var tuple = [];
+        for (var i=0; i<numItems; i++) {
+            tuple[i] = Stack.pop();
+        }
+        Stack.push(tuple);
         this.pc += 3;
     } 
     public BUILD_LIST(){ 
         var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var list = [];
+        for (var i=0; i<numItems; i++) {
+            list[i] = Stack.pop();
+        }
+        Stack.push(list);
         this.pc += 3; 
     } 
-    public BUILD_SET(){ 
+    public BUILD_SET(){// NOT ON PYTHON DISASSEMBLE SITE //////////////////////////////////////////////////////////////////////////////////////////////
         var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         this.pc += 3;
     }
     public BUILD_MAP(){ 
         var numnumEntries = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        Stack.push({}); // ignoring num entries for now
         this.pc += 3; 
     } 
     public LOAD_ATTR(){ 
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        var TOS = Stack.pop();
+        Stack.push(TOS.names[index]);
         this.pc += 3; 
     }
     public COMPARE_OP(){ //comparison operator
-        var opname = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        var opname = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var cmp_op = ['<', '<=', '==', '!=', '>', '>=', 'in', 'not in', 'is', 'is not', 'exception match', 'BAD'];
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        if (cmp_op[opname] == '<') { Stack.push(TOS<TOS1); }
+        if (cmp_op[opname] == '<=') { Stack.push(TOS<=TOS1); }
+        if (cmp_op[opname] == '==') { Stack.push(TOS==TOS1); }
+        if (cmp_op[opname] == '!=') { Stack.push(TOS!=TOS1); }
+        if (cmp_op[opname] == '>') { Stack.push(TOS>TOS1); }
+        if (cmp_op[opname] == '<=') { Stack.push(TOS>=TOS1); }
+        if (cmp_op[opname] == 'in') { Stack.push(TOS in TOS1); }
+        if (cmp_op[opname] == 'not in') { Stack.push(!(TOS in TOS1)); }
+        if (cmp_op[opname] == 'is') { Stack.push(TOS==TOS1); }
+        if (cmp_op[opname] == 'is not') { Stack.push(TOS!=TOS1); }
+        if (cmp_op[opname] == 'exception match') { Stack.push(TOS==TOS1); }
+        if (cmp_op[opname] == 'BAD') { Stack.push(TOS==TOS1); } // NO IDEA
         this.pc += 3;
     } 
     public IMPORT_NAME (){ 
@@ -797,12 +894,21 @@ class CodeObject {
         this.pc += 3;
     } 
     public DELETE_FAST(){
-        var varNum = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        var varNum = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        delete this.varnames[varNum];
         this.pc += 3; 
     } 
     public RAISE_VARARGS(){ 
         //number of raise arguments(1,2 or 3)
-        var numArg = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        var numArg = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var args = []
+        for (var i=0; i<numArg; i++) {
+            args[i] = Stack.pop();
+        }
+        if (numArg == 0) { throw 'Exception Error'; }
+        if (numArg == 1) { throw 'Exception Error: '+args[0].toString(); }
+        if (numArg == 2) { throw 'Exception Error: '+args[0].toString()+', Parameters: '+args[1].toString(); }
+        if (numArg == 3) { throw 'Exception Error: '+args[0].toString()+', Parameters: '+args[1].toString()+', Traceback: '++args[2].toString(); }
         this.pc += 3; 
     } 
     /* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
@@ -870,21 +976,35 @@ class CodeObject {
         this.pc += 3;
     }
     public BUILD_SLICE(){
-        var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        if (numItems == 2) { Stack.push([TOS1,TOS]); }
+        if (numItems == 3) { Stack.push([Stack.pop(),TOS1,TOS]); }
         this.pc += 3; 
     } 
     public MAKE_CLOSURE(){ 
-        var numFreeVars = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var code_object = Stack.pop();
+        var cells = Stack.pop();
+        var defaults = [];
+        for (var i=0; i<argc; i++) { defaults[i] = Stack.pop(); }
+        var newFunction = new FunctionObject(code_object,defaults);
+        newFunction.func_closure = cells;
+        Stack.push(newFunction);
         this.pc += 3; 
     } 
-    public LOAD_CLOSURE(){
+    public LOAD_CLOSURE(){ //http://www.programering.com/a/MzM0EjMwATY.html
         //load free variable from closure
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        if (index < this.cellvars.length) { Stack.push(this.cellvars[index]); }
+        else { Stack.push(this.freevars[this.cellvars.length-index]); }
         this.pc += 3;
     }
     public LOAD_DEREF(){
         //load and deference from closure cell
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        Stack.push(this.cellvars[index]);
         this.pc += 3; 
     }
     //Stores TOS into the cell contained in slot i of the cell and free variable storage.
