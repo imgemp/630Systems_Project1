@@ -1,0 +1,122 @@
+magic number: 32431310
+time stamp: 107396084
+code object:
+	argcount:
+	0
+	nlocals:
+	0
+	stacksize:
+	1
+	flags:
+	64
+	code: (29)
+		0:  100 (0,0) load const
+		3:  132 (0,0) make function
+		6:  90  (0,0) store name
+		9:  101 (0,0) load name
+		12: 131 (0,0) call function
+		15: 90  (1,0) store name
+		18: 101 (1,0) load name
+		21: 131 (0,0) call function
+		24: 1	      pop top
+		25: 100 (1,0) load const
+		28: 83        return value
+	consts: (2)
+		code object:
+			argcount:
+			0
+			nlocals:
+			1
+			stacksize:
+			2
+			flags:
+			3
+			code: (34)
+				0:  100 (1,0) load const
+				3:  137 (0,0) store deref
+				6:  100 (2,0) load const
+				9:  137 (1,0) store deref
+				12: 135 (0,0) load closure
+				15: 135 (1,0) load closure
+				18: 102 (2,0) build tuple
+				21: 100 (3,0) load const
+				24: 134 (0,0) make closure
+				27: 125 (0,0) store fast
+				30: 124 (0,0) load fast
+				33: 83	      return value
+			consts: (4)
+				None
+				3
+				5
+				code object:
+					argcount:
+					0
+					nlocals:
+					1
+					stacksize:
+					2
+					flags:
+					19
+					code: (18)
+						0:  100 (1,0) load const
+						3:  125 (0,0) store fast
+						6:  136 (0,0) load deref
+						9:  136 (1,0) load deref
+						12: 23        binary add
+						13: 124 (0,0) load fast
+						16: 23        binary add
+						17: 83        return value
+					consts: (2)
+						None
+						4
+					names: (0)
+					varnames: (1)
+						(interned)a
+					freevars: (2)
+						(interned)m
+						(interned)n
+					cellvars: (0)
+					filename:
+					foo3.py
+					name:
+					(interned)bar
+					firstlineno:
+					4
+					lnotab: (2)
+					(0,1)
+					(6,1)
+			names: (0)
+			varnames: (1)
+				ref to interned string in position 3
+			freevars: (0)
+			cellvars: (2)
+				ref to interned string in position 1
+				ref to interned string in position 2
+			filename:
+			foo3.py
+			name:
+			(interned)foo3
+			firstlineno:
+			1
+			lnotab: (4)
+			(0,1)
+			(6,1)
+			(6,1)
+			(18,3)
+		None
+	names: (2)
+		ref to interned string in position 4
+		ref to interned string in position 3
+	varnames: (0)
+	freevars: (0)
+	cellvars: (0)
+	filename:
+	foo3.py
+	name:
+	(interned)<module>
+	firstlineno:
+	1
+	lnotab: (2)
+	(9,8)
+	(9,1)
+[ 'a', 'm', 'n', 'bar', 'foo3', '<module>' ]
