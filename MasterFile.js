@@ -809,8 +809,9 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.LOAD_ATTR = function () {
         var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var attr = this.names[index];
         var TOS = Stack.pop();
-        Stack.push(TOS.names[index]);
+        Stack.push(TOS[attr]);
         this.pc += 3;
     };
     CodeObject.prototype.COMPARE_OP = function () {
@@ -1050,6 +1051,15 @@ var CodeObject = (function () {
             defaults[i] = Stack.pop();
         }
         var newFunction = new FunctionObject(code_object, defaults);
+        newFunction.func_name = code_object.name;
+        if (code_object.consts.length > 0) {
+            var doc_string = code_object.consts[0];
+            console.log(doc_string);
+            if (typeof doc_string == 'string' || doc_string instanceof String) {
+                console.log('got here');
+                newFunction.func_doc = doc_string; // not fool proof but better than nothing
+            }
+        }
         Stack.push(newFunction);
         this.pc += 3;
     };
