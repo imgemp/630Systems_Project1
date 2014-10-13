@@ -322,7 +322,8 @@ class CodeObject {
         this.pc += 1;
     }
     public POP_TOP(){
-        return Stack.pop();
+        Stack.pop();
+        this.pc += 1;
     }
     public ROT_TWO(){
         var TOS = Stack.pop();
@@ -559,7 +560,7 @@ class CodeObject {
         dic[key] = val;
         Stack.push(dic);
         this.pc += 1; 
-    }
+    }// shaylyn here down
     public INPLACE_ADD(){ 
         this.pc += 1; 
     }
@@ -713,7 +714,7 @@ class CodeObject {
         var newVal = TOS.next(); 
         Stack.push(TOS);
         Stack.push(newVal);
-        this.pc += 3;
+        this.pc += incrCounter + 3;
     }
     public LIST_APPEND(){
         var value = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
@@ -752,7 +753,7 @@ class CodeObject {
                 Stack.push(dupItems[i]);
                 Stack.push(dupItems[i]);
             }
-        } else { print('Warning: Number of items to duplicate is greater than 5.')}
+        } else { console.log('Warning: Number of items to duplicate is greater than 5.')}
         this.pc += 3;
     }
     public LOAD_CONST(){
@@ -908,7 +909,7 @@ class CodeObject {
         if (numArg == 0) { throw 'Exception Error'; }
         if (numArg == 1) { throw 'Exception Error: '+args[0].toString(); }
         if (numArg == 2) { throw 'Exception Error: '+args[0].toString()+', Parameters: '+args[1].toString(); }
-        if (numArg == 3) { throw 'Exception Error: '+args[0].toString()+', Parameters: '+args[1].toString()+', Traceback: '++args[2].toString(); }
+        if (numArg == 3) { throw 'Exception Error: '+args[0].toString()+', Parameters: '+args[1].toString()+', Traceback: '+args[2].toString(); }
         this.pc += 3; 
     } 
     /* CALL_FUNCTION_XXX opcodes defined below depend on this definition */
@@ -984,36 +985,37 @@ class CodeObject {
         this.pc += 3; 
     } 
     public MAKE_CLOSURE(){ 
+        // creates a new function object sets its freevars
         var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var code_object = Stack.pop();
         var cells = Stack.pop();
         var defaults = [];
         for (var i=0; i<argc; i++) { defaults[i] = Stack.pop(); }
         var newFunction = new FunctionObject(code_object,defaults);
-        newFunction.func_closure = cells;
+        newFunction.func_closure = cells; // don't know what this is for
+        for (i=0; i<cells.length; i++) { newFunction.func_code.freevars[i] = cells[i]; }
         Stack.push(newFunction);
         this.pc += 3; 
     } 
     public LOAD_CLOSURE(){ //http://www.programering.com/a/MzM0EjMwATY.html
-        //load free variable from closure
-        var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        //load from cellvars
+        var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         if (index < this.cellvars.length) { Stack.push(this.cellvars[index]); }
         else { Stack.push(this.freevars[this.cellvars.length-index]); }
         this.pc += 3;
     }
     public LOAD_DEREF(){
-        //load and deference from closure cell
+        //load from freevars
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
-        Stack.push(this.cellvars[index]);
+        Stack.push(this.freevars[index]);
         this.pc += 3; 
     }
     //Stores TOS into the cell contained in slot i of the cell and free variable storage.
     public STORE_DEREF(){ 
-        //store into cell
+        //store in cellvars
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var TOS = Stack.pop(); 
         this.cellvars[index] = TOS;
-        this.freevars[index] = TOS;
         this.pc += 3; 
     } 
     /* The next 3 opcodes must be contiguous and satisfy
