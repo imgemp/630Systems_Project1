@@ -6,8 +6,8 @@ function readNull(bytecode, ptr, level) {
 }
 
 function readNone(bytecode, ptr, level) {
-    console.log(Array(level).join('\t') + 'None');
-    var obj = 'None';
+    console.log(Array(level).join('\t') + 'null');
+    var obj = null;
     return [ptr, obj];
 }
 
@@ -1034,7 +1034,9 @@ var CodeObject = (function () {
         function_object.func_code.varnames = varnamesOriginal.slice(0);
 
         // Push the return value onto the stack (could be a None? value)
-        Stack.push(function_object.func_code.returnedValue);
+        if (!(function_object.func_code.returnedValue === null)) {
+            Stack.push(function_object.func_code.returnedValue);
+        }
 
         // Reset function object's counter
         function_object.func_code.pc = 0;
@@ -1054,9 +1056,7 @@ var CodeObject = (function () {
         newFunction.func_name = code_object.name;
         if (code_object.consts.length > 0) {
             var doc_string = code_object.consts[0];
-            console.log(doc_string);
             if (typeof doc_string == 'string' || doc_string instanceof String) {
-                console.log('got here');
                 newFunction.func_doc = doc_string; // not fool proof but better than nothing
             }
         }
