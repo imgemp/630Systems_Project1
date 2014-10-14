@@ -21,7 +21,7 @@ code object:
 		22: 100 (2,0) Load Const 1
 		25: 131 (1,0) Call Function(argc=1,kwargs=0,object class?) calls __init__?
 		28: 90  (1,0) Store Name in names[1]
-		31: 101 (1,0) Load Name 
+		31: 101 (1,0) Load Name
 		34: 106 (2,0) Load Attr ‘fun’
 		37: 131 (0,0) Call Function(argc=0,kwargs=0,
 		40: 71        Print item
@@ -61,10 +61,10 @@ code object:
 					flags:
 					67
 					code: (13)
-						0:  124 (1,0) Load Fast ‘self’
-						3:  124 (0,0) Load Fast ‘var’
-						6:  95  (0,0) Store Attr ‘var’
-						9:  100 (0,0) Load None
+						0:  124 (1,0) Load Fast ‘var’
+						3:  124 (0,0) Load Fast ‘self’
+						6:  95  (0,0) Store Attr ‘self'['var'] = var (TOS.name = TOS1)
+						9:  100 (0,0) Load Const None
 						12: 83        Return Value
 					consts: (1)
 						None

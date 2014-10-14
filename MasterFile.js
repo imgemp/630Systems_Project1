@@ -6,7 +6,7 @@ function readNull(bytecode, ptr, level) {
 }
 
 function readNone(bytecode, ptr, level) {
-    console.log(Array(level).join('\t') + 'null');
+    console.log(Array(level).join('\t') + 'None');
     var obj = null;
     return [ptr, obj];
 }
@@ -620,6 +620,8 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.PRINT_EXPR = function () {
+        var TOS = Stack.pop();
+        console.log('LOGGED TO CONSOLE: --------------------- ' + TOS);
         this.pc += 1;
     };
     CodeObject.prototype.PRINT_ITEM = function () {
@@ -659,6 +661,16 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.LOAD_LOCALS = function () {
+        var locals = {};
+        for (var i = 0; i < this.names.length; i++) {
+            if (typeof this.names[i] === 'string') {
+                locals[this.names[i]] = null;
+            } else if (this.names[i] instanceof FunctionObject) {
+                locals[this.names[i].func_name] = this.names[i];
+            } else
+                console.log('problems with LOAD_LOCALS');
+        }
+        Stack.push(locals);
         this.pc += 1;
     };
 
@@ -695,6 +707,8 @@ var CodeObject = (function () {
 
         //the class name
         var TOS2 = Stack.pop();
+        var newClass = new classObject(TOS2, TOS1, TOS);
+        Stack.push(newClass);
         this.pc += 1;
     };
 
@@ -707,7 +721,7 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.DELETE_NAME = function () {
         var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
-        this.names[index] = null;
+        this.names.splice(index, 1);
         this.pc += 3;
     };
     CodeObject.prototype.UNPACK_SEQUENCE = function () {
@@ -992,6 +1006,9 @@ var CodeObject = (function () {
             args[numArgs - 1 - i] = Stack.pop();
         }
         var function_object = Stack.pop();
+        if (function_object instanceof classObject) {
+            function_object = function_object.methods['__init__'];
+        }
 
         // Replace function object's variable names with arguments from Stack & default arguments
         var varnamesOriginal = function_object.func_code.varnames.slice(0);
@@ -1155,6 +1172,16 @@ var CodeObject = (function () {
         this.pc += 3;
     };
     return CodeObject;
+})();
+
+// Defines class object
+var classObject = (function () {
+    function classObject(name, bases, methods) {
+        this.name = name;
+        this.bases = bases;
+        this.methods = methods;
+    }
+    return classObject;
 })();
 
 // Defines class for a function object

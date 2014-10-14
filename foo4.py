@@ -1,3 +1,4 @@
+"""Other doc string"""
 def foo4():
     """Doc string test."""
     return 'nothing'

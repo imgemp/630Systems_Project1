@@ -7,7 +7,7 @@ function readNull(bytecode:NodeBuffer, ptr:number, level:number) {
 }
 
 function readNone(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log(Array(level).join('\t') + 'null');
+    console.log(Array(level).join('\t') + 'None');
     var obj = null;
     return [ptr, obj];
 }
@@ -656,7 +656,14 @@ class CodeObject {
         this.pc += 1; 
     }
     public LOAD_LOCALS(){ 
-        this.pc += 1; 
+        var locals = {}
+        for (var i=0; i<this.names.length; i++){
+            if (typeof this.names[i] === 'string') { locals[this.names[i]] = null; }
+            else if (this.names[i] instanceof FunctionObject) { locals[this.names[i].func_name] = this.names[i] }
+            else console.log('problems with LOAD_LOCALS');
+        }
+        Stack.push(locals);
+        this.pc += 1;
     }
     // Returns TOS to the caller function
     public RETURN_VALUE(){
@@ -687,6 +694,8 @@ class CodeObject {
         var TOS1 = Stack.pop();
         //the class name
         var TOS2 = Stack.pop();
+        var newClass = new classObject(TOS2,TOS1,TOS);
+        Stack.push(newClass);
         this.pc += 1; 
      }
 
@@ -927,6 +936,9 @@ class CodeObject {
         for (var i=0; i< numKwargs; i++){ var val = Stack.pop(); kwargs[i] = [Stack.pop(),val]; } // grab keyword args off stack first
         for (i=0; i< numArgs; i++) { args[numArgs-1-i] = Stack.pop(); } // next grab positional args, args[0] = leftmost argument
         var function_object = Stack.pop(); // last grab function object
+        if (function_object instanceof classObject) {
+            function_object = function_object.methods['__init__'];
+        }
         // Replace function object's variable names with arguments from Stack & default arguments
         var varnamesOriginal = function_object.func_code.varnames.slice(0); // record varnames for later use and set to empty list
         function_object.func_code.varnames = [];
@@ -1062,6 +1074,15 @@ class CodeObject {
     public MAP_ADD(){ 
         this.pc += 3; 
     }
+}
+
+// Defines class object
+class classObject{
+    name: string;
+    bases: any;
+    methods: any;
+
+    constructor(name: string, bases: any, methods: any) { this.name = name; this.bases = bases; this.methods = methods; }
 }
 
 // Defines class for a function object
