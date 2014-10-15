@@ -1,0 +1,206 @@
+magic number: 32431310
+time stamp: 401216284
+code object:
+	argcount:
+	0
+	nlocals:
+	0
+	stacksize:
+	7
+	flags:
+	64
+	code: (61)
+		0:  100 (0,0) Load Const (‘object’)
+		3:  100 (9,0) Load Const ([])
+		6:  100 (1,0) Load Const (code object - class ‘object’)
+		9:  132 (0,0) Make Function (argc=0,code object = class ‘object’)
+		12: 131 (0,0) Call Function (args=0,kwargs=0) returns list of function objects
+		15: 89        Build Class (puts function objects into one class object)
+		16: 90  (0,0) Store Name (stores the class)
+		19: 101 (0,0) Load Name (loads the class)
+		22: 100 (2,0) Load Const (1)
+		25: 100 (3,0) Load Const (2)
+		28: 100 (4,0) Load Const (‘d’)
+		31: 100 (5,0) Load Const (5)
+		34: 100 (6,0) Load Const (‘c’)
+		37: 100 (7,0) Load Const (3)
+		40: 131 (2,2) Call Function (args=2,kwargs=2,class ‘object’) calls __init__ by default
+		43: 90  (1,0) Store Name (store instance of class ‘object’ called ‘foo’)
+		46: 101 (1,0) Load Name (load ‘foo’)
+		49: 106 (2,0) Load Attr (load ‘fun’)
+		52: 131 (0,0) Call Function (args=0,kwargs=0,’fun’ function)
+		55: 71        Print Item (result from adding)
+		56: 72        Print Newline (prints newline)
+		57: 100 (8,0) Load Const (None)
+		60: 83        Return Value (returns nothing)
+	consts: (10)
+		(interned)object
+		code object:
+			argcount:
+			0
+			nlocals:
+			0
+			stacksize:
+			3
+			flags:
+			66
+			code: (32)
+				0:  101 (0,0) Load Name (‘__name__’)
+				3:  90  (1,0) Store Name (overwrites ‘__module__’)
+				6:  100 (0,0) Load Const (3)
+				9:  100 (1,0) Load Const (4)
+				12: 100 (2,0) Load Const (code object ‘__init__’)
+				15: 132 (2,0) Make Function (argc=2,__init__)
+				18: 90  (2,0) Store Name (replaces ‘__init__’ with __init__)
+				21: 100 (3,0) Load Const (code object ‘fun’)
+				24: 132 (0,0) Make Function (argc=0,fun)
+				27: 90  (3,0) Store Name (replaces ‘fun’ with fun)
+				30: 82        Load Locals (loads names onto stack as dict)
+				31: 83        Return Value (returns method dict)
+			consts: (4)
+				3
+				4
+				code object:
+					argcount:
+					5
+					nlocals:
+					5
+					stacksize:
+					2
+					flags:
+					67
+					code: (40)
+						0:  124 (1,0) Load Fast (1)
+						3:  124 (0,0) Load Fast (‘self’)
+						6:  95  (0,0) Store Attr (if self: this.self[‘a’] = 1)
+						9:  124 (2,0) Load Fast (2)
+						12: 124 (0,0) Load Fast (‘self’)
+						15: 95  (1,0) Store Attr (if self: this.self[‘b’] = 2)
+						18: 124 (3,0) Load Fast (3)
+						21: 124 (0,0) Load Fast (‘self’)
+						24: 95  (2,0) Store Attr (if self: this.self[‘c’] = 3)
+						27: 124 (4,0) Load Fast (4)
+						30: 124 (0,0) Load Fast (‘self’)
+						33: 95  (3,0) Store Attr (if self: this.self[‘d’] = 4)
+						36: 100 (0,0) Load Const (None)
+						39: 83        Return Value (returns nothing)
+					consts: (1)
+						None
+					names: (4)
+						(interned)a
+						(interned)b
+						(interned)c
+						(interned)d
+					varnames: (5)
+						(interned)self
+						ref to interned string in position 1
+						ref to interned string in position 2
+						ref to interned string in position 3
+						ref to interned string in position 4
+					freevars: (0)
+					cellvars: (0)
+					filename:
+					foo7.py
+					name:
+					(interned)__init__
+					firstlineno:
+					2
+					lnotab: (4)
+					(0,1)
+					(9,1)
+					(9,1)
+					(9,1)
+				code object:
+					argcount:
+					1
+					nlocals:
+					1
+					stacksize:
+					2
+					flags:
+					67
+					code: (28)
+						0:  124 (0,0) Load Fast (‘self’)
+						3:  106 (0,0) Load Attr (this.self[1])
+						6:  124 (0,0) Load Fast (‘self’)
+						9:  106 (1,0) Load Attr (this.self[2])
+						12: 23        Binary Add (adds them)
+						13: 124 (0,0) Load Fast (‘self’)
+						16: 106 (2,0) Load Attr (this.self[3])
+						19: 23        Binary Add (adds them)
+						20: 124 (0,0) Load Fast (‘self’)
+						23: 106 (3,0) Load Attr (this.self[4])
+						26: 23        Binary Add (adds them)
+						27: 83        Return Value (returns the result)
+					consts: (1)
+						None
+					names: (4)
+						ref to interned string in position 1
+						ref to interned string in position 2
+						ref to interned string in position 3
+						ref to interned string in position 4
+					varnames: (1)
+						ref to interned string in position 5
+					freevars: (0)
+					cellvars: (0)
+					filename:
+					foo7.py
+					name:
+					(interned)fun
+					firstlineno:
+					8
+					lnotab: (1)
+					(0,1)
+			names: (4)
+				(interned)__name__
+				(interned)__module__
+				ref to interned string in position 6
+				ref to interned string in position 7
+			varnames: (0)
+			freevars: (0)
+			cellvars: (0)
+			filename:
+			foo7.py
+			name:
+			ref to interned string in position 0
+			firstlineno:
+			1
+			lnotab: (2)
+			(6,1)
+			(15,6)
+		1
+		2
+		ref to interned string in position 4
+		5
+		ref to interned string in position 3
+		3
+		None
+ (0)
+	names: (3)
+		ref to interned string in position 0
+		(interned)foo
+		ref to interned string in position 7
+	varnames: (0)
+	freevars: (0)
+	cellvars: (0)
+	filename:
+	foo7.py
+	name:
+	(interned)<module>
+	firstlineno:
+	1
+	lnotab: (2)
+	(19,10)
+	(27,2)
+[ 'object',
+  'a',
+  'b',
+  'c',
+  'd',
+  'self',
+  '__init__',
+  'fun',
+  '__name__',
+  '__module__',
+  'foo',
+  '<module>' ]
