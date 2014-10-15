@@ -302,6 +302,7 @@ var CodeObject = (function () {
         this.lnotab = undefined;
         this.returnedValue = undefined;
         this.pc = 0;
+        this.self = undefined;
     }
     CodeObject.prototype.STOP_CODE = function () {
         //do nothing
@@ -751,7 +752,11 @@ var CodeObject = (function () {
         var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        TOS[this.names[index]] = TOS1;
+        if (TOS == 'self') {
+            this.self[this.names[index]] = TOS1;
+        } else {
+            TOS[this.names[index]] = TOS1;
+        }
         this.pc += 3;
     };
     CodeObject.prototype.DELETE_ATTR = function () {
@@ -825,7 +830,11 @@ var CodeObject = (function () {
         var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var attr = this.names[index];
         var TOS = Stack.pop();
-        Stack.push(TOS[attr]);
+        if (TOS == 'self') {
+            Stack.push(this.self[attr]);
+        } else {
+            Stack.push(TOS[attr]);
+        }
         this.pc += 3;
     };
     CodeObject.prototype.COMPARE_OP = function () {
@@ -1007,10 +1016,16 @@ var CodeObject = (function () {
             args[numArgs - 1 - i] = Stack.pop();
         }
         var function_object = Stack.pop();
-        if (function_object instanceof classObject) {
-            function_object = function_object.methods['__init__'];
+        var isClass = (function_object instanceof classObject);
+        if (isClass) {
+            var class_object = function_object;
+            var self = class_object.self;
+            function_object = class_object.methods['__init__'];
+            function_object.func_code.self = self;
             console.log('got here');
-            console.log(function_object.func_defaults);
+            // OBJECTS ALWAYS PASS SELF object AS FIRST ARGUMENT & UPDATE CHANGES TO SELF IN CLASS OBJECT BEFORE RESET VARNAMES BY INSPECTING VARNAMES[0] - hope varnames[0] doesn't get overwritten at any point
+            //  args.unshift('self');
+            // console.log(function_object.func_defaults);
         }
 
         // Replace function object's variable names with arguments from Stack & default arguments
@@ -1024,6 +1039,11 @@ var CodeObject = (function () {
         }
         console.log(function_object.func_code.varnames);
 
+        // If it's a class object, put 'self' in position zero
+        if (isClass) {
+            function_object.func_code.varnames[0] = 'self';
+        }
+
         //Fill up remaining variable names using the positional arguments
         var counter = 0;
         for (i = 0; i < argcount; i++) {
@@ -1036,9 +1056,9 @@ var CodeObject = (function () {
 
         // Get default values for any unspecified variable left
         counter = function_object.func_defaults.length;
-        for (i = argcount; i >= 0; i--) {
-            if (function_object.func_code.varnames[i - 1] == undefined) {
-                function_object.func_code.varnames[i - 1] = function_object.func_defaults[counter - 1];
+        for (i = argcount - 1; i >= 0; i--) {
+            if (function_object.func_code.varnames[i] == undefined) {
+                function_object.func_code.varnames[i] = function_object.func_defaults[counter - 1];
                 counter -= 1;
             }
         }
@@ -1052,6 +1072,11 @@ var CodeObject = (function () {
             console.log(OpCodeList[opcode]);
             function_object.func_code[OpCodeList[opcode]]();
             console.log(Stack);
+        }
+
+        // Update class objects self field with that found in function_object.func_code.self
+        if (isClass) {
+            class_object.self = function_object.func_code.self;
         }
 
         // Reset varnames
@@ -1183,10 +1208,12 @@ var CodeObject = (function () {
 
 // Defines class object
 var classObject = (function () {
+    // maybe add a 'self' property here to hold all the variables? should default to this.self = {} + methods should have func_globals set to self
     function classObject(name, bases, methods) {
         this.name = name;
         this.bases = bases;
         this.methods = methods;
+        this.self = {};
     }
     return classObject;
 })();

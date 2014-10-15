@@ -297,6 +297,7 @@ class CodeObject {
     lnotab: any;
     returnedValue: any;
     pc: number;
+    self: any;
 
     constructor() {
         this.argcount = undefined;
@@ -315,6 +316,7 @@ class CodeObject {
         this.lnotab = undefined;
         this.returnedValue = undefined;
         this.pc = 0;
+        this.self = undefined;
     }
 
     public STOP_CODE(){
@@ -736,7 +738,8 @@ class CodeObject {
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        TOS[this.names[index]] = TOS1;
+        if (TOS=='self') { this.self[this.names[index]] = TOS1; }
+        else { TOS[this.names[index]] = TOS1; }
         this.pc += 3;
     }
     public DELETE_ATTR(){
@@ -808,7 +811,8 @@ class CodeObject {
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var attr = this.names[index];
         var TOS = Stack.pop();
-        Stack.push(TOS[attr]);
+        if (TOS=='self') { Stack.push(this.self[attr]); }
+        else { Stack.push(TOS[attr]); }
         this.pc += 3; 
     }
     public COMPARE_OP(){ //comparison operator
@@ -937,9 +941,12 @@ class CodeObject {
         for (var i=0; i< numKwargs; i++){ var val = Stack.pop(); kwargs[i] = [Stack.pop(),val]; } // grab keyword args off stack first
         for (i=0; i< numArgs; i++) { args[numArgs-1-i] = Stack.pop(); } // next grab positional args, args[0] = leftmost argument
         var function_object = Stack.pop(); // last grab function object
-        if (function_object instanceof classObject) {
-            var self = function_object.self;
-            function_object = function_object.methods['__init__'];
+        var isClass = (function_object instanceof classObject);
+        if (isClass) {
+            var class_object = function_object;
+            var self = class_object.self;
+            function_object = class_object.methods['__init__'];
+            function_object.func_code.self = self;
             console.log('got here');
             // OBJECTS ALWAYS PASS SELF object AS FIRST ARGUMENT & UPDATE CHANGES TO SELF IN CLASS OBJECT BEFORE RESET VARNAMES BY INSPECTING VARNAMES[0] - hope varnames[0] doesn't get overwritten at any point
             //  args.unshift('self');
@@ -955,6 +962,8 @@ class CodeObject {
             function_object.func_code.varnames[kwargs[i][0]] = kwargs[i][1];
         }
         console.log(function_object.func_code.varnames);
+        // If it's a class object, put 'self' in position zero
+        if (isClass) { function_object.func_code.varnames[0] = 'self'; }
         //Fill up remaining variable names using the positional arguments
         var counter = 0;
         for (i=0; i< argcount; i++) {
@@ -966,9 +975,9 @@ class CodeObject {
         console.log(function_object.func_code.varnames);
         // Get default values for any unspecified variable left
         counter = function_object.func_defaults.length;
-        for (i=argcount; i>=0; i--) {
-            if (function_object.func_code.varnames[i-1] == undefined) {
-                function_object.func_code.varnames[i-1] = function_object.func_defaults[counter-1];
+        for (i=argcount-1; i>=0; i--) {
+            if (function_object.func_code.varnames[i] == undefined) {
+                function_object.func_code.varnames[i] = function_object.func_defaults[counter-1];
                 counter -= 1;
             }
         }
@@ -982,6 +991,8 @@ class CodeObject {
             function_object.func_code[OpCodeList[opcode]]();
             console.log(Stack);
         }
+        // Update class objects self field with that found in function_object.func_code.self
+        if (isClass) { class_object.self = function_object.func_code.self; }
         // Reset varnames
         function_object.func_code.varnames = varnamesOriginal.slice(0);
         // Push the return value onto the stack (could be a None? value)
