@@ -955,6 +955,7 @@ var CodeObject = (function () {
         var varNum = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         Stack.push(this.varnames[varNum]);
         this.pc += 3;
+        console.log(this.varnames);
     };
     CodeObject.prototype.STORE_FAST = function () {
         var varNum = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
@@ -1008,16 +1009,20 @@ var CodeObject = (function () {
         var function_object = Stack.pop();
         if (function_object instanceof classObject) {
             function_object = function_object.methods['__init__'];
+            console.log('got here');
+            console.log(function_object.func_defaults);
         }
 
         // Replace function object's variable names with arguments from Stack & default arguments
         var varnamesOriginal = function_object.func_code.varnames.slice(0);
+        console.log(varnamesOriginal);
         function_object.func_code.varnames = [];
         var argcount = function_object.func_code.argcount;
 
         for (var i = 0; i < numKwargs; i++) {
             function_object.func_code.varnames[kwargs[i][0]] = kwargs[i][1];
         }
+        console.log(function_object.func_code.varnames);
 
         //Fill up remaining variable names using the positional arguments
         var counter = 0;
@@ -1027,6 +1032,7 @@ var CodeObject = (function () {
                 counter += 1;
             }
         }
+        console.log(function_object.func_code.varnames);
 
         // Get default values for any unspecified variable left
         counter = function_object.func_defaults.length;
@@ -1036,9 +1042,10 @@ var CodeObject = (function () {
                 counter -= 1;
             }
         }
+        console.log(function_object.func_code.varnames);
 
         while (function_object.func_code.pc < function_object.func_code.code.length) {
-            //op code
+            // op code
             var opcode = function_object.func_code.code[function_object.func_code.pc];
 
             // call opcode

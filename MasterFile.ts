@@ -900,6 +900,7 @@ class CodeObject {
         var varNum = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         Stack.push(this.varnames[varNum]);
         this.pc += 3;
+        console.log(this.varnames);
     } 
     public STORE_FAST(){
         var varNum = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
@@ -938,15 +939,20 @@ class CodeObject {
         var function_object = Stack.pop(); // last grab function object
         if (function_object instanceof classObject) {
             function_object = function_object.methods['__init__'];
+            console.log('got here');
+            // OBJECTS ALWAYS PASS SELF object AS FIRST ARGUMENT & UPDATE CHANGES TO SELF IN CLASS OBJECT BEFORE RESET VARNAMES BY INSPECTING VARNAMES[0] - hope varnames[0] doesn't get overwritten at any point
+            console.log(function_object.func_defaults);
         }
         // Replace function object's variable names with arguments from Stack & default arguments
         var varnamesOriginal = function_object.func_code.varnames.slice(0); // record varnames for later use and set to empty list
+        console.log(varnamesOriginal);
         function_object.func_code.varnames = [];
         var argcount = function_object.func_code.argcount;
-        // Keyword agrument variables
+        // Keyword argument variables
         for (var i=0; i< numKwargs; i++) {
             function_object.func_code.varnames[kwargs[i][0]] = kwargs[i][1];
         }
+        console.log(function_object.func_code.varnames);
         //Fill up remaining variable names using the positional arguments
         var counter = 0;
         for (i=0; i< argcount; i++) {
@@ -955,6 +961,7 @@ class CodeObject {
                 counter += 1;
             }
         }
+        console.log(function_object.func_code.varnames);
         // Get default values for any unspecified variable left
         counter = function_object.func_defaults.length;
         for (i=argcount; i>=0; i--) {
@@ -963,9 +970,10 @@ class CodeObject {
                 counter -= 1;
             }
         }
+        console.log(function_object.func_code.varnames);
         // Execute the function's bytecode
         while (function_object.func_code.pc < function_object.func_code.code.length){
-            //op code
+            // op code
             var opcode = function_object.func_code.code[function_object.func_code.pc];
             // call opcode
             console.log(OpCodeList[opcode]);
@@ -1081,6 +1089,7 @@ class classObject{
     name: string;
     bases: any;
     methods: any;
+    // maybe add a 'self' property here to hold all the variables? should default to this.self = {} + methods should have func_globals set to self
 
     constructor(name: string, bases: any, methods: any) { this.name = name; this.bases = bases; this.methods = methods; }
 }
