@@ -1,5 +1,11 @@
 /// <reference path="node.d.ts" />
 
+class internedString {
+    index: number;
+
+    constructor(index: number) { this.index = index; }
+}
+
 function readNull(bytecode:NodeBuffer, ptr:number, level:number) {
     console.log(Array(level).join('\t') + 'Null');
     var obj = null;
@@ -100,7 +106,8 @@ function readStringInterned(bytecode:NodeBuffer, ptr:number, level:number) {
 }
 
 function readStringRef(bytecode:NodeBuffer, ptr:number, level:number) {
-    var obj = bytecode.readUInt32LE(ptr);
+    var index = bytecode.readUInt32LE(ptr);
+    var obj = new internedString(index);
     console.log(Array(level).join('\t') + 'ref to interned string in position ' + obj);
     return [ptr + 4, obj];
 }
@@ -316,7 +323,7 @@ class CodeObject {
         this.lnotab = undefined;
         this.returnedValue = undefined;
         this.pc = 0;
-        this.self = undefined;
+        this.self = {};
     }
 
     public STOP_CODE(){
@@ -702,10 +709,12 @@ class CodeObject {
         this.pc += 1; 
     }
     public LOAD_LOCALS(){ 
-        var locals = {}
+        var locals = {};
         for (var i=0; i<this.names.length; i++){
-            if (typeof this.names[i] === 'string') { locals[this.names[i]] = null; }
-            else if (this.names[i] instanceof FunctionObject) { locals[this.names[i].func_name] = this.names[i] }
+            var name = this.names[i];
+            if (typeof name === 'string') { locals[name] = null; }
+            else if (name instanceof internedString) { locals[byteObject.interned_list[name.index]] = null; }
+            else if (name instanceof FunctionObject) { locals[name.func_name] = name; }
             else console.log('problems with LOAD_LOCALS');
         }
         Stack.push(locals);
@@ -791,8 +800,10 @@ class CodeObject {
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        if (TOS=='self') { this.self[this.names[index]] = TOS1; }
-        else { TOS[this.names[index]] = TOS1; }
+        var attr = this.names[index];
+        if (attr instanceof internedString) { attr = byteObject.interned_list[attr.index]; }
+        if (TOS=='self') { this.self[attr] = TOS1; }
+        else { TOS[attr] = TOS1; }
         this.pc += 3;
     }
     public DELETE_ATTR(){
@@ -833,7 +844,9 @@ class CodeObject {
     }
     public LOAD_NAME(){
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
-        Stack.push(this.names[index]);
+        var name = this.names[index];
+        if (name instanceof internedString) { Stack.push(byteObject.interned_list[name.index]); }
+        else { Stack.push(name); }
         this.pc += 3;
     }
     public BUILD_TUPLE(){
@@ -866,10 +879,14 @@ class CodeObject {
     public LOAD_ATTR(){ 
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var attr = this.names[index];
+        console.log('attr='+attr);
+        if (attr instanceof internedString) { attr = byteObject.interned_list[attr.index]; console.log('interned version='+attr); }
         var TOS = Stack.pop();
+        console.log('TOS='+TOS);
         if (TOS=='self') { Stack.push(this.self[attr]); }
+        else if (TOS instanceof classObject) { Stack.push(TOS.methods[attr]); }
         else { Stack.push(TOS[attr]); }
-        this.pc += 3; 
+        this.pc += 3;
     }
     public COMPARE_OP(){ //comparison operator
         var opname = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
@@ -959,7 +976,9 @@ class CodeObject {
     public LOAD_FAST(){
         //local variable number
         var varNum = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
-        Stack.push(this.varnames[varNum]);
+        var item = this.varnames[varNum];
+        if (item instanceof internedString) { Stack.push(byteObject.interned_list[item.index]); }
+        else { Stack.push(item); }
         this.pc += 3;
         console.log(this.varnames);
     } 
@@ -1001,9 +1020,22 @@ class CodeObject {
         var isClass = (function_object instanceof classObject);
         if (isClass) {
             var class_object = function_object;
-            var self = class_object.self;
+            console.log('class methods: '+class_object.methods+'-----------------------------');
+            // var self = class_object.self;
+            for (var methodKey in class_object.methods) {
+                console.log('found a method');
+                var method = class_object.methods[methodKey];
+                console.log('method: '+method);
+                if (method instanceof FunctionObject) {
+                    console.log('found a method function object');
+                    method.func_code.self = class_object.self;
+                    console.log('test');
+                    method.func_code.self.a = 5;
+                    console.log(method.func_code.self);
+                    console.log(class_object.self);
+                }
+            }
             function_object = class_object.methods['__init__'];
-            function_object.func_code.self = self;
             console.log('got here');
             // OBJECTS ALWAYS PASS SELF object AS FIRST ARGUMENT & UPDATE CHANGES TO SELF IN CLASS OBJECT BEFORE RESET VARNAMES BY INSPECTING VARNAMES[0] - hope varnames[0] doesn't get overwritten at any point
             //  args.unshift('self');
@@ -1016,7 +1048,23 @@ class CodeObject {
         var argcount = function_object.func_code.argcount;
         // Keyword argument variables
         for (var i=0; i< numKwargs; i++) {
-            function_object.func_code.varnames[kwargs[i][0]] = kwargs[i][1];
+            var key = kwargs[i][0];
+            if (key instanceof internedString) {
+                key = byteObject.interned_list[key.index];
+            }
+            console.log('key='+key);
+            // find key in varnames and set it equal to kwargs[i][1]
+            var keyFound = false;
+            for (var j=0; j<varnamesOriginal.length; j++) {
+                var varnamesKey = varnamesOriginal[j];
+                if (varnamesKey instanceof internedString) { varnamesKey = byteObject.interned_list[varnamesKey.index]; }
+                console.log('varnames key='+varnamesKey);
+                if ((key == varnamesKey) && (!keyFound)) {
+                    function_object.func_code.varnames[j] = kwargs[i][1];
+                    console.log('setting kwarg in varnames');
+                    keyFound = true;
+                }
+            }
         }
         console.log(function_object.func_code.varnames);
         // If it's a class object, put 'self' in position zero
@@ -1033,9 +1081,16 @@ class CodeObject {
         // Get default values for any unspecified variable left
         counter = function_object.func_defaults.length;
         for (i=argcount-1; i>=0; i--) {
-            if (function_object.func_code.varnames[i] == undefined) {
+            if ((function_object.func_code.varnames[i] == undefined) && (counter > 0)) {
                 function_object.func_code.varnames[i] = function_object.func_defaults[counter-1];
                 counter -= 1;
+            }
+        }
+        console.log(function_object.func_code.varnames);
+        // Add back in any original values from varnames for stuff that is still undefined
+        for (i=0;i<varnamesOriginal.length;i++) {
+            if (function_object.func_code.varnames[i] == undefined) {
+                function_object.func_code.varnames[i] = varnamesOriginal[i];
             }
         }
         console.log(function_object.func_code.varnames);
@@ -1049,7 +1104,18 @@ class CodeObject {
             console.log(Stack);
         }
         // Update class objects self field with that found in function_object.func_code.self
-        if (isClass) { class_object.self = function_object.func_code.self; }
+        if (isClass) {
+            for (var key2 in function_object.func_code.self) {
+                console.log('func_code.self key: '+function_object.func_code.self[key2]);
+            }
+            for (var key3 in class_object.self) {
+                console.log('class_object.self key: '+class_object.self[key3]);
+            }
+            // console.log('func_code.self='+function_object.func_code.self);
+            // console.log('class_object.self='+class_object.self);
+            // class_object.self = function_object.func_code.self;
+            Stack.push(class_object);
+        }
         // Reset varnames
         function_object.func_code.varnames = varnamesOriginal.slice(0);
         // Push the return value onto the stack (could be a None? value)
@@ -1066,7 +1132,9 @@ class CodeObject {
         var defaults = [];
         for (var i=0; i<argc; i++) { defaults[i] = Stack.pop(); }
         var newFunction = new FunctionObject(code_object,defaults);
-        newFunction.func_name = code_object.name;
+        var funName = code_object.name;
+        if (funName instanceof internedString) { newFunction.func_name = byteObject.interned_list[funName.index]; }
+        else { newFunction.func_name = funName; }
         if (code_object.consts.length > 0){
             var doc_string = code_object.consts[0];
             if (typeof doc_string == 'string' || doc_string instanceof String){
