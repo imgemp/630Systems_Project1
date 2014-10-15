@@ -938,10 +938,12 @@ class CodeObject {
         for (i=0; i< numArgs; i++) { args[numArgs-1-i] = Stack.pop(); } // next grab positional args, args[0] = leftmost argument
         var function_object = Stack.pop(); // last grab function object
         if (function_object instanceof classObject) {
+            var self = function_object.self;
             function_object = function_object.methods['__init__'];
             console.log('got here');
             // OBJECTS ALWAYS PASS SELF object AS FIRST ARGUMENT & UPDATE CHANGES TO SELF IN CLASS OBJECT BEFORE RESET VARNAMES BY INSPECTING VARNAMES[0] - hope varnames[0] doesn't get overwritten at any point
-            console.log(function_object.func_defaults);
+            //  args.unshift('self');
+            // console.log(function_object.func_defaults);
         }
         // Replace function object's variable names with arguments from Stack & default arguments
         var varnamesOriginal = function_object.func_code.varnames.slice(0); // record varnames for later use and set to empty list
@@ -1089,9 +1091,10 @@ class classObject{
     name: string;
     bases: any;
     methods: any;
+    self: any;
     // maybe add a 'self' property here to hold all the variables? should default to this.self = {} + methods should have func_globals set to self
 
-    constructor(name: string, bases: any, methods: any) { this.name = name; this.bases = bases; this.methods = methods; }
+    constructor(name: string, bases: any, methods: any) { this.name = name; this.bases = bases; this.methods = methods; this.self = {}; }
 }
 
 // Defines class for a function object
