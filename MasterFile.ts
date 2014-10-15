@@ -562,32 +562,55 @@ class CodeObject {
         dic[key] = val;
         Stack.push(dic);
         this.pc += 1; 
-    }// shaylyn here down
-    public INPLACE_ADD(){ 
+    } public INPLACE_ADD(){ 
+        Stack.push(Stack.pop() + Stack.pop());
         this.pc += 1; 
     }
     public INPLACE_SUBTRACT(){ 
+        Stack.push(Stack.pop() - Stack.pop());
         this.pc += 1;
     }
     public INPLACE_MULTIPY(){ 
+        Stack.push(Stack.pop() * Stack.pop());
         this.pc += 1; 
     }
+    //without from_future_import division
     public INPLACE_DIVIDE(){ 
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        //*** need to make this so floors ints & longs but gives approx with floats or complex ***/
+        Stack.push(TOS1/TOS);
         this.pc += 1; 
     }
     public INPLACE_MODULO(){ 
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1 % TOS);
         this.pc += 1; 
     }
     public STORE_SUBSCR(){ 
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        var TOS2 = Stack.pop();
+        TOS1[TOS] = TOS2;
         this.pc += 1; 
     }
-    public DELETE_SUBSCR(){ 
+    public DELETE_SUBSCR(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        delete TOS1[TOS];
         this.pc += 1; 
     }
     public BINARY_LSHIFT(){ 
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1 << TOS);
         this.pc += 1; 
     }
     public BINARY_RSHIFT(){ 
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1 >> TOS);
         this.pc += 1; 
     }
     public BINARY_AND(){ 
@@ -609,11 +632,17 @@ class CodeObject {
         Stack.push((TOS1 || TOS));
         this.pc += 1;
     }
-    public INPLACE_POWER(){ 
+    public INPLACE_POWER(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        TOS = Math.pow(TOS1,TOS);
+        Stack.push(TOS); 
         this.pc += 1; 
     }
     public GET_ITER(){
-        // Objects already iterable?
+        var TOS = Stack.pop()
+        var TOS = TOS.iter();
+        Stack.push(TOS);
         this.pc += 1;
     }
     public PRINT_EXPR(){ 
@@ -637,18 +666,33 @@ class CodeObject {
         this.pc += 1; 
     }
     public INPLACE_LSHIFT(){ 
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1 << TOS);
         this.pc += 1; 
     }
-    public INPLACE_RSHIFT(){ 
+    public INPLACE_RSHIFT(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1 >> TOS); 
         this.pc += 1; 
     }
     public INPLACE_AND(){ 
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push((TOS1 && TOS));
         this.pc += 1; 
     }
     public INPLACE_XOR(){ 
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push((TOS1 ? 1 : 0) ^ (TOS ? 1 : 0));
         this.pc += 1; 
     }
-    public INPLACE_OR(){ 
+    public INPLACE_OR(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push((TOS1 || TOS)); 
         this.pc += 1; 
     }
     public BREAK_LOOP(){ 
@@ -720,14 +764,23 @@ class CodeObject {
         for (var i=numItems-1; i>=0; i--) { Stack.push(TOS[i]); }
         this.pc += 3;
     } 
-    public FOR_ITER(){
+      public FOR_ITER(){
         var incrCounter = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         var TOS = Stack.pop();
-        //still have to check if this is a new value or not
-        var newVal = TOS.next(); 
-        Stack.push(TOS);
-        Stack.push(newVal);
-        this.pc += incrCounter + 3;
+        //if(!(TOS instanceof Iterator)){
+            //if(TOS instanceof List){
+                //TOS = new Iterator(TOS)
+            //}
+        //}
+        var newVal = TOS.next();
+        if(newVal != -1){
+            Stack.push(TOS);
+            Stack.push(newVal); 
+            this.pc += 3;
+       }else{
+            this.pc += incrCounter + 3;
+       }
+       
     }
     public LIST_APPEND(){
         var value = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
@@ -750,11 +803,14 @@ class CodeObject {
     }
     public STORE_GLOBAL(){
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var name = Stack.pop();
+        this.names[index] = name;
         this.pc += 3;
     }
     public DELETE_GLOBAL(){
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
-        this.pc += 3;
+        this.names.splice(index,1); 
+        this.pc += 3; 
     }
     public DUP_TOPX(){
         var numItemsDup = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
@@ -877,6 +933,7 @@ class CodeObject {
     } 
     public LOAD_GLOBAL(){ 
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        Stack.push(this.names[index])
         this.pc += 3; 
     } 
     public CONTINUE_LOOP(){
@@ -1119,6 +1176,32 @@ class FunctionObject {
     func_name: string;
 
     constructor(code_object: CodeObject, defaults: any) { this.func_code = code_object; this.func_defaults = defaults; }
+}
+
+//Iterator object implemented to use for Python iterators
+class Iterator{
+    curIndex: number;
+    high: number;
+
+    //pass in the bounds 
+    constructor(low:number, high:number){
+        this.curIndex = low;
+        this.high = high;
+    }
+    //returns itself
+    iter(){
+        return this;
+    }
+    //returns next element or StopIteration if nothing is left
+    next(){
+        if(this.curIndex > this.high){
+            //stop iteration
+            return -1;
+        }else{
+            this.curIndex += 1;
+            return (this.curIndex - 1); 
+        }
+    }
 }
 
 /** Parses given bytecode object whose first 8 bytes are expected to be
