@@ -108,7 +108,7 @@ function readStringInterned(bytecode:NodeBuffer, ptr:number, level:number) {
 function readStringRef(bytecode:NodeBuffer, ptr:number, level:number) {
     var index = bytecode.readUInt32LE(ptr);
     var obj = new internedString(index);
-    console.log(Array(level).join('\t') + 'ref to interned string in position ' + obj);
+    console.log(Array(level).join('\t') + 'ref to interned string in position ' + obj.index);
     return [ptr + 4, obj];
 }
 
@@ -123,9 +123,22 @@ function readUnicode(bytecode:NodeBuffer, ptr:number, level:number) {
 }
 
 function readDict(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log('readDict Not implemented yet! You are screwed');
-    var obj = 'readDict Not implemented yet! You are screwed';
-    return [ptr + 4, obj];
+    var obj = {};
+    var prefix = Array(level).join('\t');
+    level = level + 1;
+    var key_type = bytecode.toString('ascii', ptr, ptr + 1);
+    var out = readByType[key_type](bytecode, ptr + 1, level); ptr = out[0];
+    var key = out[1];
+    while (key != null) {
+        var val_type = bytecode.toString('ascii', ptr, ptr + 1);
+        var out = readByType[val_type](bytecode, ptr + 1, level); ptr = out[0];
+        var val = out[1];
+        obj[key] = val;
+        var key_type = bytecode.toString('ascii', ptr, ptr + 1);
+        var out = readByType[key_type](bytecode, ptr + 1, level); ptr = out[0];
+        var key = out[1];
+    }
+    return [ptr, obj];
 }
 
 function readTuple(bytecode:NodeBuffer, ptr:number, level:number) {
@@ -446,6 +459,9 @@ class CodeObject {
     }
     //implements TOS = TOS1[TOS]
     public BINARY_SUBSCR(){
+        var TOS = Stack.pop();
+        var TOS1 = Stack.pop();
+        Stack.push(TOS1[TOS]);
         this.pc += 1;
     }
     //implements TOS = TOS1 // TOS
@@ -659,6 +675,7 @@ class CodeObject {
     }
     public PRINT_ITEM(){
         var TOS = Stack.pop();
+        if (TOS instanceof internedString) { TOS = byteObject.interned_list[TOS.index]; }
         console.log('LOGGED TO CONSOLE: --------------------- '+TOS);
         this.pc += 1;
     }
@@ -667,9 +684,11 @@ class CodeObject {
         this.pc += 1;
     }
     public PRINT_ITEM_TO(){ 
+        console.log('NOT WORKING - SHOULD PRINT TO FILE: --------------------- ');
         this.pc += 1; 
     }
     public PRINT_NEWLINE_TO(){ 
+        console.log('NOT WORKING - SHOULD PRINT NEWLINE TO FILE: --------------------- ');
         this.pc += 1; 
     }
     public INPLACE_LSHIFT(){ 
@@ -873,7 +892,7 @@ class CodeObject {
     }
     public BUILD_MAP(){ 
         var numnumEntries = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
-        Stack.push({}); // ignoring num entries for now
+        Stack.push({}); // ignoring num entries for now - javascript doesn't presize anything
         this.pc += 3; 
     } 
     public LOAD_ATTR(){ 
@@ -1020,26 +1039,13 @@ class CodeObject {
         var isClass = (function_object instanceof classObject);
         if (isClass) {
             var class_object = function_object;
-            console.log('class methods: '+class_object.methods+'-----------------------------');
-            // var self = class_object.self;
             for (var methodKey in class_object.methods) {
-                console.log('found a method');
                 var method = class_object.methods[methodKey];
-                console.log('method: '+method);
                 if (method instanceof FunctionObject) {
-                    console.log('found a method function object');
                     method.func_code.self = class_object.self;
-                    console.log('test');
-                    method.func_code.self.a = 5;
-                    console.log(method.func_code.self);
-                    console.log(class_object.self);
                 }
             }
             function_object = class_object.methods['__init__'];
-            console.log('got here');
-            // OBJECTS ALWAYS PASS SELF object AS FIRST ARGUMENT & UPDATE CHANGES TO SELF IN CLASS OBJECT BEFORE RESET VARNAMES BY INSPECTING VARNAMES[0] - hope varnames[0] doesn't get overwritten at any point
-            //  args.unshift('self');
-            // console.log(function_object.func_defaults);
         }
         // Replace function object's variable names with arguments from Stack & default arguments
         var varnamesOriginal = function_object.func_code.varnames.slice(0); // record varnames for later use and set to empty list
@@ -1068,7 +1074,7 @@ class CodeObject {
         }
         console.log(function_object.func_code.varnames);
         // If it's a class object, put 'self' in position zero
-        if (isClass) { function_object.func_code.varnames[0] = 'self'; }
+        if (isClass) { function_object.func_code.varnames[0] = 'self'; } //put 'self' where 'self' already exists in varnames
         //Fill up remaining variable names using the positional arguments
         var counter = 0;
         for (i=0; i< argcount; i++) {
