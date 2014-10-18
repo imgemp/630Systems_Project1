@@ -826,8 +826,8 @@ var CodeObject = (function () {
         var incrCounter = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var TOS = Stack.pop();
 
-        // if(!(TOS instanceof Iterator)){
-        //     if(TOS instanceof Arraybrek || TOS instanceof String){
+        //if(!(TOS instanceof Iterator)){
+        //     if(TOS instanceof Array || TOS instanceof String){
         //         TOS = new Iterator(0, TOS.length);
         //     }else if(TOS instanceof Object){
         //         TOS = new Iterator(0, TOS.size);
