@@ -17,11 +17,11 @@
   BrowserFS.initialize(lsfs);
 </script>
 <script type="text/javascript">
-  function RunTestSuite(fileField) {
+  function RunTestSuite() {
     var f = document.getElementById( 'fileform' );
     var fileName= f.fileField.value;
     var fs = require('fs');
-    fs.readFile(fileField, function doneReading(err, bytecode) {
+    fs.readFile(fileName, function doneReading(err, bytecode) {
       if (err)
         throw err;
       console.log('got here');
@@ -37,7 +37,7 @@
 <!-- not correct yet -->
 <form method="post" name="submit" enctype="multipart/form-data" id="fileform">
   <input type="file" name="fileField"/><br /><br />
-  <input type="button" name="submit" value="Submit" onclick="RunTestSuite('fileField')"/>
+  <input type="button" name="submit" value="Submit" onclick="RunTestSuite()"/>
 </form>
 </body>
 </html>
