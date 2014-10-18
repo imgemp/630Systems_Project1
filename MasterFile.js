@@ -300,6 +300,15 @@ function readCodeObject(bytecode, ptr, level) {
     return [ptr, obj];
 }
 
+var Block = (function () {
+    function Block(delta, start) {
+        this.delta = delta;
+        this.start = start;
+        this.end = start + delta - 1;
+    }
+    return Block;
+})();
+
 // Implemented bytecode functions in a CodeObject class
 var CodeObject = (function () {
     function CodeObject() {
@@ -320,6 +329,7 @@ var CodeObject = (function () {
         this.returnedValue = undefined;
         this.pc = 0;
         this.self = {};
+        this.BlockStack = [];
     }
     CodeObject.prototype.STOP_CODE = function () {
         //do nothing
@@ -729,8 +739,9 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.BREAK_LOOP = function () {
         //move the program to the end of the block by going ahead the size of the block
-        var blockSize = Stack.pop();
-        this.pc += blockSize;
+        var block = this.BlockStack.pop();
+        this.pc = block.end;
+        this.BlockStack.push(block);
     };
     CodeObject.prototype.WITH_CLEANUP = function () {
         this.pc += 1;
@@ -769,6 +780,7 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.POP_BLOCK = function () {
+        this.BlockStack.pop();
         this.pc += 1;
     };
     CodeObject.prototype.END_FINALLY = function () {
@@ -950,40 +962,40 @@ var CodeObject = (function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         if (cmp_op[opname] == '<') {
-            Stack.push(TOS < TOS1);
+            Stack.push(TOS1 < TOS);
         }
         if (cmp_op[opname] == '<=') {
-            Stack.push(TOS <= TOS1);
+            Stack.push(TOS1 <= TOS);
         }
         if (cmp_op[opname] == '==') {
-            Stack.push(TOS == TOS1);
+            Stack.push(TOS1 == TOS);
         }
         if (cmp_op[opname] == '!=') {
-            Stack.push(TOS != TOS1);
+            Stack.push(TOS1 != TOS);
         }
         if (cmp_op[opname] == '>') {
-            Stack.push(TOS > TOS1);
+            Stack.push(TOS1 > TOS);
         }
         if (cmp_op[opname] == '<=') {
-            Stack.push(TOS >= TOS1);
+            Stack.push(TOS1 >= TOS);
         }
         if (cmp_op[opname] == 'in') {
-            Stack.push(TOS in TOS1);
+            Stack.push(TOS1 in TOS);
         }
         if (cmp_op[opname] == 'not in') {
-            Stack.push(!(TOS in TOS1));
+            Stack.push(!(TOS1 in TOS));
         }
         if (cmp_op[opname] == 'is') {
-            Stack.push(TOS == TOS1);
+            Stack.push(TOS1 == TOS);
         }
         if (cmp_op[opname] == 'is not') {
-            Stack.push(TOS != TOS1);
+            Stack.push(TOS1 != TOS);
         }
         if (cmp_op[opname] == 'exception match') {
-            Stack.push(TOS == TOS1);
+            Stack.push(TOS1 == TOS);
         }
         if (cmp_op[opname] == 'BAD') {
-            Stack.push(TOS == TOS1);
+            Stack.push(TOS1 == TOS);
         }
         this.pc += 3;
     };
@@ -1055,17 +1067,25 @@ var CodeObject = (function () {
     CodeObject.prototype.SETUP_LOOP = function () {
         //pushes block of size delta bytes
         var delta = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
-        Stack.push(delta);
+        var start = this.pc + 3;
+        var block = new Block(delta, start);
+        this.BlockStack.push(block);
         this.pc += 3;
     };
     CodeObject.prototype.SETUP_EXCEPT = function () {
         //target address(relative)
-        var addr = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var delta = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var start = this.pc + 3;
+        var block = new Block(delta, start);
+        this.BlockStack.push(block);
         this.pc += 3;
     };
     CodeObject.prototype.SETUP_FINALLY = function () {
         //target address(relative)
-        var addr = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var delta = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        var start = this.pc + 3;
+        var block = new Block(delta, start);
+        this.BlockStack.push(block);
         this.pc += 3;
     };
     CodeObject.prototype.LOAD_FAST = function () {
@@ -1078,7 +1098,6 @@ var CodeObject = (function () {
             Stack.push(item);
         }
         this.pc += 3;
-        console.log(this.varnames);
     };
     CodeObject.prototype.STORE_FAST = function () {
         var varNum = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];

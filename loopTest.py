@@ -10,5 +10,5 @@ def loopTest():
        x = x -1
        if x == 5:
         continue;
-       print 'Current variable value :', var
+       print 'Current variable value :', x
 loopTest()

@@ -291,6 +291,15 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     return [ptr, obj];
 }
 
+class Block {
+
+    delta: number;
+    start: number;
+    end: number;
+
+    constructor(delta: number, start: number) { this.delta = delta; this.start = start; this.end = start + delta -1; }
+}
+
 // Implemented bytecode functions in a CodeObject class
 class CodeObject {
 
@@ -312,6 +321,7 @@ class CodeObject {
     returnedValue: any;
     pc: number;
     self: any;
+    BlockStack: any;
 
     constructor() {
         this.argcount = undefined;
@@ -331,6 +341,7 @@ class CodeObject {
         this.returnedValue = undefined;
         this.pc = 0;
         this.self = {};
+        this.BlockStack = [];
     }
 
     public STOP_CODE(){
@@ -717,8 +728,9 @@ class CodeObject {
     }
     public BREAK_LOOP(){ 
         //move the program to the end of the block by going ahead the size of the block
-        var blockSize = Stack.pop();
-        this.pc += blockSize; 
+        var block = this.BlockStack.pop();
+        this.pc = block.end;
+        this.BlockStack.push(block); 
     }
     public WITH_CLEANUP(){ 
         this.pc += 1; 
@@ -751,9 +763,11 @@ class CodeObject {
         this.pc += 1; 
     }
     public POP_BLOCK(){ 
+        this.BlockStack.pop();
         this.pc += 1; 
     }
     public END_FINALLY(){ 
+
         this.pc += 1; 
     }
     // Creates a new class object
@@ -910,18 +924,18 @@ class CodeObject {
         var cmp_op = ['<', '<=', '==', '!=', '>', '>=', 'in', 'not in', 'is', 'is not', 'exception match', 'BAD'];
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        if (cmp_op[opname] == '<') { Stack.push(TOS<TOS1); }
-        if (cmp_op[opname] == '<=') { Stack.push(TOS<=TOS1); }
-        if (cmp_op[opname] == '==') { Stack.push(TOS==TOS1); }
-        if (cmp_op[opname] == '!=') { Stack.push(TOS!=TOS1); }
-        if (cmp_op[opname] == '>') { Stack.push(TOS>TOS1); }
-        if (cmp_op[opname] == '<=') { Stack.push(TOS>=TOS1); }
-        if (cmp_op[opname] == 'in') { Stack.push(TOS in TOS1); }
-        if (cmp_op[opname] == 'not in') { Stack.push(!(TOS in TOS1)); }
-        if (cmp_op[opname] == 'is') { Stack.push(TOS==TOS1); }
-        if (cmp_op[opname] == 'is not') { Stack.push(TOS!=TOS1); }
-        if (cmp_op[opname] == 'exception match') { Stack.push(TOS==TOS1); }
-        if (cmp_op[opname] == 'BAD') { Stack.push(TOS==TOS1); } // NO IDEA
+        if (cmp_op[opname] == '<') { Stack.push(TOS1<TOS); }
+        if (cmp_op[opname] == '<=') { Stack.push(TOS1<=TOS); }
+        if (cmp_op[opname] == '==') { Stack.push(TOS1==TOS); }
+        if (cmp_op[opname] == '!=') { Stack.push(TOS1!=TOS); }
+        if (cmp_op[opname] == '>') { Stack.push(TOS1>TOS); }
+        if (cmp_op[opname] == '<=') { Stack.push(TOS1>=TOS); }
+        if (cmp_op[opname] == 'in') { Stack.push(TOS1 in TOS); }
+        if (cmp_op[opname] == 'not in') { Stack.push(!(TOS1 in TOS)); }
+        if (cmp_op[opname] == 'is') { Stack.push(TOS1==TOS); }
+        if (cmp_op[opname] == 'is not') { Stack.push(TOS1!=TOS); }
+        if (cmp_op[opname] == 'exception match') { Stack.push(TOS1==TOS); }
+        if (cmp_op[opname] == 'BAD') { Stack.push(TOS1==TOS); } // NO IDEA
         this.pc += 3;
     } 
     public IMPORT_NAME (){ 
@@ -978,17 +992,25 @@ class CodeObject {
     public SETUP_LOOP(){ 
         //pushes block of size delta bytes
         var delta = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
-        Stack.push(delta);
+        var start = this.pc + 3;
+        var block = new Block(delta,start);
+        this.BlockStack.push(block);
         this.pc += 3; 
     }
     public SETUP_EXCEPT(){ 
         //target address(relative)
-        var addr = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        var delta = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        var start = this.pc + 3;
+        var block = new Block(delta,start);
+        this.BlockStack.push(block);
         this.pc += 3; 
     }
     public SETUP_FINALLY(){
         //target address(relative)
-        var addr = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        var delta = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        var start = this.pc + 3;
+        var block = new Block(delta,start);
+        this.BlockStack.push(block);
         this.pc += 3; 
     }
     public LOAD_FAST(){
@@ -998,7 +1020,6 @@ class CodeObject {
         if (item instanceof internedString) { Stack.push(byteObject.interned_list[item.index]); }
         else { Stack.push(item); }
         this.pc += 3;
-        console.log(this.varnames);
     } 
     public STORE_FAST(){
         var varNum = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
