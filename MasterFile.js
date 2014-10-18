@@ -1666,8 +1666,9 @@ var OpCodeList;
     OpCodeList[OpCodeList["MAP_ADD"] = 147] = "MAP_ADD";
 })(OpCodeList || (OpCodeList = {}));
 ;
+
 // Main function to read in file
-// var fs = require('fs');
+var fs = require('fs');
 // fs.readFile(process.argv[2], function doneReading(err, bytecode) {
 //     if (err)
 //         throw err;
