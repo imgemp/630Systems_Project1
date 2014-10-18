@@ -18,6 +18,7 @@
 </script>
 <script type="text/javascript">
   function RunTestSuite(fileField) {
+    var fs = require('fs');
     fs.readFile(fileField, function doneReading(err, bytecode) {
     if (err)
       throw err;
