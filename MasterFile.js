@@ -730,7 +730,7 @@ var CodeObject = (function () {
     CodeObject.prototype.BREAK_LOOP = function () {
         //move the program to the end of the block by going ahead the size of the block
         var blockSize = Stack.pop();
-        this.pc += readUInt32LE(blockSize);
+        this.pc += blockSize;
     };
     CodeObject.prototype.WITH_CLEANUP = function () {
         this.pc += 1;
