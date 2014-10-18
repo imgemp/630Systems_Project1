@@ -20,10 +20,11 @@
   function RunTestSuite(fileField) {
     var fs = require('fs');
     fs.readFile(fileField, function doneReading(err, bytecode) {
-    if (err)
-      throw err;
-    interpretBytecode(bytecode);
-  });
+      if (err)
+        throw err;
+      console.log('got here');
+      interpretBytecode(bytecode);
+    });
   }
 </script>
 
