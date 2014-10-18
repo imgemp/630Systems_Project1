@@ -1,11 +1,4 @@
 /// <reference path="node.d.ts" />
-var internedString = (function () {
-    function internedString(index) {
-        this.index = index;
-    }
-    return internedString;
-})();
-
 function readNull(bytecode, ptr, level) {
     console.log(Array(level).join('\t') + 'Null');
     var obj = null;
@@ -735,7 +728,9 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.BREAK_LOOP = function () {
-        this.pc += 1;
+        //move the program to the end of the block by going ahead the size of the block
+        var blockSize = Stack.pop();
+        this.pc += readUInt32LE(blockSize);
     };
     CodeObject.prototype.WITH_CLEANUP = function () {
         this.pc += 1;
@@ -819,11 +814,13 @@ var CodeObject = (function () {
         var incrCounter = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var TOS = Stack.pop();
 
-        //if(!(TOS instanceof Iterator)){
-        //if(TOS instanceof List){
-        //TOS = new Iterator(TOS)
-        //}
-        //}
+        // if(!(TOS instanceof Iterator)){
+        //     if(TOS instanceof Arraybrek || TOS instanceof String){
+        //         TOS = new Iterator(0, TOS.length);
+        //     }else if(TOS instanceof Object){
+        //         TOS = new Iterator(0, TOS.size);
+        //     }
+        // }
         var newVal = TOS.next();
         if (newVal != -1) {
             Stack.push(TOS);
@@ -925,7 +922,7 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.BUILD_MAP = function () {
         var numnumEntries = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
-        Stack.push({}); // ignoring num entries for now
+        Stack.push({}); // ignoring num entries for now - javascript doesn't presize anything
         this.pc += 3;
     };
     CodeObject.prototype.LOAD_ATTR = function () {
@@ -1053,11 +1050,12 @@ var CodeObject = (function () {
     CodeObject.prototype.CONTINUE_LOOP = function () {
         //start of loop(absolute)
         var start = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
-        this.pc += 3;
+        this.pc = start;
     };
     CodeObject.prototype.SETUP_LOOP = function () {
-        //target address(relative)
-        var addr = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        //pushes block of size delta bytes
+        var delta = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
+        Stack.push(delta);
         this.pc += 3;
     };
     CodeObject.prototype.SETUP_EXCEPT = function () {
@@ -1382,6 +1380,13 @@ var FunctionObject = (function () {
         this.func_defaults = defaults;
     }
     return FunctionObject;
+})();
+
+var internedString = (function () {
+    function internedString(index) {
+        this.index = index;
+    }
+    return internedString;
 })();
 
 //Iterator object implemented to use for Python iterators

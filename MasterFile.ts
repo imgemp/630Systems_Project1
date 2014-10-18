@@ -1,11 +1,5 @@
 /// <reference path="node.d.ts" />
 
-class internedString {
-    index: number;
-
-    constructor(index: number) { this.index = index; }
-}
-
 function readNull(bytecode:NodeBuffer, ptr:number, level:number) {
     console.log(Array(level).join('\t') + 'Null');
     var obj = null;
@@ -722,7 +716,9 @@ class CodeObject {
         this.pc += 1; 
     }
     public BREAK_LOOP(){ 
-        this.pc += 1; 
+        //move the program to the end of the block by going ahead the size of the block
+        var blockSize = Stack.pop();
+        this.pc += blockSize; 
     }
     public WITH_CLEANUP(){ 
         this.pc += 1; 
@@ -792,14 +788,16 @@ class CodeObject {
         for (var i=numItems-1; i>=0; i--) { Stack.push(TOS[i]); }
         this.pc += 3;
     } 
-      public FOR_ITER(){
+    public FOR_ITER(){
         var incrCounter = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         var TOS = Stack.pop();
-        //if(!(TOS instanceof Iterator)){
-            //if(TOS instanceof List){
-                //TOS = new Iterator(TOS)
-            //}
-        //}
+        // if(!(TOS instanceof Iterator)){
+        //     if(TOS instanceof Arraybrek || TOS instanceof String){
+        //         TOS = new Iterator(0, TOS.length);
+        //     }else if(TOS instanceof Object){
+        //         TOS = new Iterator(0, TOS.size);
+        //     }
+        // }
         var newVal = TOS.next();
         if(newVal != -1){
             Stack.push(TOS);
@@ -975,11 +973,12 @@ class CodeObject {
     public CONTINUE_LOOP(){
         //start of loop(absolute)
         var start = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
-        this.pc += 3; 
+        this.pc = start; 
     }
     public SETUP_LOOP(){ 
-        //target address(relative)
-        var addr = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
+        //pushes block of size delta bytes
+        var delta = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
+        Stack.push(delta);
         this.pc += 3; 
     }
     public SETUP_EXCEPT(){ 
@@ -1250,6 +1249,12 @@ class FunctionObject {
     func_name: string;
 
     constructor(code_object: CodeObject, defaults: any) { this.func_code = code_object; this.func_defaults = defaults; }
+}
+
+class internedString {
+    index: number;
+
+    constructor(index: number) { this.index = index; }
 }
 
 //Iterator object implemented to use for Python iterators

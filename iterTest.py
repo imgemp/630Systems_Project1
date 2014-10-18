@@ -1,0 +1,5 @@
+x = iter('a, b, c')
+print x.next()
+print x.next()
+print x.next()
+print x.next()

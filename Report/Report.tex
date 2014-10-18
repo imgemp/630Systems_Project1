@@ -30,7 +30,7 @@
 \maketitle
 
 \section{Introduction}
-The goal of this project is to write a typescript program that could interpret python bytecode (.pyc) in the browser.  Our general approach was to split this task into three parts: parsing the bytecode, interpreting the result, and porting to the browser.  All preliminary work was to be done outside the browser using node.js with the last step being the transition to the browser using browserFS.\\
+The goal of this project is to write a typescript program that will interpret python bytecode (.pyc) in the browser.  Our general approach split this task into three parts: parsing the bytecode, interpreting the result, and porting to the browser.  All preliminary work was to be done outside the browser using node.js with the last step being the transition to the browser using browserFS.\\
 \\
 When python (.py) files are executed, they are compiled into bytecode (.pyc) and interpreted by the python interpreter (e.g. CPython, PyPy, etc.).  The bytecode itself is conveniently universal across the interpreters of the same version (e.g. Python 2.7).  In all subsequent executions of the python file (.py), the interpreter will run the bytecode (.pyc) directly in order to save time re-compiling the python file (.py) assuming the python file (.py) has not changed since its last compilation.  In reality, the bytecode (.pyc) must be read and parsed in its entirety before the python implementation actually executes the source.
 
