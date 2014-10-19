@@ -27,6 +27,7 @@
       // When this event fires, the data is ready.
       console.log('done loading file');
       fileBuffer = new Buffer(e.target.result);
+      var fs = require('fs');
       fs.writeFile('TestFile.pyc',fileBuffer, function (err) {
         if (err) throw err;
         runTestSuite('TestFile.pyc');
