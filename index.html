@@ -25,7 +25,7 @@
     var reader = new FileReader();
     reader.onload = function (e) {
       // When this event fires, the data is ready.
-      console.log('done loading file');
+      console.log('Writing file to buffer...');
       fileBuffer = new Buffer(e.target.result);
       var fs = require('fs');
       fs.writeFile('TestFile.pyc',fileBuffer, function (err) {
@@ -34,13 +34,13 @@
       });
     };
     reader.readAsArrayBuffer(file);
+    console.log('Reading File...');
   };
   function runTestSuite(fileName) {
-    console.log('running test suite');
+    console.log('Running test suite...');
     var fs = require('fs');
     fs.readFile(fileName, function doneReading(err, bytecode) {
       if (err) throw err;
-      console.log('got here!');
       interpretBytecode(bytecode);
     });
   }
