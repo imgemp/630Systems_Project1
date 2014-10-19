@@ -1375,7 +1375,7 @@ function interpretBytecode(bytecode:NodeBuffer) {
 
 function printToOutput(input) {
     var output = String(input);
-    document.getElementById("logOut").value += output;
+    (<HTMLInputElement>document.getElementById("logOut")).value += output;
 }
 
 // Initalize the stack object
