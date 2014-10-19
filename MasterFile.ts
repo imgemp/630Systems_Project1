@@ -49,8 +49,8 @@ function readInt64(bytecode:NodeBuffer, ptr:number, level:number) {
 }
 
 function readFloat32(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log('Float32 Not implemented yet!');
-    var obj = 'Float32 Not implemented yet!';
+    var obj = bytecode.readFloatLE(ptr);
+    console.log(Array(level).join('\t') + obj);
     return [ptr + 4, obj];
 }
 
