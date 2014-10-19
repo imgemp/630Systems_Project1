@@ -31,6 +31,7 @@
     reader.readAsArrayBuffer(file);
   };
   function runTestSuite(fileName) {
+    console.log('running test suite');
     var fs = require('fs');
     fs.readFile(fileName, function doneReading(err, bytecode) {
       if (err)
