@@ -25,6 +25,7 @@
     var reader = new FileReader();
     reader.onload = function (e) {
       // When this event fires, the data is ready.
+      console.log('done loading file');
       runTestSuite(e.target.result);
     };
     reader.readAsArrayBuffer(file);
