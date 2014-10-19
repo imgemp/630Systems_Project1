@@ -1504,7 +1504,7 @@ function interpretBytecode(bytecode) {
 
 function printToOutput(input) {
     var output = String(input);
-    document.getElementById("logOut").value += output;
+    document.getElementById("logOut").value += output + "\n";
 }
 
 // Initalize the stack object
