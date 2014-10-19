@@ -3,6 +3,7 @@
 
 <script type="text/javascript" src="browserfs.min.js"></script>
 <script type="text/javascript" src="MasterFile.js"></script>
+<script type='text/javascript' src='filereader.js'></script>
 <script type="text/javascript">
   // Installs globals onto window:
   // * Buffer
@@ -17,27 +18,37 @@
   BrowserFS.initialize(lsfs);
 </script>
 <script type="text/javascript">
-  function RunTestSuite() {
-    var f = document.getElementById( 'fileform' );
-    var fileName= f.fileField.value;
+  function processFiles(files) {
+    // var f = document.getElementById( 'fileform' );
+    // var fileName= f.fileField.value;
+    var file = files[0];
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      // When this event fires, the data is ready.
+      runTestSuite(e.target.result);
+    };
+    reader.readAsArrayBuffer(file);
+  }
+  function runTestSuite(fileName) {
     var fs = require('fs');
     fs.readFile(fileName, function doneReading(err, bytecode) {
-      if (err)
-        throw err;
-      console.log('got here');
-      interpretBytecode(bytecode);
-    });
-  }
+    if (err)
+      throw err;
+    console.log('got here');
+    interpretBytecode(bytecode);
+  });
 </script>
+
 
 <body>
 
 <h1>Python Interpreter</h1>
 <p>Please upload .pyc file to be executed.</p>
+<input id="fileInput" type="file" onchange="processFiles(this.files)">
 <!-- not correct yet -->
-<form method="post" name="submit" enctype="multipart/form-data" id="fileform">
+<!-- <form method="post" name="submit" enctype="multipart/form-data" id="fileform">
   <input type="file" name="fileField"/><br /><br />
-  <input type="button" name="submit" value="Submit" onclick="RunTestSuite()"/>
-</form>
+  <input type="button" name="submit" value="Submit" id="runInterpreter" onclick="RunTestSuite()"/>
+</form> -->
 </body>
 </html>
