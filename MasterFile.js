@@ -1503,7 +1503,11 @@ function interpretBytecode(bytecode) {
 function printToOutput(input, ending) {
     var output = input.toString();
     var ending = ending || "\n";
-    console.log(ending);
+    if (ending == '') {
+        console.log('space');
+    } else {
+        console.log('newline');
+    }
     document.getElementById("logOut").value += output + ending;
 }
 

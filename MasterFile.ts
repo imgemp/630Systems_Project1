@@ -1376,7 +1376,7 @@ function interpretBytecode(bytecode:NodeBuffer) {
 function printToOutput(input: string,ending?: string) {
     var output = input.toString();
     var ending = ending || "\n";
-    console.log(ending);
+    if (ending=='') { console.log('space'); } else { console.log('newline'); }
     (<HTMLInputElement>document.getElementById("logOut")).value += output + ending;
 }
 
