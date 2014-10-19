@@ -35,6 +35,7 @@
     var fs = require('fs');
     fs.readFile(fileName, function doneReading(err, bytecode) {
       if (err)
+        console.log('theres an error');
         throw err;
       console.log('got here');
       interpretBytecode(bytecode);
@@ -48,6 +49,7 @@
 <h1>Python Interpreter</h1>
 <p>Please upload .pyc file to be executed.</p>
 <input id="fileInput" type="file" onchange="processFiles(this.files)"/>
+<
 <!-- not correct yet -->
 <!-- <form method="post" name="submit" enctype="multipart/form-data" id="fileform">
   <input type="file" name="fileField"/><br /><br />
