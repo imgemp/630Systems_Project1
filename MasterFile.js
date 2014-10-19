@@ -225,31 +225,31 @@ function readCodeObject(bytecode, ptr, level) {
     }
 
     // Start Reading Tuple of Constants
-    printToOutput(prefix + 'consts:', '');
+    printToOutput(prefix + 'consts:', true);
     out = readTuple(bytecode, ptr + 1, level);
     ptr = out[0];
     obj.consts = out[1];
 
     // Start Reading Tuple of Names
-    printToOutput(prefix + 'names:', '');
+    printToOutput(prefix + 'names:', true);
     out = readTuple(bytecode, ptr + 1, level);
     ptr = out[0];
     obj.names = out[1];
 
     // Start Reading Tuple of Variable Names
-    printToOutput(prefix + 'varnames:', '');
+    printToOutput(prefix + 'varnames:', true);
     out = readTuple(bytecode, ptr + 1, level);
     ptr = out[0];
     obj.varnames = out[1];
 
     // Start Reading Tuple of Free Variables
-    printToOutput(prefix + 'freevars:', '');
+    printToOutput(prefix + 'freevars:', true);
     out = readTuple(bytecode, ptr + 1, level);
     ptr = out[0];
     obj.freevars = out[1];
 
     // Start Reading Tuple of Variables Used in Nested Functions
-    printToOutput(prefix + 'cellvars:', '');
+    printToOutput(prefix + 'cellvars:', true);
     out = readTuple(bytecode, ptr + 1, level);
     ptr = out[0];
     obj.cellvars = out[1];
@@ -1500,15 +1500,15 @@ function interpretBytecode(bytecode) {
     }
 }
 
-function printToOutput(input, ending) {
+function printToOutput(input, not_newline) {
     var output = input.toString();
-    var ending = ending || "\n";
-    if (ending == '') {
-        console.log('space');
-    } else {
-        console.log('newline');
+    var not_newline = not_newline || false;
+    if (!not_newline) {
+        output += '\n';
     }
-    document.getElementById("logOut").value += output + ending;
+
+    // if (ending=='') { console.log('space'); } else { console.log('newline'); }
+    document.getElementById("logOut").value += output;
 }
 
 // Initalize the stack object
