@@ -139,7 +139,7 @@ function readTuple(bytecode:NodeBuffer, ptr:number, level:number) {
     var obj = [];
     var prefix = Array(level).join('\t');
     var nobjs = bytecode.readUInt32LE(ptr);
-    process.stdout.write(' (' + String(nobjs) + ')\n');
+    printToOutput(' (' + String(nobjs) + ')');
     level = level + 1;
     ptr = ptr + 4;
     for (var j = 0; j < nobjs; j++) {
@@ -216,31 +216,31 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     }
 
     // Start Reading Tuple of Constants
-    process.stdout.write(prefix + 'consts:');
+    printToOutput(prefix + 'consts:','');
     out = readTuple(bytecode, ptr + 1, level);
     ptr = out[0];
     obj.consts = out[1];
 
     // Start Reading Tuple of Names
-    process.stdout.write(prefix + 'names:');
+    printToOutput(prefix + 'names:','');
     out = readTuple(bytecode, ptr + 1, level);
     ptr = out[0];
     obj.names = out[1];
 
     // Start Reading Tuple of Variable Names
-    process.stdout.write(prefix + 'varnames:');
+    printToOutput(prefix + 'varnames:','');
     out = readTuple(bytecode, ptr + 1, level);
     ptr = out[0];
     obj.varnames = out[1];
 
     // Start Reading Tuple of Free Variables
-    process.stdout.write(prefix + 'freevars:');
+    printToOutput(prefix + 'freevars:','');
     out = readTuple(bytecode, ptr + 1, level);
     ptr = out[0];
     obj.freevars = out[1];
 
     // Start Reading Tuple of Variables Used in Nested Functions
-    process.stdout.write(prefix + 'cellvars:');
+    printToOutput(prefix + 'cellvars:','');
     out = readTuple(bytecode, ptr + 1, level);
     ptr = out[0];
     obj.cellvars = out[1];
@@ -1127,7 +1127,7 @@ class CodeObject {
             // call opcode
             printToOutput(OpCodeList[opcode]);
             function_object.func_code[OpCodeList[opcode]]();
-            printToOutput(Stack);
+            printToOutput(Stack.toString());
         }
         // Update class objects self field with that found in function_object.func_code.self
         if (isClass) {
@@ -1359,7 +1359,7 @@ function execBytecode(){
         var opcode = byteObject.code_object.code[byteObject.code_object.pc];
         printToOutput(OpCodeList[opcode]);
         byteObject.code_object[OpCodeList[opcode]]();
-        printToOutput(Stack);
+        printToOutput(Stack.toString());
     }
 }
 
@@ -1373,9 +1373,10 @@ function interpretBytecode(bytecode:NodeBuffer) {
     }
 }
 
-function printToOutput(input) {
+function printToOutput(input: string,ending?: string) {
     var output = String(input);
-    (<HTMLInputElement>document.getElementById("logOut")).value += output + "\n";
+    var ending = ending || "\n";
+    (<HTMLInputElement>document.getElementById("logOut")).value += output + ending;
 }
 
 // Initalize the stack object
