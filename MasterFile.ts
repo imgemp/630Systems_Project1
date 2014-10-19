@@ -1092,7 +1092,7 @@ class CodeObject {
                 }
             }
         }
-        printToOutput(function_object.func_code.varnames);
+        // printToOutput(function_object.func_code.varnames);
         // If it's a class object, put 'self' in position zero
         if (isClass) { function_object.func_code.varnames[0] = 'self'; } //put 'self' where 'self' already exists in varnames
         //Fill up remaining variable names using the positional arguments
@@ -1103,7 +1103,7 @@ class CodeObject {
                 counter += 1;
             }
         }
-        printToOutput(function_object.func_code.varnames);
+        // printToOutput(function_object.func_code.varnames);
         // Get default values for any unspecified variable left
         counter = function_object.func_defaults.length;
         for (i=argcount-1; i>=0; i--) {
@@ -1112,14 +1112,14 @@ class CodeObject {
                 counter -= 1;
             }
         }
-        printToOutput(function_object.func_code.varnames);
+        // printToOutput(function_object.func_code.varnames);
         // Add back in any original values from varnames for stuff that is still undefined
         for (i=0;i<varnamesOriginal.length;i++) {
             if (function_object.func_code.varnames[i] == undefined) {
                 function_object.func_code.varnames[i] = varnamesOriginal[i];
             }
         }
-        printToOutput(function_object.func_code.varnames);
+        // printToOutput(function_object.func_code.varnames);
         // Execute the function's bytecode
         while (function_object.func_code.pc < function_object.func_code.code.length){
             // op code
@@ -1367,15 +1367,16 @@ function execBytecode(){
 function interpretBytecode(bytecode:NodeBuffer) {
     // Parse Bytecode and Return Op Codes:
     if (parseBytecode(bytecode)) {
-        printToOutput(byteObject.interned_list);
+        printToOutput('internedList = '+byteObject.interned_list.toString());
         // Execute the initial opcodes in the code object
         execBytecode();
     }
 }
 
 function printToOutput(input: string,ending?: string) {
-    var output = String(input);
+    var output = input.toString();
     var ending = ending || "\n";
+    console.log(ending);
     (<HTMLInputElement>document.getElementById("logOut")).value += output + ending;
 }
 
