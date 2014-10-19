@@ -28,15 +28,16 @@
       runTestSuite(e.target.result);
     };
     reader.readAsArrayBuffer(file);
-  }
+  };
   function runTestSuite(fileName) {
     var fs = require('fs');
     fs.readFile(fileName, function doneReading(err, bytecode) {
-    if (err)
-      throw err;
-    console.log('got here');
-    interpretBytecode(bytecode);
-  });
+      if (err)
+        throw err;
+      console.log('got here');
+      interpretBytecode(bytecode);
+    });
+  }
 </script>
 
 
@@ -50,5 +51,6 @@
   <input type="file" name="fileField"/><br /><br />
   <input type="button" name="submit" value="Submit" id="runInterpreter" onclick="RunTestSuite()"/>
 </form> -->
+
 </body>
 </html>
