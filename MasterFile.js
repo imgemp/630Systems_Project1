@@ -36,7 +36,8 @@ function readEllipsis(bytecode, ptr, level) {
 }
 
 function readInt32(bytecode, ptr, level) {
-    var obj = bytecode.readUInt32LE(ptr);
+    // console.log(bytecode.slice(ptr,ptr+4));
+    var obj = bytecode.readInt32LE(ptr);
     console.log(Array(level).join('\t') + obj);
     return [ptr + 4, obj];
 }
@@ -48,8 +49,8 @@ function readInt64(bytecode, ptr, level) {
 }
 
 function readFloat32(bytecode, ptr, level) {
-    console.log('Float32 Not implemented yet!');
-    var obj = 'Float32 Not implemented yet!';
+    var obj = bytecode.readFloatLE(ptr);
+    console.log(Array(level).join('\t') + obj);
     return [ptr + 4, obj];
 }
 
