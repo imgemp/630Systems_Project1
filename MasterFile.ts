@@ -1,80 +1,79 @@
 /// <reference path="node.d.ts" />
 
 function readNull(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log(Array(level).join('\t') + 'Null');
+    printToOutput(Array(level).join('\t') + 'Null');
     var obj = null;
     return [ptr, obj];
 }
 
 function readNone(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log(Array(level).join('\t') + 'None');
+    printToOutput(Array(level).join('\t') + 'None');
     var obj = null;
     return [ptr, obj];
 }
 
 function readFalse(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log(Array(level).join('\t') + 'False');
+    printToOutput(Array(level).join('\t') + 'False');
     var obj = false;
     return [ptr, obj];
 }
 
 function readTrue(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log(Array(level).join('\t') + 'True');
+    printToOutput(Array(level).join('\t') + 'True');
     var obj = true;
     return [ptr, obj];
 }
 
 function readStopIter(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log(Array(level).join('\t') + 'StopIteration');
+    printToOutput(Array(level).join('\t') + 'StopIteration');
     var obj = 'StopIteration';
     return [ptr, obj];
 }
 
 function readEllipsis(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log(Array(level).join('\t') + 'Ellipsis');
+    printToOutput(Array(level).join('\t') + 'Ellipsis');
     var obj = 'Ellipsis';
     return [ptr, obj];
 }
 
 function readInt32(bytecode:NodeBuffer, ptr:number, level:number) {
-    // console.log(bytecode.slice(ptr,ptr+4));
     var obj = bytecode.readInt32LE(ptr);
-    console.log(Array(level).join('\t') + obj);
+    printToOutput(Array(level).join('\t') + obj);
     return [ptr + 4, obj];
 }
 
 function readInt64(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log('Int64 Not implemented yet!');
+    printToOutput('Int64 Not implemented yet!');
     var obj = 'Int64 Not implemented yet!';
     return [ptr + 8, obj];
 }
 
 function readFloat32(bytecode:NodeBuffer, ptr:number, level:number) {
     var obj = bytecode.readFloatLE(ptr);
-    console.log(Array(level).join('\t') + obj);
+    printToOutput(Array(level).join('\t') + obj);
     return [ptr + 4, obj];
 }
 
 function readFloat64(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log('Float64 Not implemented yet!');
+    printToOutput('Float64 Not implemented yet!');
     var obj = 'Float64 Not implemented yet!';
     return [ptr + 8, obj];
 }
 
 function readComplex32(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log('Complex32 Not implemented yet!');
+    printToOutput('Complex32 Not implemented yet!');
     var obj = 'Complex32 Not implemented yet!';
     return [ptr + 4, obj];
 }
 
 function readComplex64(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log('Complex64 Not implemented yet!');
+    printToOutput('Complex64 Not implemented yet!');
     var obj = 'Complex64 Not implemented yet!';
     return [ptr + 8, obj];
 }
 
 function readLong(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log('Long Not implemented yet!');
+    printToOutput('Long Not implemented yet!');
     var obj = 'Long Not implemented yet!';
     return [ptr + 4, obj];
 }
@@ -85,7 +84,7 @@ function readString(bytecode:NodeBuffer, ptr:number, level:number) {
     for (var j = 0; j < size; j++) {
         obj = obj + bytecode.toString('ascii', ptr + 4 + j, ptr + 4 + j + 1);
     }
-    console.log(Array(level).join('\t') + obj);
+    printToOutput(Array(level).join('\t') + obj);
     return [ptr + 4 + size, obj];
 }
 
@@ -95,7 +94,7 @@ function readStringInterned(bytecode:NodeBuffer, ptr:number, level:number) {
     for (var j = 0; j < size; j++) {
         obj = obj + bytecode.toString('ascii', ptr + 4 + j, ptr + 4 + j + 1);
     }
-    console.log(Array(level).join('\t') + '(interned)' + obj);
+    printToOutput(Array(level).join('\t') + '(interned)' + obj);
     byteObject.interned_list.push(obj);
     return [ptr + 4 + size, obj];
 }
@@ -103,7 +102,7 @@ function readStringInterned(bytecode:NodeBuffer, ptr:number, level:number) {
 function readStringRef(bytecode:NodeBuffer, ptr:number, level:number) {
     var index = bytecode.readUInt32LE(ptr);
     var obj = new internedString(index);
-    console.log(Array(level).join('\t') + 'ref to interned string in position ' + obj.index);
+    printToOutput(Array(level).join('\t') + 'ref to interned string in position ' + obj.index);
     return [ptr + 4, obj];
 }
 
@@ -113,7 +112,7 @@ function readUnicode(bytecode:NodeBuffer, ptr:number, level:number) {
     for (var j = 0; j < size; j++) {
         obj = obj + bytecode.toString('utf8', ptr + 4 + j, ptr + 4 + j + 1);
     }
-    console.log(Array(level).join('\t') + obj);
+    printToOutput(Array(level).join('\t') + obj);
     return [ptr + 4 + size, obj];
 }
 
@@ -158,7 +157,7 @@ function readTuple(bytecode:NodeBuffer, ptr:number, level:number) {
 
 // Interprets and returns a CodeObject
 function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
-    console.log(Array(level).join('\t') + 'code object:');
+    printToOutput(Array(level).join('\t') + 'code object:');
     var obj = new CodeObject();
     var out = [];
 
@@ -168,22 +167,22 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     // Read Argcount
     obj.argcount = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
-    console.log(prefix + 'argcount:\n' + prefix + String(obj.argcount));
+    printToOutput(prefix + 'argcount:\n' + prefix + String(obj.argcount));
 
     // Read Nlocals
     obj.nlocals = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
-    console.log(prefix + 'nlocals:\n' + prefix + String(obj.nlocals));
+    printToOutput(prefix + 'nlocals:\n' + prefix + String(obj.nlocals));
 
     // Read Stacksize
     obj.stacksize = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
-    console.log(prefix + 'stacksize:\n' + prefix + String(obj.stacksize));
+    printToOutput(prefix + 'stacksize:\n' + prefix + String(obj.stacksize));
 
     // Read Flags
     obj.flags = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
-    console.log(prefix + 'flags:\n' + prefix + String(obj.flags));
+    printToOutput(prefix + 'flags:\n' + prefix + String(obj.flags));
 
     var type = bytecode.toString('ascii', ptr, ptr + 1);
     ptr = ptr + 1; // should be 's'
@@ -192,7 +191,7 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
 
     // Start Reading Op Codes
     obj.code = [];
-    console.log(prefix + 'code: (' + String(codelen) + ')');
+    printToOutput(prefix + 'code: (' + String(codelen) + ')');
     var colon = ': ';
     if (codelen > 9) { colon = ':  '; }
     var ptr0 = ptr;
@@ -213,7 +212,7 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
             ptr = ptr + 1;
             obj.code.push(opcode);
         }
-        console.log(prefix + logout);
+        printToOutput(prefix + logout);
     }
 
     // Start Reading Tuple of Constants
@@ -247,7 +246,7 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     obj.cellvars = out[1];
 
     // Read Filename
-    console.log(prefix + 'filename:');
+    printToOutput(prefix + 'filename:');
     type = bytecode.toString('ascii', ptr, ptr + 1);
     if (type in readByType) {
         out = readByType[type](bytecode, ptr + 1, level);
@@ -258,7 +257,7 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     }
 
     // Read Function Name
-    console.log(prefix + 'name:');
+    printToOutput(prefix + 'name:');
     type = bytecode.toString('ascii', ptr, ptr + 1);
     if (type in readByType) {
         out = readByType[type](bytecode, ptr + 1, level);
@@ -269,7 +268,7 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     }
 
     // Read First Line Number
-    console.log(prefix + 'firstlineno:');
+    printToOutput(prefix + 'firstlineno:');
     out = readByType['i'](bytecode, ptr, level);
     ptr = out[0];
     obj.firstlineno = out[1];
@@ -279,13 +278,13 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     ptr = ptr + 1; // Skipping the 's' byte
     var npairs = bytecode.readUInt32LE(ptr) / 2;
     ptr = ptr + 4;
-    console.log(prefix + 'lnotab: (' + String(npairs) + ')');
+    printToOutput(prefix + 'lnotab: (' + String(npairs) + ')');
     for (var j = 0; j < npairs; j++) {
         var byteDelta = bytecode.readUInt8(ptr);
         ptr = ptr + 1;
         var lineDelta = bytecode.readUInt8(ptr);
         ptr = ptr + 1;
-        console.log(prefix + '('.concat(String(byteDelta), ',', String(lineDelta), ')'));
+        printToOutput(prefix + '('.concat(String(byteDelta), ',', String(lineDelta), ')'));
         obj.lnotab.push([byteDelta, lineDelta]);
     }
 
@@ -676,25 +675,25 @@ class CodeObject {
     }
     public PRINT_EXPR(){ 
         var TOS = Stack.pop();
-        console.log('LOGGED TO CONSOLE: --------------------- '+TOS);
+        printToOutput('LOGGED TO CONSOLE: --------------------- '+TOS);
         this.pc += 1; 
     }
     public PRINT_ITEM(){
         var TOS = Stack.pop();
         if (TOS instanceof internedString) { TOS = byteObject.interned_list[TOS.index]; }
-        console.log('LOGGED TO CONSOLE: --------------------- '+TOS);
+        printToOutput('LOGGED TO CONSOLE: --------------------- '+TOS);
         this.pc += 1;
     }
     public PRINT_NEWLINE(){
-        console.log('LOGGED TO CONSOLE: --------------------- '); // or process.stdout.write('\n');
+        printToOutput('LOGGED TO CONSOLE: --------------------- '); // or process.stdout.write('\n');
         this.pc += 1;
     }
     public PRINT_ITEM_TO(){ 
-        console.log('NOT WORKING - SHOULD PRINT TO FILE: --------------------- ');
+        printToOutput('NOT WORKING - SHOULD PRINT TO FILE: --------------------- ');
         this.pc += 1; 
     }
     public PRINT_NEWLINE_TO(){ 
-        console.log('NOT WORKING - SHOULD PRINT NEWLINE TO FILE: --------------------- ');
+        printToOutput('NOT WORKING - SHOULD PRINT NEWLINE TO FILE: --------------------- ');
         this.pc += 1; 
     }
     public INPLACE_LSHIFT(){ 
@@ -743,7 +742,7 @@ class CodeObject {
             if (typeof name === 'string') { locals[name] = null; }
             else if (name instanceof internedString) { locals[byteObject.interned_list[name.index]] = null; }
             else if (name instanceof FunctionObject) { locals[name.func_name] = name; }
-            else console.log('problems with LOAD_LOCALS');
+            else printToOutput('problems with LOAD_LOCALS');
         }
         Stack.push(locals);
         this.pc += 1;
@@ -866,7 +865,7 @@ class CodeObject {
                 Stack.push(dupItems[i]);
                 Stack.push(dupItems[i]);
             }
-        } else { console.log('Warning: Number of items to duplicate is greater than 5.')}
+        } else { printToOutput('Warning: Number of items to duplicate is greater than 5.')}
         this.pc += 3;
     }
     public LOAD_CONST(){
@@ -911,10 +910,10 @@ class CodeObject {
     public LOAD_ATTR(){ 
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var attr = this.names[index];
-        console.log('attr='+attr);
-        if (attr instanceof internedString) { attr = byteObject.interned_list[attr.index]; console.log('interned version='+attr); }
+        printToOutput('attr='+attr);
+        if (attr instanceof internedString) { attr = byteObject.interned_list[attr.index]; printToOutput('interned version='+attr); }
         var TOS = Stack.pop();
-        console.log('TOS='+TOS);
+        printToOutput('TOS='+TOS);
         if (TOS=='self') { Stack.push(this.self[attr]); }
         else if (TOS instanceof classObject) { Stack.push(TOS.methods[attr]); }
         else { Stack.push(TOS[attr]); }
@@ -976,7 +975,7 @@ class CodeObject {
     public POP_JUMP_IF_TRUE(){
         var target = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var TOS = Stack.pop();
-        console.log(TOS);
+        printToOutput(TOS);
         if (TOS) { this.pc = target; }
         else { this.pc += 3; }
     } 
@@ -1070,7 +1069,7 @@ class CodeObject {
         }
         // Replace function object's variable names with arguments from Stack & default arguments
         var varnamesOriginal = function_object.func_code.varnames.slice(0); // record varnames for later use and set to empty list
-        console.log(varnamesOriginal);
+        printToOutput(varnamesOriginal);
         function_object.func_code.varnames = [];
         var argcount = function_object.func_code.argcount;
         // Keyword argument variables
@@ -1079,21 +1078,21 @@ class CodeObject {
             if (key instanceof internedString) {
                 key = byteObject.interned_list[key.index];
             }
-            console.log('key='+key);
+            printToOutput('key='+key);
             // find key in varnames and set it equal to kwargs[i][1]
             var keyFound = false;
             for (var j=0; j<varnamesOriginal.length; j++) {
                 var varnamesKey = varnamesOriginal[j];
                 if (varnamesKey instanceof internedString) { varnamesKey = byteObject.interned_list[varnamesKey.index]; }
-                console.log('varnames key='+varnamesKey);
+                printToOutput('varnames key='+varnamesKey);
                 if ((key == varnamesKey) && (!keyFound)) {
                     function_object.func_code.varnames[j] = kwargs[i][1];
-                    console.log('setting kwarg in varnames');
+                    printToOutput('setting kwarg in varnames');
                     keyFound = true;
                 }
             }
         }
-        console.log(function_object.func_code.varnames);
+        printToOutput(function_object.func_code.varnames);
         // If it's a class object, put 'self' in position zero
         if (isClass) { function_object.func_code.varnames[0] = 'self'; } //put 'self' where 'self' already exists in varnames
         //Fill up remaining variable names using the positional arguments
@@ -1104,7 +1103,7 @@ class CodeObject {
                 counter += 1;
             }
         }
-        console.log(function_object.func_code.varnames);
+        printToOutput(function_object.func_code.varnames);
         // Get default values for any unspecified variable left
         counter = function_object.func_defaults.length;
         for (i=argcount-1; i>=0; i--) {
@@ -1113,33 +1112,33 @@ class CodeObject {
                 counter -= 1;
             }
         }
-        console.log(function_object.func_code.varnames);
+        printToOutput(function_object.func_code.varnames);
         // Add back in any original values from varnames for stuff that is still undefined
         for (i=0;i<varnamesOriginal.length;i++) {
             if (function_object.func_code.varnames[i] == undefined) {
                 function_object.func_code.varnames[i] = varnamesOriginal[i];
             }
         }
-        console.log(function_object.func_code.varnames);
+        printToOutput(function_object.func_code.varnames);
         // Execute the function's bytecode
         while (function_object.func_code.pc < function_object.func_code.code.length){
             // op code
             var opcode = function_object.func_code.code[function_object.func_code.pc];
             // call opcode
-            console.log(OpCodeList[opcode]);
+            printToOutput(OpCodeList[opcode]);
             function_object.func_code[OpCodeList[opcode]]();
-            console.log(Stack);
+            printToOutput(Stack);
         }
         // Update class objects self field with that found in function_object.func_code.self
         if (isClass) {
             for (var key2 in function_object.func_code.self) {
-                console.log('func_code.self key: '+function_object.func_code.self[key2]);
+                printToOutput('func_code.self key: '+function_object.func_code.self[key2]);
             }
             for (var key3 in class_object.self) {
-                console.log('class_object.self key: '+class_object.self[key3]);
+                printToOutput('class_object.self key: '+class_object.self[key3]);
             }
-            // console.log('func_code.self='+function_object.func_code.self);
-            // console.log('class_object.self='+class_object.self);
+            // printToOutput('func_code.self='+function_object.func_code.self);
+            // printToOutput('class_object.self='+class_object.self);
             // class_object.self = function_object.func_code.self;
             Stack.push(class_object);
         }
@@ -1314,21 +1313,21 @@ function parseBytecode(bytecode) {
     for (var j = 0; j < 4; j++) {
         magic_number = magic_number + String(bytecode.readUInt8(j));
     }
-    console.log('magic number: ' + magic_number);
+    printToOutput('magic number: ' + magic_number);
     byteObject.magic_number = magic_number;
 
     var time_stamp = '';
     for (j = 4; j < 8; j++) {
         time_stamp = time_stamp + String(bytecode.readUInt8(j));
     }
-    console.log('time stamp: ' + time_stamp);
+    printToOutput('time stamp: ' + time_stamp);
     byteObject.time_stamp = time_stamp;
 
     // Check Magic Number Against Python 2.7 (03f3 0d0a)
     var my_version = '32431310';
     for (var j = 0; j < 4; j++) {
         if (magic_number[j] != my_version[j]) {
-            console.log('Not right version!');
+            printToOutput('Not right version!');
             return false;
         }
     }
@@ -1358,9 +1357,9 @@ function execBytecode(){
     while (byteObject.code_object.pc < byteObject.code_object.code.length){
         // Retrieve only the op code
         var opcode = byteObject.code_object.code[byteObject.code_object.pc];
-        console.log(OpCodeList[opcode]);
+        printToOutput(OpCodeList[opcode]);
         byteObject.code_object[OpCodeList[opcode]]();
-        console.log(Stack);
+        printToOutput(Stack);
     }
 }
 
@@ -1368,10 +1367,15 @@ function execBytecode(){
 function interpretBytecode(bytecode:NodeBuffer) {
     // Parse Bytecode and Return Op Codes:
     if (parseBytecode(bytecode)) {
-        console.log(byteObject.interned_list);
+        printToOutput(byteObject.interned_list);
         // Execute the initial opcodes in the code object
         execBytecode();
     }
+}
+
+function printToOutput(input) {
+    var output = String(input);
+    document.getElementById("logOut").value += output;
 }
 
 // Initalize the stack object
