@@ -37,6 +37,7 @@ function readEllipsis(bytecode:NodeBuffer, ptr:number, level:number) {
 }
 
 function readInt32(bytecode:NodeBuffer, ptr:number, level:number) {
+    console.log(bytecode.slice(ptr,ptr+4));
     var obj = bytecode.readInt32LE(ptr);
     console.log(Array(level).join('\t') + obj);
     return [ptr + 4, obj];
