@@ -675,25 +675,45 @@ class CodeObject {
     }
     public PRINT_EXPR(){ 
         var TOS = Stack.pop();
-        printToOutput('LOGGED TO CONSOLE: --------------------- '+TOS,true,true);
+        if (isVerbose) {
+            printToOutput('LOGGED TO CONSOLE: --------------------- '+TOS,false);
+        } else {
+            printToOutput(TOS,true,true);
+        }
         this.pc += 1; 
     }
     public PRINT_ITEM(){
         var TOS = Stack.pop();
         if (TOS instanceof internedString) { TOS = byteObject.interned_list[TOS.index]; }
-        printToOutput('LOGGED TO CONSOLE: --------------------- '+TOS,true,true);
+        if (isVerbose) {
+            printToOutput('LOGGED TO CONSOLE: --------------------- '+TOS,false);
+        } else {
+            printToOutput(TOS,true,true);
+        }
         this.pc += 1;
     }
     public PRINT_NEWLINE(){
-        printToOutput('LOGGED TO CONSOLE: --------------------- ',true,true); // or process.stdout.write('\n');
+        if (isVerbose) {
+            printToOutput('LOGGED TO CONSOLE: --------------------- ',false);
+        } else {
+            printToOutput('\n',true,true);
+        }
         this.pc += 1;
     }
     public PRINT_ITEM_TO(){ 
-        printToOutput('NOT WORKING - SHOULD PRINT TO FILE: --------------------- ',true,true);
+        if (isVerbose) {
+            printToOutput('NOT WORKING - SHOULD PRINT TO FILE: --------------------- ',false);
+        } else {
+            printToOutput('<PRINT_ITEM_TO> NOT FUNCTIONAL',true,true);
+        }
         this.pc += 1; 
     }
     public PRINT_NEWLINE_TO(){ 
-        printToOutput('NOT WORKING - SHOULD PRINT NEWLINE TO FILE: --------------------- ',true,true);
+        if (isVerbose) {
+            printToOutput('NOT WORKING - SHOULD PRINT NEWLINE TO FILE: --------------------- ',false);
+        } else {
+            printToOutput('<PRINT_NEWLINE_TO> NOT FUNCTIONAL',true,true);
+        }
         this.pc += 1; 
     }
     public INPLACE_LSHIFT(){ 
