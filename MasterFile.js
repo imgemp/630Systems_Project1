@@ -411,13 +411,13 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.UNARY_CONVERT = function () {
         var TOS = Stack.pop();
-        TOS = String(TOS); // Not completely accurate
+        TOS = TOS.toString(); // Not completely accurate
         Stack.push(TOS);
         this.pc += 1;
     };
     CodeObject.prototype.UNARY_INVERT = function () {
         var TOS = Stack.pop();
-        TOS = ~TOS;
+        TOS = ~TOS; //python does not invert complex numbers
         Stack.push(TOS);
         this.pc += 1;
     };
@@ -1583,6 +1583,89 @@ readByType['{'] = readDict;
 readByType['>'] = readTuple;
 readByType['c'] = readCodeObject;
 
+// Enum list of Python built-in functions
+// enum Built_Ins {
+//     abs,
+//     all,
+//     any = 'any',
+//     basestring = 'basestring',
+//     bin = 'bin',
+//     bool = 'bool',
+//     bytearray = 'bytearray',
+//     callable = 'callable',
+//     chr = 'chr',
+//     classmethod = 'classmethod',
+//     cmp = 'cmp',
+//     compile = 'compile',
+//     complex = 'complex',
+//     delattr = "delattr",
+//     dict = 'dict',
+//     dir = 'dir',
+//     divmod = 'divmod',
+//     enumerate = 'enumerate',
+//     eval = 'eval',
+//     execfile = 'execfile',
+//     file = 'file',
+//     filter = 'filter',
+//     float = 'float',
+//     format = 'format',
+//     frozenset = 'frozenset',
+//     getattr = 'getattr',
+//     func_globals = 'func_globals',
+//     hashattr = 'hashattr',
+//     hash = 'hash',
+//     help = 'help',
+//     hex = 'hex',
+//     id = 'id',
+//     input = 'input',
+//     int = 'int',
+//     isinstance = 'isinstance',
+//     issubclass = 'issubclass',
+//     iter = 'iter',
+//     len = 'len',
+//     list = 'list',
+//     locals = 'locals',
+//     long = 'long',
+//     map = 'map',
+//     max = 'max',
+//     memoryview = 'memoryview',
+//     min = 'min',
+//     next = 'next',
+//     object = 'object',
+//     oct = 'oct',
+//     open = 'open',
+//     ord = 'ord',
+//     pow = 'pow',
+//     print = 'print',
+//     property = 'property',
+//     range = 'range',
+//     raw_input = 'raw_input',
+//     reduce = 'reduce',
+//     reload = 'reload',
+//     repr = 'repr',
+//     reversed = 'reversed',
+//     round = 'round',
+//     set = 'set',
+//     setattr = 'setattr',
+//     slice = 'slice',
+//     sorted = 'sorted',
+//     staticmethod = 'staticmethod',
+//     str = 'str',
+//     sum = 'sum',
+//     super = 'super',
+//     tuple = 'tuple',
+//     type = 'type',
+//     unichar = 'unichar',
+//     unicode = 'unicode',
+//     vars = 'vars',
+//     xrange = 'xrange',
+//     zip = 'zip',
+//     _import_ = '_import_',
+//     apply = 'apply',
+//     buffer = 'buffer',
+//     coerce = 'coerce',
+//     intern = 'intern'
+// }
 // Enum list of all opcodes
 var OpCodeList;
 (function (OpCodeList) {
