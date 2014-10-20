@@ -684,7 +684,7 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.PRINT_EXPR = function () {
         var TOS = Stack.pop();
-        printToOutput('LOGGED TO CONSOLE: --------------------- ' + TOS);
+        printToOutput('LOGGED TO CONSOLE: --------------------- ' + TOS, true, true);
         this.pc += 1;
     };
     CodeObject.prototype.PRINT_ITEM = function () {
@@ -692,19 +692,19 @@ var CodeObject = (function () {
         if (TOS instanceof internedString) {
             TOS = byteObject.interned_list[TOS.index];
         }
-        printToOutput('LOGGED TO CONSOLE: --------------------- ' + TOS);
+        printToOutput('LOGGED TO CONSOLE: --------------------- ' + TOS, true, true);
         this.pc += 1;
     };
     CodeObject.prototype.PRINT_NEWLINE = function () {
-        printToOutput('LOGGED TO CONSOLE: --------------------- '); // or process.stdout.write('\n');
+        printToOutput('LOGGED TO CONSOLE: --------------------- ', true, true); // or process.stdout.write('\n');
         this.pc += 1;
     };
     CodeObject.prototype.PRINT_ITEM_TO = function () {
-        printToOutput('NOT WORKING - SHOULD PRINT TO FILE: --------------------- ');
+        printToOutput('NOT WORKING - SHOULD PRINT TO FILE: --------------------- ', true, true);
         this.pc += 1;
     };
     CodeObject.prototype.PRINT_NEWLINE_TO = function () {
-        printToOutput('NOT WORKING - SHOULD PRINT NEWLINE TO FILE: --------------------- ');
+        printToOutput('NOT WORKING - SHOULD PRINT NEWLINE TO FILE: --------------------- ', true, true);
         this.pc += 1;
     };
     CodeObject.prototype.INPLACE_LSHIFT = function () {
@@ -1500,16 +1500,20 @@ function interpretBytecode(bytecode) {
     }
 }
 
-function printToOutput(input, not_newline) {
+function printToOutput(input, skipReturn, isProgram) {
     var output = input.toString();
-    var not_newline = not_newline || false;
-    if (!not_newline) {
-        output += '\n';
+    var skipReturn = skipReturn || false;
+    var isProgram = isProgram || false;
+    if (isVerbose || isProgram) {
+        if (!skipReturn) {
+            output += '\n';
+        }
+        document.getElementById("logOut").value += output;
     }
-
-    // if (ending=='') { console.log('space'); } else { console.log('newline'); }
-    document.getElementById("logOut").value += output;
 }
+
+// Assume verbose output requested
+var isVerbose = true;
 
 // Initalize the stack object
 var Stack = [];

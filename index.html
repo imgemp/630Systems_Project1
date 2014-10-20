@@ -38,6 +38,8 @@
   function runTestSuite(fileName) {
     console.log('Running test suite...');
     isVerbose = false;
+    var testisVerbose = document.getElementById("isVerbose").value;
+    console.log('testisVerbose = '+testisVerbose.toString());
     var fs = require('fs');
     fs.readFile(fileName, function doneReading(err, bytecode) {
       if (err) throw err;
@@ -61,6 +63,7 @@
 <p></p>
 <div>
 <button type="button" onclick="processFiles()">Run Interpreter</button>&nbsp;
+<input id="isVerbose" type="checkbox" checked>Verbose<br>&nbsp;
 <button type="button" onclick="clearLogOut()">Clear Output</button>
 </div>
 <p></p>
