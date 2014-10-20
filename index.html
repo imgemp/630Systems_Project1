@@ -21,7 +21,7 @@
   function processFiles() {
     var fileInput = document.getElementById("fileInput");
     var file = fileInput.files[0];
-    
+    console.log(fileInput.files);
     var reader = new FileReader();
     reader.onload = function (e) {
       // When this event fires, the data is ready.
