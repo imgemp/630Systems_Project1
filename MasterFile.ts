@@ -55,21 +55,37 @@ function readFloat32(bytecode:NodeBuffer, ptr:number, level:number) {
 }
 
 function readFloat64(bytecode:NodeBuffer, ptr:number, level:number) {
-    printToOutput('Float64 Not implemented yet!');
-    var obj = 'Float64 Not implemented yet!';
+    var obj = bytecode.readDoubleLE(ptr);
+    printToOutput(Array(level).join('\t') + obj);
     return [ptr + 8, obj];
+}
+
+class Complex { //use this instead? http://mathjs.org/docs/getting_started.html
+
+    real: number;
+    imag: number;
+
+    constructor(real: number, imag: number) { this.real = real; this.imag = imag; }
 }
 
 function readComplex32(bytecode:NodeBuffer, ptr:number, level:number) {
-    printToOutput('Complex32 Not implemented yet!');
-    var obj = 'Complex32 Not implemented yet!';
-    return [ptr + 4, obj];
+    var real = bytecode.readFloatLE(ptr);
+    var imag = bytecode.readFloatLE(ptr+4);
+    printToOutput('complex32');
+    printToOutput('real='+real);
+    printToOutput('imag='+imag);
+    var obj = new Complex(real,imag);
+    return [ptr + 8, obj];
 }
 
 function readComplex64(bytecode:NodeBuffer, ptr:number, level:number) {
-    printToOutput('Complex64 Not implemented yet!');
-    var obj = 'Complex64 Not implemented yet!';
-    return [ptr + 8, obj];
+    var real = bytecode.readDoubleLE(ptr);
+    var imag = bytecode.readDoubleLE(ptr+8);
+    printToOutput('complex64');
+    printToOutput('real='+real);
+    printToOutput('imag='+imag);
+    var obj = new Complex(real,imag);
+    return [ptr + 16, obj];
 }
 
 function readLong(bytecode:NodeBuffer, ptr:number, level:number) {
@@ -1400,6 +1416,7 @@ function printToOutput(input: string,skipReturn?: boolean,isProgram?: boolean) {
     if (isVerbose || isProgram) {
         if (!skipReturn) { output += '\n'; }
         (<HTMLInputElement>document.getElementById("logOut")).value += output;
+        // process.stdout.write(output);
     }
 }
 

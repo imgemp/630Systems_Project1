@@ -54,21 +54,37 @@ function readFloat32(bytecode, ptr, level) {
 }
 
 function readFloat64(bytecode, ptr, level) {
-    printToOutput('Float64 Not implemented yet!');
-    var obj = 'Float64 Not implemented yet!';
+    var obj = bytecode.readDoubleLE(ptr);
+    printToOutput(Array(level).join('\t') + obj);
     return [ptr + 8, obj];
 }
 
+var Complex = (function () {
+    function Complex(real, imag) {
+        this.real = real;
+        this.imag = imag;
+    }
+    return Complex;
+})();
+
 function readComplex32(bytecode, ptr, level) {
-    printToOutput('Complex32 Not implemented yet!');
-    var obj = 'Complex32 Not implemented yet!';
-    return [ptr + 4, obj];
+    var real = bytecode.readFloatLE(ptr);
+    var imag = bytecode.readFloatLE(ptr + 4);
+    printToOutput('complex32');
+    printToOutput('real=' + real);
+    printToOutput('imag=' + imag);
+    var obj = new Complex(real, imag);
+    return [ptr + 8, obj];
 }
 
 function readComplex64(bytecode, ptr, level) {
-    printToOutput('Complex64 Not implemented yet!');
-    var obj = 'Complex64 Not implemented yet!';
-    return [ptr + 8, obj];
+    var real = bytecode.readDoubleLE(ptr);
+    var imag = bytecode.readDoubleLE(ptr + 8);
+    printToOutput('complex64');
+    printToOutput('real=' + real);
+    printToOutput('imag=' + imag);
+    var obj = new Complex(real, imag);
+    return [ptr + 16, obj];
 }
 
 function readLong(bytecode, ptr, level) {
@@ -1529,6 +1545,7 @@ function printToOutput(input, skipReturn, isProgram) {
             output += '\n';
         }
         document.getElementById("logOut").value += output;
+        // process.stdout.write(output);
     }
 }
 
