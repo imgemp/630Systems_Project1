@@ -20,8 +20,7 @@
 <script type="text/javascript">
   function processFiles() {
     var fileInput = document.getElementById("fileInput");
-    var file = fileInput.files[0];
-    console.log(fileInput.files);
+    var file = fileInput.files[0]; // [lastModified,lastModifiedDate,name,size,type,webkitRelativePath,__proto__]
     var reader = new FileReader();
     reader.onload = function (e) {
       // When this event fires, the data is ready.
@@ -38,6 +37,7 @@
   };
   function runTestSuite(fileName) {
     console.log('Running test suite...');
+    isVerbose = false;
     var fs = require('fs');
     fs.readFile(fileName, function doneReading(err, bytecode) {
       if (err) throw err;
