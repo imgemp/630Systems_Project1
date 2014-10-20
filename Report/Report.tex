@@ -8,7 +8,6 @@
 \usepackage{amssymb}
 \usepackage{cancel}
 \usepackage{hyperref}
-\usepackage{ulem}
 \usepackage[usenames,dvipsnames]{color}
 \newtheorem{claim}{Claim}
 
@@ -44,23 +43,45 @@ Our program assumes the python bytecode was compiled with Python 2.7 although we
 
 \subsection{Understanding Python Bytecode}
 
-As mentioned above, the majority of the python bytecode is structured as an alternating series of types and data chunks, however the first 8 bytes (64 bits) of bytecode are specially formatted.  The first 4 bytes (32 bits) of bytecode represent a magic number corresponding to the marshal format version.  The next 4 bytes are the modification timestamp of the python source file (.py).  The next byte constitutes the beginning of the type/datum sequence.  Each ``type-byte'' is stored in the bytecode as an unsigned 8 bit integer representing a single character.  This character corresponds to a specific datum type, which dictates how the following bytes should be read in order to correctly parse the corresponding datum.  For instance, the type-byte ``s'' indicates that the datum is a string.  The 4 bytes (32 bits) following the type-byte are a signed integer representing the size of the string to be read.  Once the string is parsed, the program moves to the following byte and expects to encounter another type-byte.  The only way this rule is broken is if the program has moved beyond the length of the bytecode file, in which case parsing is complete.  The diagram below depicts this example and the general algorithmic scheme for parsing the bytecode.\\
+As mentioned above, the majority of the python bytecode is structured as an alternating series of types and data chunks, however the first 8 bytes (64 bits) of bytecode are specially formatted.  The first 4 bytes (32 bits) of bytecode represent a magic number corresponding to the marshal format version.  The second 4 bytes are the modification timestamp of the python source file (.py).  The next byte constitutes the beginning of the type/datum sequence.  Each ``type-byte'' is stored in the bytecode as an unsigned 8 bit integer representing a single character.  This character corresponds to a specific datum type, which dictates how the following bytes should be read in order to correctly parse the corresponding datum.  For instance, the type-byte ``s'' indicates that the datum is a string.  The 4 bytes (32 bits) following the type-byte are a signed integer representing the size of the string to be read.  Once the string is parsed, the program moves to the following byte and expects to encounter another type-byte.  The only way this rule is broken is if the program has moved beyond the length of the bytecode file, in which case parsing is complete.  The diagram below depicts this example and the general algorithmic scheme for parsing the bytecode.\\
 \\
-0) Initialize Global Interned List \\
-1) Read Magic Number \\
-2) Read Timestamp \\
-3) While Not End of File \\
-4) \indent Parse\_Type\_Datum() \\
+\begin{minipage}{\textwidth}
+\begin{minipage}{0.35\textwidth}
+\begin{verbatim}
+1) Read Magic Number
+2) Read Timestamp
+3) While Not End of File
+4)     Parse (Type,Datum)
+\end{verbatim}
+\end{minipage}
+\begin{minipage}{.64\textwidth}
+\begin{tabular}{ c | c | c | c | c | c | c | c | c }
+type & size (int32LE) & \multicolumn{5}{|c|}{string} & type & $\ldots$ \\ \hline
+'s' & 5 & h & e & l & l & o & 'c' & \ldots \\ \hline
+\end{tabular}
+\end{minipage}
+\end{minipage}
+\\\\
+The resulting parsed bytecode consists of a series of {\em code objects} containing {\em opcodes}, stored constants, argument names, and other general information.  Code objects may appear nested within a list of constants creating a nested hierarchy of code objects.
 
 \subsection{Special Cases}
 
-64 Bit, Complex Numbers, Floats, interned\_list?
+An important object not given sufficient attention in python documentation is the interned list.  The interned list is a global variable containing a list of names referred to by any number of code objects during bytecode execution.  The parser must add certain strings to this list in order for the execution to function properly.
+
+\subsection{Our Implementation}
 
 \section{Interpreter}
+
+Once the bytecode has been fully parsed, the python interpreter begins to proceed through the op codes, or instruction list, of the highest level code object (representing the source module).  The interpreter maintains its place in the instruction list with a program counter pointing to the byte offset in the instruction list of the current instruction.  Opcode execution consists of a series of Stack manipulations and completes by updating the program to point to the next instruction.  The interpreter is finished when the program counter has moved beyond the end of the instruction list of the highest level code object.
 
 \subsection{Interpreter Dependencies}
 
 \subsection{Understanding the Interpreter}
+
+The opcodes are positive integers representing 
+
+\subsection{Our Implementation}
+In our implementation, each opcode has a corresponding function which executes a series of operations by manipulating the global stack object.  Upon completion of the opcode execution, the program counter is updated to point to the next instruction to be executed.
 
 \subsection{Special Cases}
 
