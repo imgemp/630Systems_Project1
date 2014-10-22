@@ -1,5 +1,6 @@
 /// <reference path="Globals.ts" />
 /// <reference path="BytecodeObjects.ts" />
+/// <reference path="NumericObjects.ts" />
 /// <reference path="Log.ts" />
 /// <reference path="node.d.ts" />
 
@@ -61,14 +62,6 @@ function readFloat64(bytecode:NodeBuffer, ptr:number, level:number) {
     var obj = bytecode.readDoubleLE(ptr);
     printToOutput(Array(level).join('\t') + obj);
     return [ptr + 8, obj];
-}
-
-class Complex { //use this instead? http://mathjs.org/docs/getting_started.html
-
-    real: number;
-    imag: number;
-
-    constructor(real: number, imag: number) { this.real = real; this.imag = imag; }
 }
 
 function readComplex32(bytecode:NodeBuffer, ptr:number, level:number) {
@@ -201,7 +194,7 @@ function readCodeObject(bytecode:NodeBuffer, ptr:number, level:number) {
     // Read Flags
     obj.flags = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
-    printToOutput(prefix + 'flags:\n' + prefix + String(obj.flags));
+    printToOutput(prefix + 'flags:\n' + prefix + obj.flags.toString(16));
 
     var type = bytecode.toString('ascii', ptr, ptr + 1);
     ptr = ptr + 1; // should be 's'

@@ -1,5 +1,6 @@
 /// <reference path="Globals.ts" />
 /// <reference path="BytecodeObjects.ts" />
+/// <reference path="NumericObjects.ts" />
 /// <reference path="Log.ts" />
 /// <reference path="node.d.ts" />
 function readNull(bytecode, ptr, level) {
@@ -61,14 +62,6 @@ function readFloat64(bytecode, ptr, level) {
     printToOutput(Array(level).join('\t') + obj);
     return [ptr + 8, obj];
 }
-
-var Complex = (function () {
-    function Complex(real, imag) {
-        this.real = real;
-        this.imag = imag;
-    }
-    return Complex;
-})();
 
 function readComplex32(bytecode, ptr, level) {
     var real = bytecode.readFloatLE(ptr);
@@ -203,7 +196,7 @@ function readCodeObject(bytecode, ptr, level) {
     // Read Flags
     obj.flags = bytecode.readUInt32LE(ptr);
     ptr = ptr + 4;
-    printToOutput(prefix + 'flags:\n' + prefix + String(obj.flags));
+    printToOutput(prefix + 'flags:\n' + prefix + obj.flags.toString(16));
 
     var type = bytecode.toString('ascii', ptr, ptr + 1);
     ptr = ptr + 1; // should be 's'

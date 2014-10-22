@@ -143,7 +143,7 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_ADD = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 + TOS);
+        Stack.push(TOS1 + TOS); //Math.add(TOS1,TOS)
         this.pc += 1;
     };
 
