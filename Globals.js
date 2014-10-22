@@ -1,5 +1,6 @@
 /// <reference path="Parsers.ts" />
 /// <reference path="Log.ts" />
+/// <reference path="Built_Ins.ts" />
 // Assume verbose output requested
 var isVerbose = true;
 
@@ -167,3 +168,87 @@ var OpCodeList;
     OpCodeList[OpCodeList["MAP_ADD"] = 147] = "MAP_ADD";
 })(OpCodeList || (OpCodeList = {}));
 ;
+
+//Dictionary ist of Python built-in functions
+var builtIns = {};
+builtIns['abs'] = abs;
+builtIns['all'] = all;
+builtIns['any'] = any;
+/*basestring,
+bin,
+bool,
+bytearray,
+callable,
+chr,
+classmethod,
+cmp,
+compile,
+complex,
+delattr,
+dict,
+dir,
+divmod,
+enumerate,
+eval,
+execfile,
+file,
+filter,
+float,
+format,
+frozenset,
+getattr,
+func_globals,
+hashattr,
+hash,
+help,
+hex,
+id,
+input,
+int,
+isinstance,
+issubclass,
+iter,
+len,
+list,
+locals,
+long,
+map,
+max,
+memoryview,
+min,
+next,
+object,
+oct,
+open,
+ord,
+pow,
+print,
+property,
+range,
+raw_input,
+reduce,
+reload,
+repr,
+reversed,
+round,
+set,
+setattr,
+slice,
+sorted,
+staticmethod,
+str,
+sum,
+super,
+tuple,
+type,
+unichar,
+unicode,
+vars,
+xrange,
+zip,
+_import_,
+apply,
+buffer,
+coerce,
+intern
+};*/
