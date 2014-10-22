@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
 
-<script type="text/javascript" src="browserfs.js"></script>
+<script type="text/javascript" src="browserfs.min.js"></script>
+<script type="text/javascript" src="Interpreter.js"></script>
+<script type="text/javascript" src="Parsers.js"></script>
+<script type="text/javascript" src="BytecodeObjects.js"></script>
+<script type="text/javascript" src="Globals.js"></script>
+<script type="text/javascript" src="Log.js"></script>
+<!-- <script type='text/javascript' src='filereader.js'></script> -->
 <script type="text/javascript">
   // Installs globals onto window:
   // * Buffer
@@ -16,22 +22,54 @@
   BrowserFS.initialize(lsfs);
 </script>
 <script type="text/javascript">
-	var fs = require('fs');
-	fs.writeFile('/test.txt', 'Cool, I can do this in the browser!', function(err) {
-	  fs.readFile('/test.txt', function(err, contents) {
-	    console.log(contents.toString());
-	  });
-	});
+  function processFiles() {
+    var fileInput = document.getElementById("fileInput");
+    var file = fileInput.files[0]; // [lastModified,lastModifiedDate,name,size,type,webkitRelativePath,__proto__]
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      // When this event fires, the data is ready.
+      console.log('Writing file to buffer...');
+      fileBuffer = new Buffer(e.target.result);
+      var fs = require('fs');
+      fs.writeFile('TestFile.pyc',fileBuffer, function (err) {
+        if (err) throw err;
+        runTestSuite('TestFile.pyc');
+      });
+    };
+    reader.readAsArrayBuffer(file);
+    console.log('Reading File...');
+  };
+  function runTestSuite(fileName) {
+    console.log('Running test suite...');
+    isVerbose = document.getElementById("isVerbose").checked;
+    var fs = require('fs');
+    fs.readFile(fileName, function doneReading(err, bytecode) {
+      if (err) throw err;
+      interpretBytecode(bytecode);
+    });
+  }
+</script>
+<script>
+  function clearLogOut() {
+    document.getElementById("logOut").value = '';
+  }
 </script>
 
 <body>
-
 <h1>Python Interpreter</h1>
 <p>Please upload .pyc file to be executed.</p>
-<!-- not correct yet -->
-<form method="post" action="MasterFile.js" name="submit" enctype="multipart/form-data">
-  <input type="file" name="fileField"><br /><br />
-  <input type="submit" name="submit" value="Submit">
-</form>
+<div>
+<input id="fileInput" type="file" accept='.pyc'/>
+</div>
+<p></p>
+<div>
+<button type="button" onclick="processFiles()">Run Interpreter</button>&nbsp;
+<input id="isVerbose" type="checkbox" checked>Verbose</input>&nbsp;
+<button type="button" onclick="clearLogOut()">Clear Output</button>
+</div>
+<p></p>
+<div>
+<textarea readonly rows="50" cols="50" id="logOut"></textarea>
+</div>
 </body>
 </html>
