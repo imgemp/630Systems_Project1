@@ -162,7 +162,7 @@ class CodeObject {
     public BINARY_ADD(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 + TOS);
+        Stack.push(TOS1 + TOS); //Math.add(TOS1,TOS)
         this.pc += 1;
     }
     //implements TOS = TOS1 - TOS
