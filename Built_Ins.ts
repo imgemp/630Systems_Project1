@@ -1,9 +1,9 @@
 /// <reference path="NumericObjects.ts" />
-function abs(x: any){
+function abs(x: any): any{
 	if(x instanceof Complex){
 		var x2 = Math.pow(x.real,2);
 		var xi2 = Math.pow(x.imag,2);
-		return sqrt((x2+xi2));
+		return Math.sqrt((x2+xi2));
 	}else if ((x instanceof Integer) || (x instanceof Float) || (x instanceof Long)) {
 		return Math.abs(x);
 	}else{
@@ -48,7 +48,7 @@ function dict(){}
 function dir(){}
 function divmod(){}
 function enumerate(){}
-function eval(){}
+function eval1(){}
 function execfile(){}
 function file(){}
 function filter(){}
@@ -78,10 +78,10 @@ function min(){}
 function next(){}
 function object(){}
 function oct(){}
-function open(){}
+function open1(){}
 function ord(){}
 function pow(x, y, z?){}
-function print(){}
+function print1(){}
 function property(){}
 function range(){}
 function raw_input(){}

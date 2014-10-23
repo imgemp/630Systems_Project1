@@ -169,86 +169,84 @@ var OpCodeList;
 })(OpCodeList || (OpCodeList = {}));
 ;
 
-//Dictionary ist of Python built-in functions
+//Dictionary list of Python built-in functions
 var builtIns = {};
 builtIns['abs'] = abs;
 builtIns['all'] = all;
 builtIns['any'] = any;
-/*basestring,
-bin,
-bool,
-bytearray,
-callable,
-chr,
-classmethod,
-cmp,
-compile,
-complex,
-delattr,
-dict,
-dir,
-divmod,
-enumerate,
-eval,
-execfile,
-file,
-filter,
-float,
-format,
-frozenset,
-getattr,
-func_globals,
-hashattr,
-hash,
-help,
-hex,
-id,
-input,
-int,
-isinstance,
-issubclass,
-iter,
-len,
-list,
-locals,
-long,
-map,
-max,
-memoryview,
-min,
-next,
-object,
-oct,
-open,
-ord,
-pow,
-print,
-property,
-range,
-raw_input,
-reduce,
-reload,
-repr,
-reversed,
-round,
-set,
-setattr,
-slice,
-sorted,
-staticmethod,
-str,
-sum,
-super,
-tuple,
-type,
-unichar,
-unicode,
-vars,
-xrange,
-zip,
-_import_,
-apply,
-buffer,
-coerce,
-intern
-};*/
+builtIns['basestring'] = basestring;
+builtIns['bin'] = bin;
+builtIns['bool'] = bool;
+builtIns['bytearray'] = bytearray;
+builtIns['callable'] = callable;
+builtIns['chr'] = chr;
+builtIns['classmethod'] = classmethod;
+builtIns['cmp'] = cmp;
+builtIns['compile'] = compile;
+builtIns['complex'] = complex;
+builtIns['delattr'] = delattr;
+builtIns['dict'] = dict;
+builtIns['dir'] = dir;
+builtIns['divmod'] = divmod;
+builtIns['enumerate'] = enumerate;
+builtIns['eval'] = eval;
+builtIns['execfile'] = execfile;
+builtIns['file'] = file;
+builtIns['filter'] = filter;
+builtIns['float'] = floater;
+builtIns['format'] = format;
+builtIns['frozenset'] = frozenset;
+builtIns['getattr'] = getattr;
+builtIns['func_globals'] = func_globals;
+builtIns['hashattr'] = hashattr;
+builtIns['hash'] = hash;
+builtIns['help'] = help;
+builtIns['hex'] = hex;
+builtIns['id'] = id;
+builtIns['int'] = inter;
+builtIns['isinstance'] = isinstance;
+builtIns['issubclass'] = issubclass;
+builtIns['iter'] = iter;
+builtIns['len'] = len;
+builtIns['list'] = list;
+builtIns['locals'] = locals;
+builtIns['long'] = longer;
+builtIns['map'] = map;
+builtIns['max'] = max;
+builtIns['memoryview'] = memoryview;
+builtIns['min'] = min;
+builtIns['next'] = next;
+builtIns['object'] = object;
+builtIns['oct'] = oct;
+builtIns['open'] = open;
+builtIns['ord'] = ord;
+builtIns['pow'] = pow;
+builtIns['print'] = print;
+builtIns['property'] = property;
+builtIns['range'] = range;
+builtIns['raw_input'] = raw_input;
+builtIns['reduce'] = reduce;
+builtIns['reload'] = reload;
+builtIns['repr'] = repr;
+builtIns['reversed'] = reversed;
+builtIns['round'] = round;
+builtIns['set'] = set;
+builtIns['setattr'] = setattr;
+builtIns['slice'] = slice;
+builtIns['sorted'] = sorted;
+builtIns['staticmethod'] = staticmethod;
+builtIns['str'] = str;
+builtIns['sum'] = sum;
+builtIns['super'] = super1;
+builtIns['tuple'] = tuple;
+builtIns['type'] = type;
+builtIns['unichar'] = unichar;
+builtIns['unicode'] = unicode;
+builtIns['vars'] = vars;
+builtIns['xrange'] = xrange;
+builtIns['zip'] = zip;
+builtIns['_import_'] = _import_;
+builtIns['apply'] = apply;
+builtIns['buffer'] = buffer;
+builtIns['coerce'] = coerce;
+builtIns['intern'] = intern;
