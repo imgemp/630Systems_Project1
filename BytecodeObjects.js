@@ -360,9 +360,9 @@ var CodeObject = (function () {
     CodeObject.prototype.PRINT_EXPR = function () {
         var TOS = Stack.pop();
         if (isVerbose) {
-            printToOutput('LOGGED TO CONSOLE: --------------------- ' + TOS, false);
+            printToOutput('LOGGED TO CONSOLE: --------------------- ' + str(TOS), false);
         } else {
-            printToOutput(TOS, true, true);
+            printToOutput(str(TOS), true, true);
         }
         this.pc += 1;
     };
@@ -372,9 +372,9 @@ var CodeObject = (function () {
             TOS = byteObject.interned_list[TOS.index];
         }
         if (isVerbose) {
-            printToOutput('LOGGED TO CONSOLE: --------------------- ' + TOS, false);
+            printToOutput('LOGGED TO CONSOLE: --------------------- ' + str(TOS), false);
         } else {
-            printToOutput(TOS, true, true);
+            printToOutput(str(TOS), true, true);
         }
         this.pc += 1;
     };

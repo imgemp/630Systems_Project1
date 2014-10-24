@@ -193,8 +193,26 @@ function sorted() {
 }
 function staticmethod() {
 }
-function str() {
+
+function str(object) {
+    var err = 'str(' + object.constructor.name + ') NotImplemented';
+    var result;
+    if (object instanceof Numeric) {
+        result = object.__str__();
+        if (result == 'NotImplemented') {
+            throw err;
+        } else {
+            return result;
+        }
+    } else {
+        try  {
+            return object.toString();
+        } catch (err) {
+            throw err;
+        }
+    }
 }
+
 function sum() {
 }
 function super1() {

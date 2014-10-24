@@ -18,6 +18,11 @@ var Integer = (function (_super) {
         _super.call(this);
         this.value = value;
     }
+    // toString
+    Integer.prototype.__str__ = function () {
+        return this.value.toString();
+    };
+
     // Addition
     Integer.prototype.__add__ = function (other) {
         if (other instanceof Integer) {
@@ -477,6 +482,11 @@ var Float = (function (_super) {
         _super.call(this);
         this.value = value;
     }
+    // toString
+    Float.prototype.__str__ = function () {
+        return this.value.toString();
+    };
+
     // Addition
     Float.prototype.__add__ = function (other) {
         if (other instanceof Integer) {
@@ -979,6 +989,11 @@ var Complex = (function (_super) {
         this.real = real;
         this.imag = imag;
     }
+    // toString
+    Complex.prototype.__str__ = function () {
+        return this.real.toString() + ' ' + this.imag.toString() + 'j';
+    };
+
     // Addition
     Complex.prototype.__add__ = function (other) {
         if (other instanceof Integer) {
