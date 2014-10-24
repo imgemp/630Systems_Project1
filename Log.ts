@@ -4,6 +4,7 @@ function printToOutput(input: any,skipReturn?: boolean,isProgram?: boolean) {
 	var output;
 	try {
 		if ((input.length>1) && (typeof input !== 'string') && (typeof input !== 'undefined')) {
+			output = [];
 			for (var i=0;i<input.length;i++) {
 				output[i] = str(input[i]);
 			}
