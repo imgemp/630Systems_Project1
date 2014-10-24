@@ -19,7 +19,7 @@ function getArgNames(func) {
 	var reg = /\(([\s\S]*?)\)/;
 	var args = reg.exec(func);
 	if (args) { 
-    	var arg_names = args[1].split(',');
+    	var arg_names = args[1].split(',').map(Function.prototype.call, String.prototype.trim);
     	return arg_names;
     } else { return []; }
 
