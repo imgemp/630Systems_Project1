@@ -758,6 +758,7 @@ class CodeObject {
         if (isBuiltIn) {
             function_object = builtIns[function_object];
             varnamesOriginal = getArgNames(function_object);
+            console.log(varnamesOriginal);
             argcount = function_object.length;
         } else if (isClass) {
             var class_object = function_object;
