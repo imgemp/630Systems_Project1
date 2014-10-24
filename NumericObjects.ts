@@ -1064,7 +1064,7 @@ class Complex extends Numeric {
 	// toString
 	public __str__(): string {
 
-		return this.real.toString()+' '+this.imag.toString()+'j';
+		return this.real.toString()+' + '+this.imag.toString()+'j';
 
 	}
 

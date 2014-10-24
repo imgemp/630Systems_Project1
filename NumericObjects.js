@@ -991,7 +991,7 @@ var Complex = (function (_super) {
     }
     // toString
     Complex.prototype.__str__ = function () {
-        return this.real.toString() + ' ' + this.imag.toString() + 'j';
+        return this.real.toString() + ' + ' + this.imag.toString() + 'j';
     };
 
     // Addition
