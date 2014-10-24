@@ -1,4 +1,18 @@
 /// <reference path="NumericObjects.ts" />
+
+function getArgNames(func) {
+
+	var reg = /\(([\s\S]*?)\)/;
+	var args = reg.exec(func);
+	if (args) { 
+    	var arg_names = args[1].split(',');
+    	return arg_names;
+    } else { return []; }
+
+}
+
+// console.log(getArgNames(getArgNames));
+
 // function abs(x: any): any{
 // 	if(x instanceof Complex){
 // 		var x2 = Math.pow(x.real,2);

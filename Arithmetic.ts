@@ -445,20 +445,35 @@ function invert(x_this: any): any {
 }
 
 // Complex Conversion
-function complex(x_this: any): any {
+function complex(real?: any, imag?: any): any {
 
-	var err: string = 'complex('+x_this.constructor.name+') NotImplemented';
+	var err: string = 'complex(args) NotImplemented';
 	var result: any;
-	if (x_this instanceof Numeric) {
-		result = x_this.__complex__();
-		if (result == 'NotImplemented') {
-			throw err;
-		} else {
-			return result;
+
+	if (typeof real !== 'undefined') {
+		if (real instanceof Numeric) {
+			real = real.__complex__();
+			if (result == 'NotImplemented') {
+				throw err;
+			}
 		}
 	} else {
-		throw err;
+		real = new Complex(0,0);
 	}
+	if (typeof imag !== 'undefined') {
+		if (imag instanceof Numeric) {
+			imag = imag.__complex__();
+			var j: Complex = new Complex(0,1);
+			imag = imag.__mul__(j);
+			if (result == 'NotImplemented') {
+				throw err;
+			}
+		}
+	} else {
+		imag = new Complex(0,0);
+	}
+
+	return real.__add__(imag);
 
 }
 

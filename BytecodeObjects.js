@@ -1,6 +1,7 @@
 /// <reference path="Globals.ts" />
 /// <reference path="Log.ts" />
 /// <reference path="Arithmetic.ts" />
+/// <reference path="Built_Ins.ts" />
 var Block = (function () {
     function Block(delta, start) {
         this.delta = delta;
@@ -827,11 +828,19 @@ var CodeObject = (function () {
         for (i = 0; i < numArgs; i++) {
             args[numArgs - 1 - i] = Stack.pop();
         }
-        var function_object = Stack.pop();
-        var isClass = (function_object instanceof classObject);
 
-        //***********ADD isBuiltIn here and handle accordingly********************************
-        if (isClass) {
+        // Initialize variables depending on function_object type
+        var function_object = Stack.pop();
+        var isBuiltIn = (function_object in builtIns);
+        var isClass = (function_object instanceof classObject);
+        var varnamesOriginal = [];
+        var varnamesNew = [];
+        var argcount = 0;
+        var defaults = [];
+        if (isBuiltIn) {
+            varnamesOriginal = getArgNames(function_object);
+            argcount = function_object.length;
+        } else if (isClass) {
             var class_object = function_object;
             for (var methodKey in class_object.methods) {
                 var method = class_object.methods[methodKey];
@@ -840,13 +849,14 @@ var CodeObject = (function () {
                 }
             }
             function_object = class_object.methods['__init__'];
+            varnamesOriginal = function_object.func_code.varnames.slice(0);
+            argcount = function_object.func_code.argcount;
+            defaults = function_object.func_defaults;
+        } else {
+            varnamesOriginal = function_object.func_code.varnames.slice(0);
+            argcount = function_object.func_code.argcount;
+            defaults = function_object.func_defaults;
         }
-
-        // Replace function object's variable names with arguments from Stack & default arguments
-        var varnamesOriginal = function_object.func_code.varnames.slice(0);
-        printToOutput(varnamesOriginal);
-        function_object.func_code.varnames = [];
-        var argcount = function_object.func_code.argcount;
 
         for (var i = 0; i < numKwargs; i++) {
             var key = kwargs[i][0];
@@ -854,8 +864,6 @@ var CodeObject = (function () {
                 key = byteObject.interned_list[key.index];
             }
             printToOutput('key=' + key);
-
-            // find key in varnames and set it equal to kwargs[i][1]
             var keyFound = false;
             for (var j = 0; j < varnamesOriginal.length; j++) {
                 var varnamesKey = varnamesOriginal[j];
@@ -864,79 +872,80 @@ var CodeObject = (function () {
                 }
                 printToOutput('varnames key=' + varnamesKey);
                 if ((key == varnamesKey) && (!keyFound)) {
-                    function_object.func_code.varnames[j] = kwargs[i][1];
+                    varnamesNew[j] = kwargs[i][1];
                     printToOutput('setting kwarg in varnames');
                     keyFound = true;
                 }
             }
         }
 
-        // printToOutput(function_object.func_code.varnames);
         // If it's a class object, put 'self' in position zero
         if (isClass) {
-            function_object.func_code.varnames[0] = 'self';
+            varnamesNew[0] = 'self';
         }
 
         //Fill up remaining variable names using the positional arguments
         var counter = 0;
         for (i = 0; i < argcount; i++) {
-            if ((function_object.func_code.varnames[i] == undefined) && (counter < args.length)) {
-                function_object.func_code.varnames[i] = args[counter];
+            if ((varnamesNew[i] == undefined) && (counter < args.length)) {
+                varnamesNew[i] = args[counter];
                 counter += 1;
             }
         }
 
-        // printToOutput(function_object.func_code.varnames);
         // Get default values for any unspecified variable left
-        counter = function_object.func_defaults.length;
+        counter = defaults.length;
         for (i = argcount - 1; i >= 0; i--) {
-            if ((function_object.func_code.varnames[i] == undefined) && (counter > 0)) {
-                function_object.func_code.varnames[i] = function_object.func_defaults[counter - 1];
+            if ((varnamesNew[i] == undefined) && (counter > 0)) {
+                varnamesNew[i] = defaults[counter - 1];
                 counter -= 1;
             }
         }
 
         for (i = 0; i < varnamesOriginal.length; i++) {
-            if (function_object.func_code.varnames[i] == undefined) {
-                function_object.func_code.varnames[i] = varnamesOriginal[i];
+            if (varnamesNew[i] == undefined) {
+                varnamesNew[i] = varnamesOriginal[i];
             }
         }
 
-        while (function_object.func_code.pc < function_object.func_code.code.length) {
-            // op code
-            var opcode = function_object.func_code.code[function_object.func_code.pc];
-
-            // call opcode
-            printToOutput(OpCodeList[opcode]);
-            function_object.func_code[OpCodeList[opcode]]();
-            printToOutput(Stack.toString());
-        }
-
-        // Update class objects self field with that found in function_object.func_code.self
-        if (isClass) {
-            for (var key2 in function_object.func_code.self) {
-                printToOutput('func_code.self key: ' + function_object.func_code.self[key2]);
+        //Execute Function
+        var returnedValue;
+        if (isBuiltIn) {
+            returnedValue = function_object.apply(null, varnamesNew);
+            if (returnedValue == 'NotImplemented') {
+                returnedValue = null;
             }
-            for (var key3 in class_object.self) {
-                printToOutput('class_object.self key: ' + class_object.self[key3]);
+        } else {
+            // Overwrite function's varnames list
+            function_object.func_code.varnames = varnamesNew.slice(0);
+
+            while (function_object.func_code.pc < function_object.func_code.code.length) {
+                // op code
+                var opcode = function_object.func_code.code[function_object.func_code.pc];
+
+                // call opcode
+                printToOutput(OpCodeList[opcode]);
+                function_object.func_code[OpCodeList[opcode]]();
+                printToOutput(Stack.toString());
             }
 
-            // printToOutput('func_code.self='+function_object.func_code.self);
-            // printToOutput('class_object.self='+class_object.self);
-            // class_object.self = function_object.func_code.self;
-            Stack.push(class_object);
-        }
+            // Reset varnames
+            function_object.func_code.varnames = varnamesOriginal.slice(0);
 
-        // Reset varnames
-        function_object.func_code.varnames = varnamesOriginal.slice(0);
+            // Push class object back onto stack
+            if (isClass) {
+                Stack.push(class_object);
+            }
+            returnedValue = function_object.func_code.returnedValue;
+
+            // Reset function object's counter
+            function_object.func_code.pc = 0;
+        }
 
         // Push the return value onto the stack (could be a None? value)
-        if (!(function_object.func_code.returnedValue === null)) {
-            Stack.push(function_object.func_code.returnedValue);
+        if (!(returnedValue === null)) {
+            Stack.push(returnedValue);
         }
-
-        // Reset function object's counter
-        function_object.func_code.pc = 0;
 
         // Increment parent's program counter
         this.pc += 3;

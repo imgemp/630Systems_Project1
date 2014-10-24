@@ -407,19 +407,34 @@ function invert(x_this) {
 }
 
 // Complex Conversion
-function complex(x_this) {
-    var err = 'complex(' + x_this.constructor.name + ') NotImplemented';
+function complex(real, imag) {
+    var err = 'complex(args) NotImplemented';
     var result;
-    if (x_this instanceof Numeric) {
-        result = x_this.__complex__();
-        if (result == 'NotImplemented') {
-            throw err;
-        } else {
-            return result;
+
+    if (typeof real !== 'undefined') {
+        if (real instanceof Numeric) {
+            real = real.__complex__();
+            if (result == 'NotImplemented') {
+                throw err;
+            }
         }
     } else {
-        throw err;
+        real = new Complex(0, 0);
     }
+    if (typeof imag !== 'undefined') {
+        if (imag instanceof Numeric) {
+            imag = imag.__complex__();
+            var j = new Complex(0, 1);
+            imag = imag.__mul__(j);
+            if (result == 'NotImplemented') {
+                throw err;
+            }
+        }
+    } else {
+        imag = new Complex(0, 0);
+    }
+
+    return real.__add__(imag);
 }
 
 // Integer Conversion
@@ -561,5 +576,3 @@ function coerce(x_this, y_other) {
         }
     }
 }
-
-var test = add(1, 2, 3);
