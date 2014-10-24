@@ -18,11 +18,29 @@ function all(){
 function any(){
 	
 }
-function basestring(){}
-function bin(){}
-function bool(){}
+function basestring(){
+
+}
+function bin(x: any):any{
+	if( x instanceof Integer){
+		return x.toString(2);
+	}
+}
+function bool(x?:any) : boolean{
+	var xVal = x || false;
+	if(xVal != false){
+		if( xVal == 'None' || xVal == ''){
+			xVal = false;
+		}else{
+			xVal = true;
+		}
+	}
+	return xVal;
+}
 function bytearray(){}
-function callable(){}
+function callable(obj: any){
+
+}
 function chr(i : number){
 	if( i <= 255 && i >= 0){
 		return String.fromCharCode(i);
@@ -30,8 +48,10 @@ function chr(i : number){
 		return "ValueError";
 	}
 }
-function classmethod(){}
-function cmp(x, y){
+function classmethod(func: any){
+
+}
+function cmp(x:any, y:any):number{
 	if(x === y){
 		return 0;
 	}else if( x > y){
@@ -43,7 +63,9 @@ function cmp(x, y){
 }
 function compile(){}
 // function complex(){}
-function delattr(){}
+function delattr(obj:any, attrName: String){
+	delete obj.attrName; 
+}
 function dict(){}
 function dir(){}
 // function divmod(){}
@@ -55,19 +77,30 @@ function filter(){}
 function floater(){}
 function format(){}
 function frozenset(){}
-function getattr(){}
+function getattr(obj: any, attrName:String, dfault?:any): any{
+	var dflt = dfault || false;
+	if(obj.attrName != null){
+		return obj.attrName;
+	}else if(dflt != false){
+		return dflt
+	}else{
+		return "AttributeError"
+	}
+}
 function func_globals(){}
 function hashattr(){}
 function hash(){}
 function help(){}
 // function hex(){}
-function id(){}
+function id(obj: any){}
 function input(){}
 function inter(){}
 function isinstance(){}
 function issubclass(){}
 function iter(){}
-function len(){}
+function len(s:any): number{
+	return s.length;
+}
 function list(){}
 function locals(){}
 function longer(){}
@@ -76,10 +109,18 @@ function max(){}
 function memoryview(){}
 function min(){}
 function next(){}
-function object(){}
+function object(){
+	return new Object;
+}
 // function oct(){}
 function open1(){}
-function ord(){}
+function ord(c){
+	if(c.length > 1){
+		return "TypeError";
+	}else{
+		return c.charCodeAt(0);
+	}
+}
 // function pow(x, y, z?){}
 function print1(){}
 function property(){}
@@ -89,7 +130,9 @@ function reduce(){}
 function reload(){}
 function repr(){}
 function reversed(){}
-function round(){}
+function round(num: any, ndigits?:number){
+	
+}
 function set(){}
 function setattr(){}
 function slice(){}

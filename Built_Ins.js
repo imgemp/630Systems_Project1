@@ -19,13 +19,25 @@ function any() {
 }
 function basestring() {
 }
-function bin() {
+function bin(x) {
+    if (x instanceof Integer) {
+        return x.toString(2);
+    }
 }
-function bool() {
+function bool(x) {
+    var xVal = x || false;
+    if (xVal != false) {
+        if (xVal == 'None' || xVal == '') {
+            xVal = false;
+        } else {
+            xVal = true;
+        }
+    }
+    return xVal;
 }
 function bytearray() {
 }
-function callable() {
+function callable(obj) {
 }
 function chr(i) {
     if (i <= 255 && i >= 0) {
@@ -34,7 +46,7 @@ function chr(i) {
         return "ValueError";
     }
 }
-function classmethod() {
+function classmethod(func) {
 }
 function cmp(x, y) {
     if (x === y) {
@@ -49,7 +61,8 @@ function compile() {
 }
 
 // function complex(){}
-function delattr() {
+function delattr(obj, attrName) {
+    delete obj.attrName;
 }
 function dict() {
 }
@@ -73,7 +86,15 @@ function format() {
 }
 function frozenset() {
 }
-function getattr() {
+function getattr(obj, attrName, dfault) {
+    var dflt = dfault || false;
+    if (obj.attrName != null) {
+        return obj.attrName;
+    } else if (dflt != false) {
+        return dflt;
+    } else {
+        return "AttributeError";
+    }
 }
 function func_globals() {
 }
@@ -85,7 +106,7 @@ function help() {
 }
 
 // function hex(){}
-function id() {
+function id(obj) {
 }
 function input() {
 }
@@ -97,7 +118,8 @@ function issubclass() {
 }
 function iter() {
 }
-function len() {
+function len(s) {
+    return s.length;
 }
 function list() {
 }
@@ -116,12 +138,18 @@ function min() {
 function next() {
 }
 function object() {
+    return new Object;
 }
 
 // function oct(){}
 function open1() {
 }
-function ord() {
+function ord(c) {
+    if (c.length > 1) {
+        return "TypeError";
+    } else {
+        return c.charCodeAt(0);
+    }
 }
 
 // function pow(x, y, z?){}
@@ -141,7 +169,7 @@ function repr() {
 }
 function reversed() {
 }
-function round() {
+function round(num, ndigits) {
 }
 function set() {
 }

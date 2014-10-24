@@ -15,17 +15,23 @@ by various browsers, i.e. Chrome, Firefox, Internet Explorer, etc.
 
 ##Dependencies
 *Typescript and Node.js*:
+
 npm install -g typescript
+
 (<reference path="node.d.ts" />)
+
 Compile: tsc MasterFile.ts (which creates a .js file)
+
 *BrowserFS*
+
 npm install -g grunt-cli bower
+
 npm install
+
 See also the [README](https://github.com/jvilk/BrowserFS/blob/master/README.md)
 
 ##Known Bugs
-As of now our python interpreter cannot handle complex, long, or 64 bit integers and floats. Iterators are also not supported. Importing and 
-set and map adds still need to be implemented. It is important to note that this program was built based upon Python 2.7 and
+As of now our python interpreter cannot handle complex, long, or 64 bit integers and floats. Iterators are also not supported. Importing and set and map adds still need to be implemented. It is important to note that this program was built based upon Python 2.7 and
 other versions will not be parsed. 
 
 ##Acknowledgements
