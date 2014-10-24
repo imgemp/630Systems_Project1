@@ -831,6 +831,7 @@ class CodeObject {
         var returnedValue;
         if (isBuiltIn) {
             returnedValue = function_object.apply(null, varnamesNew);
+            console.log(returnedValue);
             if (returnedValue == 'NotImplemented') { returnedValue = null; }
         } else {
             // Overwrite function's varnames list

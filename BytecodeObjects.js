@@ -913,6 +913,7 @@ var CodeObject = (function () {
         var returnedValue;
         if (isBuiltIn) {
             returnedValue = function_object.apply(null, varnamesNew);
+            console.log(returnedValue);
             if (returnedValue == 'NotImplemented') {
                 returnedValue = null;
             }

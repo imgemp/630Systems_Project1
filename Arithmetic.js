@@ -410,6 +410,8 @@ function invert(x_this) {
 function complex(real, imag) {
     var err = 'complex(args) NotImplemented';
     var result;
+    console.log(real);
+    console.log(imag);
 
     if (typeof real !== 'undefined') {
         if (real instanceof Numeric) {
@@ -432,6 +434,7 @@ function complex(real, imag) {
         }
     } else {
         imag = new Complex(0, 0);
+        console.log('working as expected');
     }
 
     return real.__add__(imag);
