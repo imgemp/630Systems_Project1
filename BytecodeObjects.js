@@ -485,7 +485,7 @@ var CodeObject = (function () {
     /****** Opcodes from here have an argument obtained by accessing the byte code ******/
     CodeObject.prototype.STORE_NAME = function () {
         var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
-        var name = getValue(Stack.pop());
+        var name = Stack.pop();
         this.names[index] = name;
         this.pc += 3;
     };
