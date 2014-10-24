@@ -155,7 +155,7 @@ function staticmethod(){}
 
 
 function str(object: any): string {
-
+	console.log(object);
 	var err: string = 'str('+object.constructor.name+') NotImplemented';
 	var result: string;
 	if (object instanceof Numeric) {

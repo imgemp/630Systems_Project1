@@ -71,11 +71,3 @@ function interpretBytecode(bytecode) {
         execBytecode();
     }
 }
-
-// Main function to read in file
-var fs = require('fs');
-fs.readFile(process.argv[2], function doneReading(err, bytecode) {
-    if (err)
-        throw err;
-    interpretBytecode(bytecode);
-});
