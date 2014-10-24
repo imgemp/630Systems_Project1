@@ -449,10 +449,8 @@ function complex(real?: any, imag?: any): any {
 
 	var err: string = 'complex(args) NotImplemented';
 	var result: any;
-	console.log(real);
-	console.log(imag);
 
-	if (typeof real !== 'undefined') {
+	if (real !== 'real') {
 		if (real instanceof Numeric) {
 			real = real.__complex__();
 			if (result == 'NotImplemented') {
@@ -462,7 +460,7 @@ function complex(real?: any, imag?: any): any {
 	} else {
 		real = new Complex(0,0);
 	}
-	if (typeof imag !== 'undefined') {
+	if (imag !== 'imag') {
 		if (imag instanceof Numeric) {
 			imag = imag.__complex__();
 			var j: Complex = new Complex(0,1);
@@ -473,7 +471,6 @@ function complex(real?: any, imag?: any): any {
 		}
 	} else {
 		imag = new Complex(0,0);
-		console.log('working as expected');
 	}
 
 	return real.__add__(imag);
