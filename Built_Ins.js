@@ -1,4 +1,16 @@
 /// <reference path="NumericObjects.ts" />
+function getValue(object) {
+    if (object instanceof Numeric) {
+        if (object instanceof Complex) {
+            return object.real;
+        } else {
+            return object.value;
+        }
+    } else {
+        return object;
+    }
+}
+
 function getArgNames(func) {
     var reg = /\(([\s\S]*?)\)/;
     var args = reg.exec(func);

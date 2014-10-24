@@ -111,13 +111,13 @@ class CodeObject {
         this.pc += 1;
     }
     public UNARY_NOT(){
-        var TOS = Stack.pop();
+        var TOS = getValue(Stack.pop());
         TOS = !TOS;/////////////////////////////////////////////////////////////////////////
         Stack.push(TOS);
         this.pc += 1;
     }
     public UNARY_CONVERT(){
-        var TOS = Stack.pop();
+        var TOS = getValue(Stack.pop());
         TOS = TOS.toString(); // Not completely accurate
         Stack.push(TOS);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
@@ -171,8 +171,8 @@ class CodeObject {
     }
     //implements TOS = TOS1[TOS]
     public BINARY_SUBSCR(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         Stack.push(TOS1[TOS]);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
@@ -180,14 +180,14 @@ class CodeObject {
     public BINARY_FLOOR_DIVIDE(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(floordiv(TOS1,TOS));/////////////////////////////////////////////////////////////////////////
+        Stack.push(floordiv(TOS1,TOS));
         this.pc += 1;
     }
     //implements TOS = TOS1/TOS (with from_future_import division)
     public BINARY_TRUE_DIVIDE(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(truediv(TOS1,TOS));/////////////////////////////////////////////////////////////////////////
+        Stack.push(truediv(TOS1,TOS));
         this.pc += 1;
     }
     //DIFFERENCE OF THESE FROM BINARY?
@@ -200,94 +200,94 @@ class CodeObject {
     }
     // Implements TOS[:] = TOS1
     public SLICE_0(){ 
-        var TOS = Stack.pop();
+        var TOS = getValue(Stack.pop());
         Stack.push(TOS.slice(0,TOS.length));/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     //Implements TOS1[TOS:] = TOS2
     public SLICE_1(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         Stack.push(TOS1.slice(TOS,TOS1.length));/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public SLICE_2(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         Stack.push(TOS1.slice(0,TOS));/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public SLICE_3(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
         Stack.push(TOS2.slice(TOS1,TOS));/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public STORE_SLICE_0(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         for (var i=0; i<TOS.length; i++) { TOS[i] = TOS1[i]; }/////////////////////////////////////////////////////////////////////////
         Stack.push(TOS);
         this.pc += 1; 
     }
     public STORE_SLICE_1(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
         for (var i=TOS; i<TOS1.length; i++) { TOS1[i] = TOS2[i-TOS]; }/////////////////////////////////////////////////////////////////////////
         Stack.push(TOS1);
         this.pc += 1;
     }
     public STORE_SLICE_2(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
         for (var i=0; i<TOS; i++) { TOS1[i] = TOS2[i]; }/////////////////////////////////////////////////////////////////////////
         Stack.push(TOS1);
         this.pc += 1;
     }
     public STORE_SLICE_3(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
-        var TOS3 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
+        var TOS3 = getValue(Stack.pop());
         for (var i=TOS1; i<TOS; i++) { TOS2[i] = TOS3[i-TOS1]; }/////////////////////////////////////////////////////////////////////////
         Stack.push(TOS2);
         this.pc += 1;
     }
     public DELETE_SLICE_0(){
-        var TOS = Stack.pop();
+        var TOS = getValue(Stack.pop());
         TOS.splice(0,TOS.length);
         Stack.push(TOS);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public DELETE_SLICE_1(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         TOS1.splice(TOS,TOS1.length);
         Stack.push(TOS1);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public DELETE_SLICE_2(){ 
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         TOS1.splice(0,TOS);
         Stack.push(TOS1);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public DELETE_SLICE_3(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
         TOS2.splice(TOS1,TOS);
         Stack.push(TOS2);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public STORE_MAP(){
-        var val = Stack.pop();
-        var key = Stack.pop();
-        var dic = Stack.pop();
+        var val = getValue(Stack.pop());
+        var key = getValue(Stack.pop());
+        var dic = getValue(Stack.pop());
         dic[key] = val;/////////////////////////////////////////////////////////////////////////
         Stack.push(dic);
         this.pc += 1; 
@@ -308,15 +308,15 @@ class CodeObject {
         this.BINARY_MODULO();
     }
     public STORE_SUBSCR(){ 
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
         TOS1[TOS] = TOS2;/////////////////////////////////////////////////////////////////////////
         this.pc += 1; 
     }
     public DELETE_SUBSCR(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         delete TOS1[TOS];/////////////////////////////////////////////////////////////////////////
         this.pc += 1; 
     }
@@ -354,13 +354,13 @@ class CodeObject {
         this.BINARY_POWER();
     }
     public GET_ITER(){
-        var TOS = Stack.pop()
+        var TOS = getValue(Stack.pop());
         var TOS = TOS.iter();
         Stack.push(TOS);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public PRINT_EXPR(){ 
-        var TOS = Stack.pop();/////////////////////////////////////////////////////////////////////////
+        var TOS = Stack.pop();
         if (isVerbose) {
             printToOutput('LOGGED TO CONSOLE: --------------------- '+str(TOS),false);
         } else {
@@ -369,7 +369,7 @@ class CodeObject {
         this.pc += 1; 
     }
     public PRINT_ITEM(){
-        var TOS = Stack.pop();/////////////////////////////////////////////////////////////////////////
+        var TOS = Stack.pop();
         if (TOS instanceof internedString) { TOS = byteObject.interned_list[TOS.index]; }
         if (isVerbose) {
             printToOutput('LOGGED TO CONSOLE: --------------------- '+str(TOS),false);
@@ -478,7 +478,7 @@ class CodeObject {
 
     public STORE_NAME(){
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
-        var name = Stack.pop();/////////////////////////////////////////////////////////////////////////
+        var name = getValue(Stack.pop());
         this.names[index] = name;
         this.pc += 3;
     }
@@ -610,11 +610,10 @@ class CodeObject {
         this.pc += 3;
     }
     public COMPARE_OP(){ //comparison operator
-        /////////////////////////////////////////////////////////////////////////
         var opname = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var cmp_op = ['<', '<=', '==', '!=', '>', '>=', 'in', 'not in', 'is', 'is not', 'exception match', 'BAD'];
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         if (cmp_op[opname] == '<') { Stack.push(TOS1<TOS); }
         if (cmp_op[opname] == '<=') { Stack.push(TOS1<=TOS); }
         if (cmp_op[opname] == '==') { Stack.push(TOS1==TOS); }

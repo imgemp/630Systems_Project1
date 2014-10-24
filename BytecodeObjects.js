@@ -88,13 +88,13 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.UNARY_NOT = function () {
-        var TOS = Stack.pop();
+        var TOS = getValue(Stack.pop());
         TOS = !TOS; /////////////////////////////////////////////////////////////////////////
         Stack.push(TOS);
         this.pc += 1;
     };
     CodeObject.prototype.UNARY_CONVERT = function () {
-        var TOS = Stack.pop();
+        var TOS = getValue(Stack.pop());
         TOS = TOS.toString(); // Not completely accurate
         Stack.push(TOS); /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
@@ -153,8 +153,8 @@ var CodeObject = (function () {
 
     //implements TOS = TOS1[TOS]
     CodeObject.prototype.BINARY_SUBSCR = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         Stack.push(TOS1[TOS]); /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     };
@@ -163,7 +163,7 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_FLOOR_DIVIDE = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(floordiv(TOS1, TOS)); /////////////////////////////////////////////////////////////////////////
+        Stack.push(floordiv(TOS1, TOS));
         this.pc += 1;
     };
 
@@ -171,7 +171,7 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_TRUE_DIVIDE = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(truediv(TOS1, TOS)); /////////////////////////////////////////////////////////////////////////
+        Stack.push(truediv(TOS1, TOS));
         this.pc += 1;
     };
 
@@ -187,34 +187,34 @@ var CodeObject = (function () {
 
     // Implements TOS[:] = TOS1
     CodeObject.prototype.SLICE_0 = function () {
-        var TOS = Stack.pop();
+        var TOS = getValue(Stack.pop());
         Stack.push(TOS.slice(0, TOS.length)); /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     };
 
     //Implements TOS1[TOS:] = TOS2
     CodeObject.prototype.SLICE_1 = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         Stack.push(TOS1.slice(TOS, TOS1.length)); /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     };
     CodeObject.prototype.SLICE_2 = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         Stack.push(TOS1.slice(0, TOS)); /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     };
     CodeObject.prototype.SLICE_3 = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
         Stack.push(TOS2.slice(TOS1, TOS)); /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     };
     CodeObject.prototype.STORE_SLICE_0 = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         for (var i = 0; i < TOS.length; i++) {
             TOS[i] = TOS1[i];
         }
@@ -222,9 +222,9 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.STORE_SLICE_1 = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
         for (var i = TOS; i < TOS1.length; i++) {
             TOS1[i] = TOS2[i - TOS];
         }
@@ -232,9 +232,9 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.STORE_SLICE_2 = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
         for (var i = 0; i < TOS; i++) {
             TOS1[i] = TOS2[i];
         }
@@ -242,10 +242,10 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.STORE_SLICE_3 = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
-        var TOS3 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
+        var TOS3 = getValue(Stack.pop());
         for (var i = TOS1; i < TOS; i++) {
             TOS2[i] = TOS3[i - TOS1];
         }
@@ -253,37 +253,37 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.DELETE_SLICE_0 = function () {
-        var TOS = Stack.pop();
+        var TOS = getValue(Stack.pop());
         TOS.splice(0, TOS.length);
         Stack.push(TOS); /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     };
     CodeObject.prototype.DELETE_SLICE_1 = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         TOS1.splice(TOS, TOS1.length);
         Stack.push(TOS1); /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     };
     CodeObject.prototype.DELETE_SLICE_2 = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         TOS1.splice(0, TOS);
         Stack.push(TOS1); /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     };
     CodeObject.prototype.DELETE_SLICE_3 = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
         TOS2.splice(TOS1, TOS);
         Stack.push(TOS2); /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     };
     CodeObject.prototype.STORE_MAP = function () {
-        var val = Stack.pop();
-        var key = Stack.pop();
-        var dic = Stack.pop();
+        var val = getValue(Stack.pop());
+        var key = getValue(Stack.pop());
+        var dic = getValue(Stack.pop());
         dic[key] = val; /////////////////////////////////////////////////////////////////////////
         Stack.push(dic);
         this.pc += 1;
@@ -306,15 +306,15 @@ var CodeObject = (function () {
         this.BINARY_MODULO();
     };
     CodeObject.prototype.STORE_SUBSCR = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        var TOS2 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
+        var TOS2 = getValue(Stack.pop());
         TOS1[TOS] = TOS2; /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     };
     CodeObject.prototype.DELETE_SUBSCR = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         delete TOS1[TOS]; /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     };
@@ -352,7 +352,7 @@ var CodeObject = (function () {
         this.BINARY_POWER();
     };
     CodeObject.prototype.GET_ITER = function () {
-        var TOS = Stack.pop();
+        var TOS = getValue(Stack.pop());
         var TOS = TOS.iter();
         Stack.push(TOS); /////////////////////////////////////////////////////////////////////////
         this.pc += 1;
@@ -485,7 +485,7 @@ var CodeObject = (function () {
     /****** Opcodes from here have an argument obtained by accessing the byte code ******/
     CodeObject.prototype.STORE_NAME = function () {
         var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
-        var name = Stack.pop();
+        var name = getValue(Stack.pop());
         this.names[index] = name;
         this.pc += 3;
     };
@@ -636,11 +636,10 @@ var CodeObject = (function () {
         this.pc += 3;
     };
     CodeObject.prototype.COMPARE_OP = function () {
-        /////////////////////////////////////////////////////////////////////////
         var opname = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var cmp_op = ['<', '<=', '==', '!=', '>', '>=', 'in', 'not in', 'is', 'is not', 'exception match', 'BAD'];
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
+        var TOS = getValue(Stack.pop());
+        var TOS1 = getValue(Stack.pop());
         if (cmp_op[opname] == '<') {
             Stack.push(TOS1 < TOS);
         }
