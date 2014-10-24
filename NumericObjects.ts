@@ -1,18 +1,26 @@
 /// <reference path="Globals.ts" />
 /// <reference path="Log.ts" />
 
-class Integer {
+class Numeric {
+
+	constructor(){}
+
+}
+
+class Integer extends Numeric {
 
 	value: number;
 
-	constructor(value: number) { this.value = value; }
+	constructor(value: number) { super(); this.value = value; }
 
-	public __add__(other: any) {
+	// Addition
+	public __add__(other: any): any {
 
 		if (other instanceof Integer) {
-			var newInteger = new Integer(this.value);
-			newInteger.value += other.value;
-			return newInteger;
+			// var newInteger = new Integer(this.value);
+			// newInteger.value += other.value;
+			// return newInteger;
+			return new Integer(this.value + other.value);
 		} else if (other instanceof Float) {
 			return 'NotImplemented'; // can't downcast float to integer
 		} else if (other instanceof Complex) {
@@ -23,48 +31,22 @@ class Integer {
 
 	}
 
-	public __radd__(other: any) {
+	public __radd__(other: any): any {
 
-		if (other instanceof Integer) {
-			var newInteger = new Integer(this.value);
-			newInteger.value += other.value;
-			return newInteger;
-		} else if (other instanceof Float) {
-			// upcast integer to float
-			var newFloat = new Float(this.value);
-			newFloat.value += other.value;
-			return newFloat;
-		} else if (other instanceof Complex) {
-			// upcast integer to complex
-			var newComplex = new Complex(this.value,0);
-			newComplex.real += other.real;
-			newComplex.imag += other.imag;
-			return newComplex;
-		} else if (other instance of Long) {
-			return 'NotImplemented';
-		} else { return 'NotImplemented'; }
+		return this.__add__(other); // addition is symmetric
 
 	}
 
-}
-
-class Float {
-
-	value: number;
-
-	constructor(value: number) { this.value = value; }
-
-	public __add__(other: any) {
+	// Subtraction
+	public __sub__(other: any): any {
 
 		if (other instanceof Integer) {
-			// upcast integer to float
-			var newFloat = new Float(this.value);
-			newFloat.value += other.value;
-			return newFloat;
+			// var newInteger = new Integer(this.value);
+			// newInteger.value -= other.value;
+			// return newInteger;
+			return new Integer(this.value - other.value);
 		} else if (other instanceof Float) {
-			var newFloat = new Float(this.value);
-			newFloat.value += other.value;
-			return newFloat;
+			return 'NotImplemented'; // can't downcast float to integer
 		} else if (other instanceof Complex) {
 			return 'NotImplemented'; // can't downcast complex to integer
 		} else if (other instanceof Long) {
@@ -73,24 +55,446 @@ class Float {
 
 	}
 
-	public __radd__(other: any) {
+	public __rsub__(other: any): any {
 
 		if (other instanceof Integer) {
-			var newInteger = new Integer(this.value);
-			newInteger.value += other.value;
-			return newInteger;
+			// var newInteger = new Integer(other.value);
+			// newInteger.value -= this.value;
+			// return newInteger;
+			return new Integer(other.value - this.value);
 		} else if (other instanceof Float) {
-			// upcast integer to float
-			var newFloat = new Float(this.value);
-			newFloat.value += other.value;
-			return newFloat;
+			return 'NotImplemented'; // can't downcast float to integer
 		} else if (other instanceof Complex) {
-			// upcast integer to complex
-			var newComplex = new Complex(this.value,0);
-			newComplex.real += other.real;
-			newComplex.imag += other.imag;
-			return newComplex;
-		} else if (other instance of Long) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Multiplication
+	public __mul__(other: any): any {
+
+		if (other instanceof Integer) {
+			// var newInteger = new Integer(this.value);
+			// newInteger.value *= other.value;
+			// return newInteger;
+			return new Integer(this.value * other.value);
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rmul__(other: any): any {
+
+		return this.__rmul__(other); // multiplication is symmetric
+
+	}
+
+	// Floor Division
+	public __floordiv__(other: any): any {
+
+		if (other instanceof Integer) {
+			// var newInteger = new Integer(this.value);
+			// newInteger.value = Math.floor(newInteger.value/other.value);
+			// return newInteger;
+			return new Integer(Math.floor( this.value / other.value ));
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rfloordiv__(other: any): any {
+
+		if (other instanceof Integer) {
+			// var newInteger = new Integer(other.value);
+			// newInteger.value = Math.floor(newInteger.value/this.value);
+			// return newInteger;
+			return new Integer(Math.floor( other.value / this.value ));
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Modulus
+	public __mod__(other: any): any {
+
+		if (other instanceof Integer) {
+			// var newInteger = new Integer(this.value);
+			// newInteger.value = newInteger.value % other.value;
+			// return newInteger;
+			return new Integer(this.value % other.value);
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rmod__(other: any): any {
+
+		if (other instanceof Integer) {
+			// var newInteger = new Integer(other.value);
+			// newInteger.value = newInteger.value % this.value;
+			// return newInteger;
+			return new Integer(other.value % this.value);
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Divmod
+	public __divmod__(other: any): any {
+
+		if (other instanceof Integer) {
+			other = new Integer(other.value);
+			var quotient: Integer = this.__floordiv__(other);
+			var remainder: Integer = this.__sub__(quotient.__mul__(other));
+			return [quotient,remainder];
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rdivmod__(other: any): any {
+
+		if (other instanceof Integer) {
+			var quotient: Integer = other.__floordiv__(this);
+			var remainder: Integer = other.__sub__(quotient.__mul__(this));
+			return [quotient,remainder];
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Power - Missing Ternary Input Version
+	public __pow__(other: any): any {
+
+		if (other instanceof Integer) {
+			// other = new Integer(other.value);
+			// var quotient: Integer = this.__floordiv__(other);
+			// var remainder: Integer = this.__sub__(quotient.__mul__(other));
+			// return [quotient,remainder];
+			return new Integer(Math.pow( this.value, other.value ));
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rpow__(other: any): any {
+
+		if (other instanceof Integer) {
+			// var quotient: Integer = other.__floordiv__(this);
+			// var remainder: Integer = other.__sub__(quotient.__mul__(this));
+			// return [quotient,remainder];
+			return new Integer(Math.pow( other.value, this.value ));
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Bitwise Operations **Only for Integers**
+
+	// Left Bitwise Shift
+	public __lshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return new Integer(this.value << other.value);
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rlshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return new Integer(other.value << this.value);
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Right Bitwise Shift
+	public __rshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return new Integer(this.value >> other.value);
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rrshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return new Integer(other.value >> this.value);
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Bitwise AND
+	public __and__(other: any): any {
+
+		if (other instanceof Integer) {
+			return new Integer(this.value & other.value);
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rand__(other: any): any {
+
+		return this.__and__(other); // bitwise and is symmetric
+
+	}
+
+	// Bitwise XOR
+	public __xor__(other: any): any {
+
+		if (other instanceof Integer) {
+			return new Integer(this.value ^ other.value);
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rxor__(other: any): any {
+
+		return this.__xor__(other); // bitwise xor is symmetric
+
+	}
+
+	// Bitwise OR
+	public __or__(other: any): any {
+
+		if (other instanceof Integer) {
+			return new Integer(this.value | other.value);
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __ror__(other: any): any {
+
+		return this.__or__(other); // bitwise or is symmetric
+
+	}
+
+	// Division - Assume Classic Mode
+	public __div__(other: any): any {
+
+		return this.__floordiv__(other);
+
+	}
+
+	public __rdiv__(other: any): any {
+
+		return this.__rfloordiv__(other);
+
+	}
+
+	// True Division
+	public __truediv__(other: any): any {
+
+		if (other instanceof Integer) {
+			// var newInteger = new Integer(this.value);
+			// newInteger.value = Math.floor(newInteger.value/other.value);
+			// return newInteger;
+			return new Float( this.value / other.value );
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rtruediv__(other: any): any {
+
+		if (other instanceof Integer) {
+			// var newInteger = new Integer(other.value);
+			// newInteger.value = Math.floor(newInteger.value/this.value);
+			// return newInteger;
+			return new Float( other.value / this.value );
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Negative Literal
+	public __neg__(): Integer {
+
+		this.value = -this.value;
+		return this;
+
+	}
+
+	// Positive Literal
+	public __pos__(): Integer {
+
+		return this;
+
+	}
+
+	// Absolute Value
+	public __abs__(): Integer {
+
+		this.value = Math.abs(this.value);
+		return this;
+	}
+
+	// Inversion
+	public __invert__(): Integer {
+
+		return new Integer(~this.value);
+
+	}
+
+	// Complex Conversion
+	public __complex__(): Complex {
+
+		return new Complex(this.value,0);
+
+	}
+
+	// Integer Conversion
+	public __int__(): Integer {
+
+		return this;
+
+	}
+
+	// Long Conversion
+	public __long__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Float Conversion
+	public __float__(): Float {
+
+		return new Float(this.value);
+
+	}
+
+	// Octal Conversion
+	public __oct__(): string {
+
+		return this.value.toString(8);
+
+	}
+
+	// Hex Conversion
+	public __hex__(): string {
+
+		return this.value.toString(16);
+
+	}
+
+	// Index
+	public __index__(): Integer {
+
+		return this;
+
+	}
+
+	// Coercion
+	public __coerce__(other: any): any {
+
+		if (other instanceof Integer) {
+			return [this,other];
+		} else if (other instanceof Float) {
+			return 'NotImplemented'; // can't downcast float to integer
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
 			return 'NotImplemented';
 		} else { return 'NotImplemented'; }
 
@@ -98,37 +502,1134 @@ class Float {
 
 }
 
-class Complex {
+class Float extends Numeric {
 
-	real: number;
-	imag: number;
+	value: number;
 
-	constructor(real: number, imag: number) { this.real = real; this.imag = imag; }
+	constructor(value: number) { super(); this.value = value; }
 
-	public __add__(other: Integer) {
-		var newComplex = new Complex(this.real,this.imag);
-		newComplex.real += other.value;
-		return newComplex;
+	// Addition
+	public __add__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			// var newFloat = new Float(this.value);
+			// newFloat.value += other.value;
+			// return newFloat;
+			return new Float(this.value + other.value);
+		} else if (other instanceof Float) {
+			// var newFloat = new Float(this.value);
+			// newFloat.value += other.value;
+			// return newFloat;
+			return new Float(this.value + other.value);
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
 	}
 
-	public __add__(other: Float) {
-		var newComplex = new Complex(this.real,this.imag);
-		newComplex.real += other.value;
-		return newComplex;
+	public __radd__(other: any): any {
+
+		return this.__add__(other);
+
 	}
 
-	public __add__(other: Complex) {
-		var newComplex = new Complex(this.real,this.imag);
-		newComplex.real += other.real;
-		newComplex.imag += other.imag;
-		return newComplex;
+	// Subtraction
+	public __sub__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			// var newFloat = new Float(this.value);
+			// newFloat.value -= other.value;
+			// return newFloat;
+			return new Float(this.value - other.value);
+		} else if (other instanceof Float) {
+			// var newFloat = new Float(this.value);
+			// newFloat.value -= other.value;
+			// return newFloat;
+			return new Float(this.value - other.value);
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rsub__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			// var newFloat = new Float(other.value);
+			// newFloat.value -= this.value;
+			// return newFloat;
+			return new Float(other.value - this.value);
+		} else if (other instanceof Float) {
+			// var newFloat = new Float(other.value);
+			// newFloat.value -= this.value;
+			// return newFloat;
+			return new Float(other.value - this.value);
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Multiplication
+	public __mul__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			// var newFloat = new Float(this.value);
+			// newFloat.value *= other.value;
+			// return newFloat;
+			return new Float(this.value * other.value);
+		} else if (other instanceof Float) {
+			// var newFloat = new Float(this.value);
+			// newFloat.value *= other.value;
+			// return newFloat;
+			return new Float(this.value * other.value);
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rmul__(other: any): any {
+
+		return this.__mul__(other); // multiplication is symmetric
+
+	}
+
+	// Floor Division
+	public __floordiv__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			// var newFloat = new Float(this.value);
+			// newFloat.value = Math.floor(newFloat.value/other.value);
+			// return newFloat;
+			return new Float(Math.floor( this.value / other.value ));
+		} else if (other instanceof Float) {
+			// var newFloat = new Float(this.value);
+			// newFloat.value = Math.floor(newFloat.value/other.value);
+			// return newFloat;
+			return new Float(Math.floor( this.value / other.value ));
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rfloordiv__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			// var newFloat = new Float(other.value);
+			// newFloat.value = Math.floor(newFloat.value/this.value);
+			// return newFloat;
+			return new Float(Math.floor( other.value / this.value ));
+		} else if (other instanceof Float) {
+			// var newFloat = new Float(other.value);
+			// newFloat.value = Math.floor(newFloat.value/this.value);
+			// return newFloat;
+			return new Float(Math.floor( other.value / this.value ));
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Modulus
+	public __mod__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			// var newFloat = new Float(other.value);
+			// newFloat.value = this.value % newFloat.value;
+			// return newFloat;
+			return new Float(this.value % other.value);
+		} else if (other instanceof Float) {
+			// var newFloat = new Float(other.value);
+			// newFloat.value = this.value % newFloat.value;
+			// return newFloat;
+			return new Float(this.value % other.value);
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rmod__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			// var newFloat = new Float(other.value);
+			// newFloat.value = newFloat.value % this.value;
+			// return newFloat;
+			return new Float(other.value % this.value);
+		} else if (other instanceof Float) {
+			// var newFloat = new Float(other.value);
+			// newFloat.value = newFloat.value % this.value;
+			// return newFloat;
+			return new Float(other.value % this.value);
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Divmod
+	public __divmod__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			other = new Float(other.value);
+			var quotient: Float = this.__floordiv__(other);
+			var remainder: Float = this.__sub__(quotient.__mul__(other));
+			return [quotient,remainder];
+		} else if (other instanceof Float) {
+			var quotient: Float = this.__floordiv__(other);
+			var remainder: Float = this.__sub__(quotient.__mul__(other));
+			return [quotient,remainder];
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rdivmod__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			other = new Float(other.value);
+			var quotient: Float = other.__floordiv__(this);
+			var remainder: Float = other.__sub__(quotient.__mul__(this));
+			return [quotient,remainder];
+		} else if (other instanceof Float) {
+			var quotient: Float = other.__floordiv__(this);
+			var remainder: Float = other.__sub__(quotient.__mul__(this));
+			return [quotient,remainder];
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Power - Missing Ternary Input Version
+	public __pow__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			return new Float(Math.pow( this.value, other.value ));
+		} else if (other instanceof Float) {
+			return new Float(Math.pow( this.value, other.value ));
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rpow__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			return new Float(Math.pow( other.value, this.value ));
+		} else if (other instanceof Float) {
+			return new Float(Math.pow( other.value, this.value ));
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Bitwise Operations **Only for Integers**
+
+	// Left Bitwise Shift
+	public __lshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rlshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Right Bitwise Shift
+	public __rshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rrshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Bitwise AND
+	public __and__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rand__(other: any): any {
+
+		return this.__and__(other); // bitwise and is symmetric
+
+	}
+
+	// Bitwise XOR
+	public __xor__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rxor__(other: any): any {
+
+		return this.__xor__(other); // bitwise xor is symmetric
+
+	}
+
+	// Bitwise OR
+	public __or__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __ror__(other: any): any {
+
+		return this.__or__(other); // bitwise or is symmetric
+
+	}
+
+	// Division
+	public __div__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			// var newFloat = new Float(this.value);
+			// newFloat.value = Math.floor(newFloat.value/other.value);
+			// return newFloat;
+			return new Float( this.value / other.value );
+		} else if (other instanceof Float) {
+			// var newFloat = new Float(this.value);
+			// newFloat.value = Math.floor(newFloat.value/other.value);
+			// return newFloat;
+			return new Float( this.value / other.value );
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rdiv__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			// var newFloat = new Float(other.value);
+			// newFloat.value = Math.floor(newFloat.value/this.value);
+			// return newFloat;
+			return new Float( other.value / this.value );
+		} else if (other instanceof Float) {
+			// var newFloat = new Float(other.value);
+			// newFloat.value = Math.floor(newFloat.value/this.value);
+			// return newFloat;
+			return new Float( other.value / this.value );
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// True Division
+	public __truediv__(other: any): any {
+
+		return this.__div__(other);
+
+	}
+
+	public __rtruediv__(other: any): any {
+
+		return this.__rdiv__(other);
+
+	}
+
+	// Negative Literal
+	public __neg__(): Float {
+
+		this.value = -this.value;
+		return this;
+
+	}
+
+	// Positive Literal
+	public __pos__(): Float {
+
+		return this;
+
+	}
+
+	// Absolute Value
+	public __abs__(): Float {
+
+		this.value = Math.abs(this.value);
+		return this;
+
+	}
+
+	// Inversion
+	public __invert__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Complex Conversion
+	public __complex__(): Complex {
+
+		return new Complex(this.value,0);
+
+	}
+
+	// Integer Conversion
+	public __int__(): Integer {
+
+		return new Integer(this.value);
+
+	}
+
+	// Long Conversion
+	public __long__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Float Conversion
+	public __float__(): Float {
+
+		return this;
+
+	}
+
+	// Octal Conversion
+	public __oct__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Hex Conversion
+	public __hex__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Index
+	public __index__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Coercion
+	public __coerce__(other: any): any {
+
+		if (other instanceof Integer) {
+			return [this,new Float(other.value)];
+		} else if (other instanceof Float) {
+			return [this,other];
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
 	}
 
 }
 
-class Long {
+class Complex extends Numeric {
+
+	real: number;
+	imag: number;
+
+	constructor(real: number, imag: number) { super(); this.real = real; this.imag = imag; }
+
+	// Addition
+	public __add__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			// var newComplex = new Complex(this.real,this.imag);
+			// newComplex.real += other.value;
+			// return newComplex;
+			return new Complex(this.real + other.value, this.imag);
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			// var newComplex = new Complex(this.real,this.imag);
+			// newComplex.real += other.value;
+			// return newComplex;
+			return new Complex(this.real + other.value, this.imag);
+		} else if (other instanceof Complex) {
+			// var newComplex = new Complex(this.real,this.imag);
+			// newComplex.real += other.real;
+			// newComplex.imag += other.imag;
+			// return newComplex;
+			return new Complex(this.real + other.real, this.imag + other.imag);
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __radd__(other: any): any {
+
+		return this.__add__(other); // addition is symmetric
+
+	}
+
+	// Subtraction
+	public __sub__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			// var newComplex = new Complex(this.real,this.imag);
+			// newComplex.real -= other.value;
+			// return newComplex;
+			return new Complex(this.real - other.value, this.imag);
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			// var newComplex = new Complex(this.real,this.imag);
+			// newComplex.real -= other.value;
+			// return newComplex;
+			return new Complex(this.real - other.value, this.imag);
+		} else if (other instanceof Complex) {
+			// var newComplex = new Complex(this.real,this.imag);
+			// newComplex.real -= other.real;
+			// newComplex.imag -= other.imag;
+			// return newComplex;
+			return new Complex(this.real - other.real, this.imag - other.imag);
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rsub__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			// var newComplex = new Complex(other.value,0);
+			// newComplex.real -= other.value; // this was wrong - needed to subtract imag too
+			// return newComplex;
+			return new Complex(other.value - this.real, -this.imag);
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			// var newComplex = new Complex(other.value,0);
+			// newComplex.real -= this.real;
+			// newComplex.imag -= this.imag;
+			// return newComplex;
+			return new Complex(other.value - this.real, -this.imag);
+		} else if (other instanceof Complex) {
+			// var newComplex = new Complex(other.real,other.imag);
+			// newComplex.real -= this.real;
+			// newComplex.imag -= this.imag;
+			// return newComplex;
+			return new Complex(other.real - this.real, other.imag - this.imag);
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Multiplication
+	public __mul__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			// var newComplex = new Complex(this.real,this.imag);
+			// newComplex.real *= other.value;
+			// newComplex.imag *= other.value;
+			// return newComplex;
+			return new Complex(this.real * other.value, this.imag * other.value);
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			// var newComplex = new Complex(this.real,this.imag);
+			// newComplex.real *= other.value;
+			// newComplex.imag *= other.value;
+			// return newComplex;
+			return new Complex(this.real * other.value, this.imag * other.value);
+		} else if (other instanceof Complex) {
+			// var newComplex = new Complex(this.real,this.imag);
+			// newComplex.real = this.real*other.real-this.imag*other.imag;
+			// newComplex.imag = this.imag*other.real+this.real*other.imag;
+			// return newComplex;
+			return new Complex(this.real * other.real - this.imag * other.imag, this.imag * other.real + this.real * other.imag);
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rmul__(other: any): any {
+
+		return this.__mul__(other); // addition is symmetric
+
+	}
+
+	// Floor Division
+	public __floordiv__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			// var newComplex = new Complex(0,0);
+			// newComplex.real = Math.floor(this.real/other.value);
+			// newComplex.imag = Math.floor(this.imag/other.value);
+			// return newComplex;
+			return new Complex(Math.floor( this.real / other.value ), Math.floor( this.imag / other.value ));
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			// var newComplex = new Complex(0,0);
+			// newComplex.real = Math.floor(this.real/other.value);
+			// newComplex.imag = Math.floor(this.imag/other.value);
+			// return newComplex;
+			return new Complex(Math.floor( this.real / other.value ), Math.floor( this.imag / other.value ));
+		} else if (other instanceof Complex) {
+			var newComplex: Complex = new Complex(0,0);
+			var den: number = Math.pow(other.real,2)+Math.pow(other.imag,2);
+			newComplex.real = Math.floor((this.real*other.real+this.imag*other.imag)/(den));
+			newComplex.imag = Math.floor((this.imag*other.real-this.real*other.imag)/(den));
+			return newComplex;
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rfloordiv__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			var newComplex: Complex = new Complex(0,0);
+			var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);
+			newComplex.real = Math.floor((other.value*this.real)/(den));
+			newComplex.imag = Math.floor((-other.value*this.imag)/(den));
+			return newComplex;
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			var newComplex: Complex = new Complex(0,0);
+			var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);
+			newComplex.real = Math.floor((other.value*this.real)/(den));
+			newComplex.imag = Math.floor((-other.value*this.imag)/(den));
+			return newComplex;
+		} else if (other instanceof Complex) {
+			var newComplex: Complex = new Complex(0,0);
+			var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);
+			newComplex.real = Math.floor((other.real*this.real+other.imag*this.imag)/(den));
+			newComplex.imag = Math.floor((other.imag*this.real-other.real*this.imag)/(den));
+			return newComplex;
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Modulus
+	public __mod__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			other = new Complex(other.value,0);
+			return this.__sub__(other.__mul__(this.__floordiv__(other))); //remainder of a/b = a - floor(a/b)*b, a = this, b = other
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			other = new Complex(other.value,0);
+			return this.__sub__(other.__mul__(this.__floordiv__(other))); //remainder of a/b = a - floor(a/b)*b, a = this, b = other
+		} else if (other instanceof Complex) {
+			return this.__sub__(other.__mul__(this.__floordiv__(other))); //remainder of a/b = a - floor(a/b)*b, a = this, b = other
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rmod__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			other = new Complex(other.value,0);
+			return other.__sub__(this.__mul__(other.__floordiv__(this))); //remainder of a/b = a - floor(a/b)*b, a = other, b = this
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			other = new Complex(other.value,0);
+			return other.__sub__(this.__mul__(other.__floordiv__(this))); //remainder of a/b = a - floor(a/b)*b, a = other, b = this
+		} else if (other instanceof Complex) {
+			return other.__sub__(this.__mul__(other.__floordiv__(this))); //remainder of a/b = a - floor(a/b)*b, a = other, b = this
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Cartesian-Polar Transformations
+	public cart2pol(cart: Complex): any {
+
+		var r: number = Math.sqrt(Math.pow(cart.real,2)+Math.pow(cart.imag,2));
+		var theta: number = Math.atan2(cart.imag,cart.real);
+		return [r,theta];
+
+	}
+
+	public pol2cart(r: number, theta: number) {
+
+		var tan_theta: number = Math.tan(theta);
+		var sign: number = 1;
+		if ((theta<Math.PI/2) || (theta>Math.PI/2)) {
+			sign = -1;
+		}
+		var real_part: number = sign*r/Math.sqrt(1+Math.pow(tan_theta,2));
+		var imag_part: number = real_part*tan_theta;
+		return new Complex(real_part,imag_part);
+
+	}
+
+	// Power - Missing Ternary Input Version
+	public __pow__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			var this_pol: any = this.cart2pol(this);
+			var result_r: number = this_pol[0];
+			var result_theta: number = this_pol[1]*other.value;
+			return this.pol2cart(result_r,result_theta);
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			var this_pol: any = this.cart2pol(this);
+			var result_r: number = this_pol[0];
+			var result_theta: number = this_pol[1]*other.value;
+			return this.pol2cart(result_r,result_theta);
+		} else if (other instanceof Complex) {
+			var this_pol: any = this.cart2pol(this);
+			var result_r: number = this_pol[0]*Math.exp(-this_pol[1]*other.imag);
+			var result_theta: number = this_pol[1]*other.real;
+			return this.pol2cart(result_r,result_theta);
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rpow__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			var other_theta: number = 0;
+			if (other.value<0) { other_theta = Math.PI; }
+			var result_r: number = Math.abs(other.value)*Math.exp(-other_theta*this.imag);
+			var result_theta: number = other_theta*this.real;
+			return this.pol2cart(result_r,result_theta);
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			var other_theta: number = 0;
+			if (other.value<0) { other_theta = Math.PI; }
+			var result_r: number = Math.abs(other.value)*Math.exp(-other_theta*this.imag);
+			var result_theta: number = other_theta*this.real;
+			return this.pol2cart(result_r,result_theta);
+		} else if (other instanceof Complex) {
+			var other_pol: any = this.cart2pol(other);
+			var result_r: number = other_pol[0]*Math.exp(-other_pol[1]*this.imag);
+			var result_theta: number = other_pol[1]*this.real;
+			return this.pol2cart(result_r,result_theta);
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Bitwise Operations **Only for Integers**
+
+	// Left Bitwise Shift
+	public __lshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rlshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Right Bitwise Shift
+	public __rshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rrshift__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// Bitwise AND
+	public __and__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to float
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rand__(other: any): any {
+
+		return this.__and__(other); // bitwise and is symmetric
+
+	}
+
+	// Bitwise XOR
+	public __xor__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rxor__(other: any): any {
+
+		return this.__xor__(other); // bitwise xor is symmetric
+
+	}
+
+	// Bitwise OR
+	public __or__(other: any): any {
+
+		if (other instanceof Integer) {
+			return 'NotImplemented';
+		} else if (other instanceof Float) {
+			return 'NotImplemented';
+		} else if (other instanceof Complex) {
+			return 'NotImplemented'; // can't downcast complex to integer
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __ror__(other: any): any {
+
+		return this.__or__(other); // bitwise or is symmetric
+
+	}
+
+	// Division
+	public __div__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			// var newComplex = new Complex(0,0);
+			// newComplex.real = Math.floor(this.real/other.value);
+			// newComplex.imag = Math.floor(this.imag/other.value);
+			// return newComplex;
+			return new Complex( this.real / other.value , this.imag / other.value );
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			// var newComplex = new Complex(0,0);
+			// newComplex.real = Math.floor(this.real/other.value);
+			// newComplex.imag = Math.floor(this.imag/other.value);
+			// return newComplex;
+			return new Complex( this.real / other.value , this.imag / other.value );
+		} else if (other instanceof Complex) {
+			var newComplex: Complex = new Complex(0,0);
+			var den: number = Math.pow(other.real,2)+Math.pow(other.imag,2);
+			newComplex.real = (this.real*other.real+this.imag*other.imag)/(den);
+			newComplex.imag = (this.imag*other.real-this.real*other.imag)/(den);
+			return newComplex;
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rdiv__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			var newComplex: Complex = new Complex(0,0);
+			var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);
+			newComplex.real = (other.value*this.real)/(den);
+			newComplex.imag = (-other.value*this.imag)/(den);
+			return newComplex;
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			var newComplex: Complex = new Complex(0,0);
+			var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);
+			newComplex.real = (other.value*this.real)/(den);
+			newComplex.imag = (-other.value*this.imag)/(den);
+			return newComplex;
+		} else if (other instanceof Complex) {
+			var newComplex: Complex = new Complex(0,0);
+			var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);
+			newComplex.real = (other.real*this.real+other.imag*this.imag)/(den);
+			newComplex.imag = (other.imag*this.real-other.real*this.imag)/(den);
+			return newComplex;
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	// True Division
+	public __truediv__(other: any): any {
+
+		return this.__div__(other);
+
+	}
+
+	public __rtruediv__(other: any): any {
+
+		return this.__rdiv__(other);
+
+	}
+
+	// Negative Literal
+	public __neg__(): Complex {
+
+		this.real = -this.real;
+		this.imag = -this.imag;
+		return this;
+
+	}
+
+	// Positive Literal
+	public __pos__(): Complex {
+
+		return this;
+
+	}
+
+	// Absolute Value
+	public __abs__(): Float {
+
+		return new Float(Math.sqrt( Math.pow( this.real, 2 ) + Math.pow( this.imag, 2 ) ));
+	
+	}
+
+	// Inversion
+	public __invert__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Complex Conversion
+	public __complex__(): Complex {
+
+		return this;
+
+	}
+
+	// Integer Conversion
+	public __int__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Long Conversion
+	public __long__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Float Conversion
+	public __float__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Octal Conversion
+	public __oct__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Hex Conversion
+	public __hex__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Index
+	public __index__(): string {
+
+		return 'NotImplemented';
+
+	}
+
+	// Coercion
+	public __coerce__(other: any): any {
+
+		if (other instanceof Integer) {
+			return [this,new Complex(other.value,0)];
+		} else if (other instanceof Float) {
+			return [this,new Complex(other.value,0)];
+		} else if (other instanceof Complex) {
+			return [this,other];
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+}
+
+class Long extends Numeric {
 
 	value: number;
 
-	constructor(value: number) { this.value = value; }
+	constructor(value: number) { super(); this.value = value; }
 }
