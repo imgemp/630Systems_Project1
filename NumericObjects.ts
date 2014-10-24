@@ -1,11 +1,17 @@
 /// <reference path="Globals.ts" />
 /// <reference path="Log.ts" />
 
-class Integer {
+class Numeric {
+
+	constructor(){}
+
+}
+
+class Integer extends Numeric {
 
 	value: number;
 
-	constructor(value: number) { this.value = value; }
+	constructor(value: number) { super(); this.value = value; }
 
 	// Addition
 	public __add__(other: any): any {
@@ -496,11 +502,11 @@ class Integer {
 
 }
 
-class Float {
+class Float extends Numeric {
 
 	value: number;
 
-	constructor(value: number) { this.value = value; }
+	constructor(value: number) { super(); this.value = value; }
 
 	// Addition
 	public __add__(other: any): any {
@@ -1034,12 +1040,12 @@ class Float {
 
 }
 
-class Complex {
+class Complex extends Numeric {
 
 	real: number;
 	imag: number;
 
-	constructor(real: number, imag: number) { this.real = real; this.imag = imag; }
+	constructor(real: number, imag: number) { super(); this.real = real; this.imag = imag; }
 
 	// Addition
 	public __add__(other: any): any {
@@ -1621,9 +1627,9 @@ class Complex {
 
 }
 
-class Long {
+class Long extends Numeric {
 
 	value: number;
 
-	constructor(value: number) { this.value = value; }
+	constructor(value: number) { super(); this.value = value; }
 }

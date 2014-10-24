@@ -1,6 +1,7 @@
 /// <reference path="Parsers.ts" />
 /// <reference path="Log.ts" />
 /// <reference path="Built_Ins.ts" />
+/// <reference path="Arithmetic.ts" />
 // Assume verbose output requested
 var isVerbose = true;
 

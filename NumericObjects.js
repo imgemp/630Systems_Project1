@@ -1,7 +1,21 @@
 /// <reference path="Globals.ts" />
 /// <reference path="Log.ts" />
-var Integer = (function () {
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Numeric = (function () {
+    function Numeric() {
+    }
+    return Numeric;
+})();
+
+var Integer = (function (_super) {
+    __extends(Integer, _super);
     function Integer(value) {
+        _super.call(this);
         this.value = value;
     }
     // Addition
@@ -455,10 +469,12 @@ var Integer = (function () {
         }
     };
     return Integer;
-})();
+})(Numeric);
 
-var Float = (function () {
+var Float = (function (_super) {
+    __extends(Float, _super);
     function Float(value) {
+        _super.call(this);
         this.value = value;
     }
     // Addition
@@ -954,10 +970,12 @@ var Float = (function () {
         }
     };
     return Float;
-})();
+})(Numeric);
 
-var Complex = (function () {
+var Complex = (function (_super) {
+    __extends(Complex, _super);
     function Complex(real, imag) {
+        _super.call(this);
         this.real = real;
         this.imag = imag;
     }
@@ -1502,11 +1520,13 @@ var Complex = (function () {
         }
     };
     return Complex;
-})();
+})(Numeric);
 
-var Long = (function () {
+var Long = (function (_super) {
+    __extends(Long, _super);
     function Long(value) {
+        _super.call(this);
         this.value = value;
     }
     return Long;
-})();
+})(Numeric);

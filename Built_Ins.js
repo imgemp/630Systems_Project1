@@ -1,16 +1,15 @@
 /// <reference path="NumericObjects.ts" />
-function abs(x) {
-    if (x instanceof Complex) {
-        var x2 = Math.pow(x.real, 2);
-        var xi2 = Math.pow(x.imag, 2);
-        return Math.sqrt((x2 + xi2));
-    } else if ((x instanceof Integer) || (x instanceof Float) || (x instanceof Long)) {
-        return Math.abs(x);
-    } else {
-        return 'NotImplemented';
-    }
-}
-
+// function abs(x: any): any{
+// 	if(x instanceof Complex){
+// 		var x2 = Math.pow(x.real,2);
+// 		var xi2 = Math.pow(x.imag,2);
+// 		return Math.sqrt((x2+xi2));
+// 	}else if ((x instanceof Integer) || (x instanceof Float) || (x instanceof Long)) {
+// 		return Math.abs(x);
+// 	}else{
+// 		return 'NotImplemented';
+// 	}
+// }
 //iterator
 function all() {
 }
@@ -48,16 +47,16 @@ function cmp(x, y) {
 }
 function compile() {
 }
-function complex() {
-}
+
+// function complex(){}
 function delattr() {
 }
 function dict() {
 }
 function dir() {
 }
-function divmod() {
-}
+
+// function divmod(){}
 function enumerate() {
 }
 function eval1() {
@@ -84,8 +83,8 @@ function hash() {
 }
 function help() {
 }
-function hex() {
-}
+
+// function hex(){}
 function id() {
 }
 function input() {
@@ -118,14 +117,14 @@ function next() {
 }
 function object() {
 }
-function oct() {
-}
+
+// function oct(){}
 function open1() {
 }
 function ord() {
 }
-function pow(x, y, z) {
-}
+
+// function pow(x, y, z?){}
 function print1() {
 }
 function property() {
@@ -180,7 +179,7 @@ function apply() {
 }
 function buffer() {
 }
-function coerce() {
-}
+
+// function coerce(){}
 function intern() {
 }
