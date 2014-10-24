@@ -926,7 +926,7 @@ var CodeObject = (function () {
                 // call opcode
                 printToOutput(OpCodeList[opcode]);
                 function_object.func_code[OpCodeList[opcode]]();
-                printToOutput(Stack.toString());
+                printToOutput(Stack);
             }
 
             // Reset varnames
