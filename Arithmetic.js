@@ -257,7 +257,7 @@ function xor(x_this, y_other) {
     }
 }
 
-// // Bitwise OR
+// Bitwise OR
 function or(x_this, y_other) {
     var err = 'or(' + x_this.constructor.name + ',' + y_other.constructor.name + ') NotImplemented';
     var result;
@@ -303,7 +303,7 @@ function div(x_this, y_other) {
     }
 }
 
-// // True Division
+// True Division
 function truediv(x_this, y_other) {
     var err = 'truediv(' + x_this.constructor.name + ',' + y_other.constructor.name + ') NotImplemented';
     var result;
@@ -490,7 +490,7 @@ function oct(x_this) {
     }
 }
 
-// // Hex Conversion
+// Hex Conversion
 function hex(x_this) {
     var err = 'hex(' + x_this.constructor.name + ') NotImplemented';
     var result;
@@ -526,7 +526,7 @@ function index(x_this) {
     }
 }
 
-// // Coercion
+// Coercion
 function coerce(x_this, y_other) {
     var err = 'coerce(' + x_this.constructor.name + ',' + y_other.constructor.name + ') NotImplemented';
     var result;
@@ -561,3 +561,5 @@ function coerce(x_this, y_other) {
         }
     }
 }
+
+var test = add(1, 2, 3);

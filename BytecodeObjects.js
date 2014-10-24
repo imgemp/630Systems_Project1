@@ -1,5 +1,6 @@
 /// <reference path="Globals.ts" />
 /// <reference path="Log.ts" />
+/// <reference path="Arithmetic.ts" />
 var Block = (function () {
     function Block(delta, start) {
         this.delta = delta;
@@ -77,14 +78,12 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.UNARY_POSITIVE = function () {
         var TOS = Stack.pop();
-        TOS = +TOS;
-        Stack.push(TOS);
+        Stack.push(pos(TOS));
         this.pc += 1;
     };
     CodeObject.prototype.UNARY_NEGATIVE = function () {
         var TOS = Stack.pop();
-        TOS = -TOS;
-        Stack.push(TOS);
+        Stack.push(neg(TOS));
         this.pc += 1;
     };
     CodeObject.prototype.UNARY_NOT = function () {
@@ -101,15 +100,13 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.UNARY_INVERT = function () {
         var TOS = Stack.pop();
-        TOS = ~TOS; //python does not invert complex numbers
-        Stack.push(TOS);
+        Stack.push(invert(TOS));
         this.pc += 1;
     };
     CodeObject.prototype.BINARY_POWER = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        TOS = Math.pow(TOS1, TOS);
-        Stack.push(TOS);
+        Stack.push(pow(TOS1, TOS));
         this.pc += 1;
     };
 
@@ -117,7 +114,7 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_MULTIPLY = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 * TOS);
+        Stack.push(mul(TOS1, TOS));
         this.pc += 1;
     };
 
@@ -125,9 +122,7 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_DIVIDE = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-
-        //*** need to make this so floors ints & longs but gives approx with floats or complex ***/
-        Stack.push(TOS1 / TOS);
+        Stack.push(div(TOS1, TOS));
         this.pc += 1;
     };
 
@@ -135,7 +130,7 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_MODULO = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 % TOS);
+        Stack.push(mod(TOS1, TOS));
         this.pc += 1;
     };
 
@@ -143,7 +138,7 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_ADD = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 + TOS); //Math.add(TOS1,TOS)
+        Stack.push(add(TOS1, TOS)); //Math.add(TOS1,TOS)
         this.pc += 1;
     };
 
@@ -151,7 +146,7 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_SUBTRACT = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 - TOS);
+        Stack.push(sub(TOS1, TOS));
         this.pc += 1;
     };
 
@@ -167,7 +162,7 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_FLOOR_DIVIDE = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(Math.floor(TOS1 / TOS));
+        Stack.push(floordiv(TOS1, TOS));
         this.pc += 1;
     };
 
@@ -175,24 +170,18 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_TRUE_DIVIDE = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 / TOS);
+        Stack.push(truediv(TOS1, TOS));
         this.pc += 1;
     };
 
     //DIFFERENCE OF THESE FROM BINARY?
     CodeObject.prototype.INPLACE_FLOOR_DIVIDE = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push(Math.floor(TOS1 / TOS));
-        this.pc += 1;
+        this.BINARY_FLOOR_DIVIDE();
     };
 
     //with from_future_import division
     CodeObject.prototype.INPLACE_TRUE_DIVIDE = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push(TOS1 / TOS);
-        this.pc += 1;
+        this.BINARY_TRUE_DIVIDE();
     };
 
     // Implements TOS[:] = TOS1
@@ -299,32 +288,21 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.INPLACE_ADD = function () {
-        Stack.push(Stack.pop() + Stack.pop());
-        this.pc += 1;
+        this.BINARY_ADD();
     };
     CodeObject.prototype.INPLACE_SUBTRACT = function () {
-        Stack.push(Stack.pop() - Stack.pop());
-        this.pc += 1;
+        this.BINARY_SUBTRACT();
     };
     CodeObject.prototype.INPLACE_MULTIPY = function () {
-        Stack.push(Stack.pop() * Stack.pop());
-        this.pc += 1;
+        this.BINARY_MULTIPLY();
     };
 
     //without from_future_import division
     CodeObject.prototype.INPLACE_DIVIDE = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-
-        //*** need to make this so floors ints & longs but gives approx with floats or complex ***/
-        Stack.push(TOS1 / TOS);
-        this.pc += 1;
+        this.BINARY_DIVIDE();
     };
     CodeObject.prototype.INPLACE_MODULO = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push(TOS1 % TOS);
-        this.pc += 1;
+        this.BINARY_MODULO();
     };
     CodeObject.prototype.STORE_SUBSCR = function () {
         var TOS = Stack.pop();
@@ -342,39 +320,35 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_LSHIFT = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 << TOS);
+        Stack.push(lshift(TOS1, TOS));
         this.pc += 1;
     };
     CodeObject.prototype.BINARY_RSHIFT = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 >> TOS);
+        Stack.push(rshift(TOS1, TOS));
         this.pc += 1;
     };
     CodeObject.prototype.BINARY_AND = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push((TOS1 && TOS));
+        Stack.push(and(TOS1, TOS));
         this.pc += 1;
     };
     CodeObject.prototype.BINARY_XOR = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push((TOS1 ? 1 : 0) ^ (TOS ? 1 : 0));
+        Stack.push(xor(TOS1, TOS));
         this.pc += 1;
     };
     CodeObject.prototype.BINARY_OR = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push((TOS1 || TOS));
+        Stack.push(or(TOS1, TOS));
         this.pc += 1;
     };
     CodeObject.prototype.INPLACE_POWER = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        TOS = Math.pow(TOS1, TOS);
-        Stack.push(TOS);
-        this.pc += 1;
+        this.BINARY_POWER();
     };
     CodeObject.prototype.GET_ITER = function () {
         var TOS = Stack.pop();
@@ -428,34 +402,19 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.INPLACE_LSHIFT = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push(TOS1 << TOS);
-        this.pc += 1;
+        this.BINARY_LSHIFT();
     };
     CodeObject.prototype.INPLACE_RSHIFT = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push(TOS1 >> TOS);
-        this.pc += 1;
+        this.BINARY_RSHIFT();
     };
     CodeObject.prototype.INPLACE_AND = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push((TOS1 && TOS));
-        this.pc += 1;
+        this.BINARY_ADD();
     };
     CodeObject.prototype.INPLACE_XOR = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push((TOS1 ? 1 : 0) ^ (TOS ? 1 : 0));
-        this.pc += 1;
+        this.BINARY_XOR();
     };
     CodeObject.prototype.INPLACE_OR = function () {
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push((TOS1 || TOS));
-        this.pc += 1;
+        this.BINARY_OR();
     };
     CodeObject.prototype.BREAK_LOOP = function () {
         //move the program to the end of the block by going ahead the size of the block
@@ -870,6 +829,8 @@ var CodeObject = (function () {
         }
         var function_object = Stack.pop();
         var isClass = (function_object instanceof classObject);
+
+        //***********ADD isBuiltIn here and handle accordingly********************************
         if (isClass) {
             var class_object = function_object;
             for (var methodKey in class_object.methods) {

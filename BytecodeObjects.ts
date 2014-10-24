@@ -1,5 +1,6 @@
 /// <reference path="Globals.ts" />
 /// <reference path="Log.ts" />
+/// <reference path="Arithmetic.ts" />
 
 class Block {
 
@@ -100,14 +101,12 @@ class CodeObject {
     }
     public UNARY_POSITIVE(){
         var TOS = Stack.pop();
-        TOS = +TOS;
-        Stack.push(TOS);
+        Stack.push(pos(TOS));
         this.pc += 1;
     }
     public UNARY_NEGATIVE(){
         var TOS = Stack.pop();
-        TOS = -TOS;
-        Stack.push(TOS);
+        Stack.push(neg(TOS));
         this.pc += 1;
     }
     public UNARY_NOT(){
@@ -124,30 +123,27 @@ class CodeObject {
     }
     public UNARY_INVERT(){
         var TOS = Stack.pop();
-        TOS = ~TOS; //python does not invert complex numbers
-        Stack.push(TOS);
+        Stack.push(invert(TOS));
         this.pc += 1;
     }
     public BINARY_POWER(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        TOS = Math.pow(TOS1,TOS);
-        Stack.push(TOS);
+        Stack.push(pow(TOS1,TOS));
         this.pc += 1;
     }
     //implements TOS = TOS1 * TOS
     public BINARY_MULTIPLY(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 * TOS);
+        Stack.push(mul(TOS1,TOS));
         this.pc += 1;
     }
     //implements TOS = TOS1/TOS (without from_future_import division)
     public BINARY_DIVIDE(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        //*** need to make this so floors ints & longs but gives approx with floats or complex ***/
-        Stack.push(TOS1/TOS);
+        Stack.push(div(TOS1,TOS));
         this.pc += 1;
 
     }
@@ -155,21 +151,21 @@ class CodeObject {
     public BINARY_MODULO(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 % TOS);
+        Stack.push(mod(TOS1,TOS));
         this.pc += 1;
     }
     //implemsnts TOS = TOS1 + TOS
     public BINARY_ADD(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 + TOS); //Math.add(TOS1,TOS)
+        Stack.push(add(TOS1,TOS)); //Math.add(TOS1,TOS)
         this.pc += 1;
     }
     //implements TOS = TOS1 - TOS
     public BINARY_SUBTRACT(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 - TOS);
+        Stack.push(sub(TOS1,TOS));
         this.pc += 1;
     }
     //implements TOS = TOS1[TOS]
@@ -183,29 +179,23 @@ class CodeObject {
     public BINARY_FLOOR_DIVIDE(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(Math.floor(TOS1/TOS));
+        Stack.push(floordiv(TOS1,TOS));
         this.pc += 1;
     }
     //implements TOS = TOS1/TOS (with from_future_import division)
     public BINARY_TRUE_DIVIDE(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1/TOS);
+        Stack.push(truediv(TOS1,TOS));
         this.pc += 1;
     }
     //DIFFERENCE OF THESE FROM BINARY?
     public INPLACE_FLOOR_DIVIDE(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push(Math.floor(TOS1/TOS));
-        this.pc += 1;
+        this.BINARY_FLOOR_DIVIDE();
     }
     //with from_future_import division
     public INPLACE_TRUE_DIVIDE(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push(TOS1/TOS);
-        this.pc += 1;
+        this.BINARY_TRUE_DIVIDE();
     }
     // Implements TOS[:] = TOS1
     public SLICE_0(){ 
@@ -300,31 +290,21 @@ class CodeObject {
         dic[key] = val;
         Stack.push(dic);
         this.pc += 1; 
-    } public INPLACE_ADD(){ 
-        Stack.push(Stack.pop() + Stack.pop());
-        this.pc += 1; 
+    } public INPLACE_ADD(){
+        this.BINARY_ADD();
     }
     public INPLACE_SUBTRACT(){ 
-        Stack.push(Stack.pop() - Stack.pop());
-        this.pc += 1;
+        this.BINARY_SUBTRACT();
     }
     public INPLACE_MULTIPY(){ 
-        Stack.push(Stack.pop() * Stack.pop());
-        this.pc += 1; 
+        this.BINARY_MULTIPLY(); 
     }
     //without from_future_import division
     public INPLACE_DIVIDE(){ 
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        //*** need to make this so floors ints & longs but gives approx with floats or complex ***/
-        Stack.push(TOS1/TOS);
-        this.pc += 1; 
+        this.BINARY_DIVIDE();
     }
     public INPLACE_MODULO(){ 
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push(TOS1 % TOS);
-        this.pc += 1; 
+        this.BINARY_MODULO();
     }
     public STORE_SUBSCR(){ 
         var TOS = Stack.pop();
@@ -342,40 +322,35 @@ class CodeObject {
     public BINARY_LSHIFT(){ 
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 << TOS);
+        Stack.push(lshift(TOS1,TOS));
         this.pc += 1; 
     }
     public BINARY_RSHIFT(){ 
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1 >> TOS);
+        Stack.push(rshift(TOS1,TOS));
         this.pc += 1; 
     }
     public BINARY_AND(){ 
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push((TOS1 && TOS));
+        Stack.push(and(TOS1,TOS));
         this.pc += 1; 
-
     }
     public BINARY_XOR(){ 
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push((TOS1 ? 1 : 0) ^ (TOS ? 1 : 0));
+        Stack.push(xor(TOS1,TOS));
         this.pc += 1;  
     }
     public BINARY_OR(){ 
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push((TOS1 || TOS));
+        Stack.push(or(TOS1,TOS));
         this.pc += 1;
     }
     public INPLACE_POWER(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        TOS = Math.pow(TOS1,TOS);
-        Stack.push(TOS); 
-        this.pc += 1; 
+        this.BINARY_POWER();
     }
     public GET_ITER(){
         var TOS = Stack.pop()
@@ -427,34 +402,19 @@ class CodeObject {
         this.pc += 1; 
     }
     public INPLACE_LSHIFT(){ 
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push(TOS1 << TOS);
-        this.pc += 1; 
+        this.BINARY_LSHIFT();
     }
     public INPLACE_RSHIFT(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push(TOS1 >> TOS); 
-        this.pc += 1; 
+        this.BINARY_RSHIFT();
     }
     public INPLACE_AND(){ 
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push((TOS1 && TOS));
-        this.pc += 1; 
+        this.BINARY_ADD();
     }
     public INPLACE_XOR(){ 
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push((TOS1 ? 1 : 0) ^ (TOS ? 1 : 0));
-        this.pc += 1; 
+        this.BINARY_XOR();
     }
     public INPLACE_OR(){
-        var TOS = Stack.pop();
-        var TOS1 = Stack.pop();
-        Stack.push((TOS1 || TOS)); 
-        this.pc += 1; 
+        this.BINARY_OR();
     }
     public BREAK_LOOP(){ 
         //move the program to the end of the block by going ahead the size of the block
@@ -787,6 +747,9 @@ class CodeObject {
         for (i=0; i< numArgs; i++) { args[numArgs-1-i] = Stack.pop(); } // next grab positional args, args[0] = leftmost argument
         var function_object = Stack.pop(); // last grab function object
         var isClass = (function_object instanceof classObject);
+        //***********ADD isBuiltIn here and handle accordingly********************************
+        //foo.length gives number of expected arguments
+        //http://www.2ality.com/2011/08/spreading.html
         if (isClass) {
             var class_object = function_object;
             for (var methodKey in class_object.methods) {
