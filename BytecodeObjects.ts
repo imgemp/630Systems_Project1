@@ -112,14 +112,14 @@ class CodeObject {
     }
     public UNARY_NOT(){
         var TOS = Stack.pop();
-        TOS = !TOS;
+        TOS = !TOS;/////////////////////////////////////////////////////////////////////////
         Stack.push(TOS);
         this.pc += 1;
     }
     public UNARY_CONVERT(){
         var TOS = Stack.pop();
         TOS = TOS.toString(); // Not completely accurate
-        Stack.push(TOS);
+        Stack.push(TOS);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public UNARY_INVERT(){
@@ -173,21 +173,21 @@ class CodeObject {
     public BINARY_SUBSCR(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1[TOS]);
+        Stack.push(TOS1[TOS]);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     //implements TOS = TOS1 // TOS
     public BINARY_FLOOR_DIVIDE(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(floordiv(TOS1,TOS));
+        Stack.push(floordiv(TOS1,TOS));/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     //implements TOS = TOS1/TOS (with from_future_import division)
     public BINARY_TRUE_DIVIDE(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(truediv(TOS1,TOS));
+        Stack.push(truediv(TOS1,TOS));/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     //DIFFERENCE OF THESE FROM BINARY?
@@ -201,33 +201,33 @@ class CodeObject {
     // Implements TOS[:] = TOS1
     public SLICE_0(){ 
         var TOS = Stack.pop();
-        Stack.push(TOS.slice(0,TOS.length));
+        Stack.push(TOS.slice(0,TOS.length));/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     //Implements TOS1[TOS:] = TOS2
     public SLICE_1(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1.slice(TOS,TOS1.length));
+        Stack.push(TOS1.slice(TOS,TOS1.length));/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public SLICE_2(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(TOS1.slice(0,TOS));
+        Stack.push(TOS1.slice(0,TOS));/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public SLICE_3(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         var TOS2 = Stack.pop();
-        Stack.push(TOS2.slice(TOS1,TOS));
+        Stack.push(TOS2.slice(TOS1,TOS));/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public STORE_SLICE_0(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        for (var i=0; i<TOS.length; i++) { TOS[i] = TOS1[i]; }
+        for (var i=0; i<TOS.length; i++) { TOS[i] = TOS1[i]; }/////////////////////////////////////////////////////////////////////////
         Stack.push(TOS);
         this.pc += 1; 
     }
@@ -235,7 +235,7 @@ class CodeObject {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         var TOS2 = Stack.pop();
-        for (var i=TOS; i<TOS1.length; i++) { TOS1[i] = TOS2[i-TOS]; }
+        for (var i=TOS; i<TOS1.length; i++) { TOS1[i] = TOS2[i-TOS]; }/////////////////////////////////////////////////////////////////////////
         Stack.push(TOS1);
         this.pc += 1;
     }
@@ -243,7 +243,7 @@ class CodeObject {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         var TOS2 = Stack.pop();
-        for (var i=0; i<TOS; i++) { TOS1[i] = TOS2[i]; }
+        for (var i=0; i<TOS; i++) { TOS1[i] = TOS2[i]; }/////////////////////////////////////////////////////////////////////////
         Stack.push(TOS1);
         this.pc += 1;
     }
@@ -252,28 +252,28 @@ class CodeObject {
         var TOS1 = Stack.pop();
         var TOS2 = Stack.pop();
         var TOS3 = Stack.pop();
-        for (var i=TOS1; i<TOS; i++) { TOS2[i] = TOS3[i-TOS1]; }
+        for (var i=TOS1; i<TOS; i++) { TOS2[i] = TOS3[i-TOS1]; }/////////////////////////////////////////////////////////////////////////
         Stack.push(TOS2);
         this.pc += 1;
     }
     public DELETE_SLICE_0(){
         var TOS = Stack.pop();
         TOS.splice(0,TOS.length);
-        Stack.push(TOS);
+        Stack.push(TOS);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public DELETE_SLICE_1(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         TOS1.splice(TOS,TOS1.length);
-        Stack.push(TOS1);
+        Stack.push(TOS1);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public DELETE_SLICE_2(){ 
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         TOS1.splice(0,TOS);
-        Stack.push(TOS1);
+        Stack.push(TOS1);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public DELETE_SLICE_3(){
@@ -281,14 +281,14 @@ class CodeObject {
         var TOS1 = Stack.pop();
         var TOS2 = Stack.pop();
         TOS2.splice(TOS1,TOS);
-        Stack.push(TOS2);
+        Stack.push(TOS2);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public STORE_MAP(){
         var val = Stack.pop();
         var key = Stack.pop();
         var dic = Stack.pop();
-        dic[key] = val;
+        dic[key] = val;/////////////////////////////////////////////////////////////////////////
         Stack.push(dic);
         this.pc += 1; 
     } public INPLACE_ADD(){
@@ -311,13 +311,13 @@ class CodeObject {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
         var TOS2 = Stack.pop();
-        TOS1[TOS] = TOS2;
+        TOS1[TOS] = TOS2;/////////////////////////////////////////////////////////////////////////
         this.pc += 1; 
     }
     public DELETE_SUBSCR(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        delete TOS1[TOS];
+        delete TOS1[TOS];/////////////////////////////////////////////////////////////////////////
         this.pc += 1; 
     }
     public BINARY_LSHIFT(){ 
@@ -356,11 +356,11 @@ class CodeObject {
     public GET_ITER(){
         var TOS = Stack.pop()
         var TOS = TOS.iter();
-        Stack.push(TOS);
+        Stack.push(TOS);/////////////////////////////////////////////////////////////////////////
         this.pc += 1;
     }
     public PRINT_EXPR(){ 
-        var TOS = Stack.pop();
+        var TOS = Stack.pop();/////////////////////////////////////////////////////////////////////////
         if (isVerbose) {
             printToOutput('LOGGED TO CONSOLE: --------------------- '+TOS,false);
         } else {
@@ -369,7 +369,7 @@ class CodeObject {
         this.pc += 1; 
     }
     public PRINT_ITEM(){
-        var TOS = Stack.pop();
+        var TOS = Stack.pop();/////////////////////////////////////////////////////////////////////////
         if (TOS instanceof internedString) { TOS = byteObject.interned_list[TOS.index]; }
         if (isVerbose) {
             printToOutput('LOGGED TO CONSOLE: --------------------- '+TOS,false);
@@ -478,7 +478,7 @@ class CodeObject {
 
     public STORE_NAME(){
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
-        var name = Stack.pop();
+        var name = Stack.pop();/////////////////////////////////////////////////////////////////////////
         this.names[index] = name;
         this.pc += 3;
     }
@@ -515,7 +515,6 @@ class CodeObject {
     }
     public LIST_APPEND(){
         var value = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
-
         this.pc += 3;
     }
     public STORE_ATTR(){
@@ -611,6 +610,7 @@ class CodeObject {
         this.pc += 3;
     }
     public COMPARE_OP(){ //comparison operator
+        /////////////////////////////////////////////////////////////////////////
         var opname = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         var cmp_op = ['<', '<=', '==', '!=', '>', '>=', 'in', 'not in', 'is', 'is not', 'exception match', 'BAD'];
         var TOS = Stack.pop();

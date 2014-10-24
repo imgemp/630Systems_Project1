@@ -41,8 +41,9 @@ function readEllipsis(bytecode:NodeBuffer, ptr:number, level:number) {
 }
 
 function readInt32(bytecode:NodeBuffer, ptr:number, level:number) {
-    var obj = bytecode.readInt32LE(ptr);
-    printToOutput(Array(level).join('\t') + obj);
+    var val = bytecode.readInt32LE(ptr);
+    var obj: Integer = new Integer(val);
+    printToOutput(Array(level).join('\t') + val);
     return [ptr + 4, obj];
 }
 
@@ -53,14 +54,16 @@ function readInt64(bytecode:NodeBuffer, ptr:number, level:number) {
 }
 
 function readFloat32(bytecode:NodeBuffer, ptr:number, level:number) {
-    var obj = bytecode.readFloatLE(ptr);
-    printToOutput(Array(level).join('\t') + obj);
+    var val = bytecode.readFloatLE(ptr);
+    var obj: Float = new Float(val);
+    printToOutput(Array(level).join('\t') + val);
     return [ptr + 4, obj];
 }
 
 function readFloat64(bytecode:NodeBuffer, ptr:number, level:number) {
-    var obj = bytecode.readDoubleLE(ptr);
-    printToOutput(Array(level).join('\t') + obj);
+    var val = bytecode.readDoubleLE(ptr);
+    var obj: Float = new Float(val);
+    printToOutput(Array(level).join('\t') + val);
     return [ptr + 8, obj];
 }
 
@@ -70,7 +73,7 @@ function readComplex32(bytecode:NodeBuffer, ptr:number, level:number) {
     printToOutput('complex32');
     printToOutput('real='+real);
     printToOutput('imag='+imag);
-    var obj = new Complex(real,imag);
+    var obj: Complex = new Complex(real,imag);
     return [ptr + 8, obj];
 }
 
@@ -80,7 +83,7 @@ function readComplex64(bytecode:NodeBuffer, ptr:number, level:number) {
     printToOutput('complex64');
     printToOutput('real='+real);
     printToOutput('imag='+imag);
-    var obj = new Complex(real,imag);
+    var obj: Complex = new Complex(real,imag);
     return [ptr + 16, obj];
 }
 
