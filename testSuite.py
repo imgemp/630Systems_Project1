@@ -24,7 +24,7 @@ def foo3():
     return bar
 #call function
 bar = foo3()
-bar()
+print(bar())
 #test for document string help
 """Other doc string"""
 def foo4():
