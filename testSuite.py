@@ -81,3 +81,33 @@ def foo6(a):
     return -1*a
 x = foo6(2)
 print x
+
+
+
+# Expected Output
+# Hello1
+# 4
+# 1
+# 12
+# foo4
+# Doc string test.
+# 11
+# 23
+# q
+# Current variable value :10
+# Current variable value :9
+# Current variable value :8
+# Current variable value :7
+# Current variable value :6
+# Current variable value :5
+# Current variable value :9
+# Current variable value :8
+# Current variable value :7
+# Current variable value :6
+# Current variable value :4
+# Current variable value :3
+# Current variable value :2
+# Current variable value :1
+# Current variable value :0
+# a does not equal 1
+# -2
