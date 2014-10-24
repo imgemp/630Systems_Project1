@@ -152,7 +152,30 @@ function setattr(){}
 function slice(){}
 function sorted(){}
 function staticmethod(){}
-function str(){}
+
+
+function str(object: any): string {
+
+	var err: string = 'str('+object.constructor.name+') NotImplemented';
+	var result: string;
+	if (object instanceof Numeric) {
+		result = object.__str__();
+		if (result == 'NotImplemented') {
+			throw err;
+		} else {
+			return result;
+		}
+	} else {
+		try {
+			return object.toString();
+		} catch(err) {
+			throw err;
+		}
+	}
+
+}
+
+
 function sum(){}
 function super1(){}
 function tuple(){}

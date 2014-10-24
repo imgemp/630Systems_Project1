@@ -13,6 +13,13 @@ class Integer extends Numeric {
 
 	constructor(value: number) { super(); this.value = value; }
 
+	// toString
+	public __str__(): string {
+
+		return this.value.toString();
+
+	}
+
 	// Addition
 	public __add__(other: any): any {
 
@@ -507,6 +514,13 @@ class Float extends Numeric {
 	value: number;
 
 	constructor(value: number) { super(); this.value = value; }
+
+	// toString
+	public __str__(): string {
+
+		return this.value.toString();
+
+	}
 
 	// Addition
 	public __add__(other: any): any {
@@ -1046,6 +1060,13 @@ class Complex extends Numeric {
 	imag: number;
 
 	constructor(real: number, imag: number) { super(); this.real = real; this.imag = imag; }
+
+	// toString
+	public __str__(): string {
+
+		return this.real.toString()+' '+this.imag.toString()+'j';
+
+	}
 
 	// Addition
 	public __add__(other: any): any {

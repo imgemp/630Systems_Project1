@@ -362,9 +362,9 @@ class CodeObject {
     public PRINT_EXPR(){ 
         var TOS = Stack.pop();/////////////////////////////////////////////////////////////////////////
         if (isVerbose) {
-            printToOutput('LOGGED TO CONSOLE: --------------------- '+TOS,false);
+            printToOutput('LOGGED TO CONSOLE: --------------------- '+str(TOS),false);
         } else {
-            printToOutput(TOS,true,true);
+            printToOutput(str(TOS),true,true);
         }
         this.pc += 1; 
     }
@@ -372,9 +372,9 @@ class CodeObject {
         var TOS = Stack.pop();/////////////////////////////////////////////////////////////////////////
         if (TOS instanceof internedString) { TOS = byteObject.interned_list[TOS.index]; }
         if (isVerbose) {
-            printToOutput('LOGGED TO CONSOLE: --------------------- '+TOS,false);
+            printToOutput('LOGGED TO CONSOLE: --------------------- '+str(TOS),false);
         } else {
-            printToOutput(TOS,true,true);
+            printToOutput(str(TOS),true,true);
         }
         this.pc += 1;
     }
