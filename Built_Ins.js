@@ -250,7 +250,7 @@ function str(object) {
                     return result;
                 }
             } else {
-                if ((object[i] !== undefined) || (object[i] !== null)) {
+                if ((object[i] !== undefined) && (object[i] !== null)) {
                     try  {
                         return object[i].toString();
                     } catch (err) {
