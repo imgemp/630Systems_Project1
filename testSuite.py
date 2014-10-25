@@ -110,29 +110,29 @@ while i < len(tests):
     while j < 2:
         a,b = b,a
         j = j + 1
-        print(a+b)
-        print(a-b)
-        print(a*b)
-        print(a//b)
-        print(a%b)
-        print(divmod(a,b))
-        print(a**b)
-        print(a<<b)
-        print(a>>b)
-        print(a&b)
-        print(a^b)
-        print(a|b)
-        print(a/b)
-        print(-a)
-        print(+a)
-        print(abs(a))
-        print(~a)
-        print(complex(a))
-        print(int(a))
-        print(float(a))
-        print(oct(a))
-        print(hex(a))
-        print(coerce(a,b))
+        print(str(a)+'+'+str(b)+'='+str(a+b))
+        print(str(a)+'+'+str(b)+'='+str(a-b))
+        print(str(a)+'+'+str(b)+'='+str(a*b))
+        print(str(a)+'+'+str(b)+'='+str(a//b))
+        print(str(a)+'+'+str(b)+'='+str(a%b))
+        print(str(a)+'+'+str(b)+'='+str(divmod(a,b)))
+        print(str(a)+'+'+str(b)+'='+str(a**b))
+        print(str(a)+'+'+str(b)+'='+str(a<<b))
+        print(str(a)+'+'+str(b)+'='+str(a>>b))
+        print(str(a)+'+'+str(b)+'='+str(a&b))
+        print(str(a)+'+'+str(b)+'='+str(a^b))
+        print(str(a)+'+'+str(b)+'='+str(a|b))
+        print(str(a)+'+'+str(b)+'='+str(a/b))
+        print(str(a)+'+'+str(b)+'='+str(-a))
+        print(str(a)+'pos'+str(b)+'='+str(+a))
+        print(str(a)+'abs'+str(b)+'='+str(abs(a)))
+        print(str(a)+'~'+str(b)+'='+str(~a))
+        print(str(a)+'complex'+str(b)+'='+str(complex(a)))
+        print(str(a)+'int'+str(b)+'='+str(int(a)))
+        print(str(a)+'float'+str(b)+'='+str(float(a)))
+        print(str(a)+'oct'+str(b)+'='+str(oct(a)))
+        print(str(a)+'hex'+str(b)+'='+str(hex(a)))
+        print(str(a)+'coerce'+str(b)+'='+str(coerce(a,b)))
     i = i + 1
 #tests other non complex arithmetic builtins
 tests = [[3,2.5],[3.5,2.5]]
@@ -224,7 +224,7 @@ print(coerce(1+1j,2+2j))
 # (-1+1j)
 # (3+2j)
 # 5
-# 1
+# 1 ----------------- shows -1
 # 6
 # 1
 # 1
