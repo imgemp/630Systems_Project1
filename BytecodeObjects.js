@@ -466,6 +466,7 @@ var CodeObject = (function () {
         var block = BlockStack.pop();
         if (block.flag) {
             this.pc = block.end + 1;
+            Stack.push(block.value);
         } else {
             this.pc += 1;
         }

@@ -14,6 +14,7 @@ var Err = (function () {
         var block = BlockStack.pop();
         if (block.type == 'except') {
             block.flag = true;
+            block.value = this.__str__();
         } else {
             throw this.__str__();
         }

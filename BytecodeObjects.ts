@@ -10,6 +10,7 @@ class Block {
     end: number;
     type: string;
     flag: boolean;
+    value: any;
 
     constructor(delta: number, start: number, type: string) {
 
@@ -463,6 +464,7 @@ class CodeObject {
         var block = BlockStack.pop();
         if (block.flag) {
             this.pc = block.end + 1;
+            Stack.push(block.value);
         } else { this.pc += 1; }
     }
     public END_FINALLY(){ 
