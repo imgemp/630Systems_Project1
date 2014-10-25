@@ -183,10 +183,12 @@ function str(object: any): string {
 						throw err;
 					}
 				} else {
-					try {
-						return object[i].toString();
-					} catch(err) {
-						throw err;
+					if ((object[i] !== undefined) || (object[i] !== null)) {
+						try {
+							return object[i].toString();
+						} catch(err) {
+							throw err;
+						}
 					}
 				}
 			}
@@ -204,10 +206,12 @@ function str(object: any): string {
 					return result;
 				}
 			} else {
-				try {
-					return object.toString();
-				} catch(err) {
-					throw err;
+				if ((object[i] !== undefined) || (object[i] !== null)) {
+					try {
+						return object[i].toString();
+					} catch(err) {
+						throw err;
+					}
 				}
 			}
 		}
