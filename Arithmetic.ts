@@ -5,7 +5,9 @@
 // Addition
 function add(x_this: any, y_other: any): any {
 
-	var err: string = 'add('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'add('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__add__(y_other);
@@ -30,7 +32,9 @@ function add(x_this: any, y_other: any): any {
 // Subtraction
 function sub(x_this: any, y_other: any): any {
 
-	var err: string = 'sub('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'sub('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__sub__(y_other);
@@ -55,7 +59,9 @@ function sub(x_this: any, y_other: any): any {
 // Multiplication
 function mul(x_this: any, y_other: any): any {
 
-	var err: string = 'mul('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'mul('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__mul__(y_other);
@@ -80,7 +86,9 @@ function mul(x_this: any, y_other: any): any {
 // Floor Division
 function floordiv(x_this: any, y_other: any): any {
 
-	var err: string = 'floordiv('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'floordiv('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__floordiv__(y_other);
@@ -105,7 +113,9 @@ function floordiv(x_this: any, y_other: any): any {
 // Modulus
 function mod(x_this: any, y_other: any): any {
 
-	var err: string = 'mod('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'mod('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__mod__(y_other);
@@ -130,7 +140,9 @@ function mod(x_this: any, y_other: any): any {
 // Divmod
 function divmod(x_this: any, y_other: any): any {
 
-	var err: string = 'divmod('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'divmod('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__divmod__(y_other);
@@ -157,7 +169,9 @@ function divmod(x_this: any, y_other: any): any {
 // Power - Missing Ternary Input Version
 function pow(x_this: any, y_other: any): any {
 
-	var err: string = 'pow('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'pow('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__pow__(y_other);
@@ -184,7 +198,9 @@ function pow(x_this: any, y_other: any): any {
 // Left Bitwise Shift
 function lshift(x_this: any, y_other: any): any {
 
-	var err: string = 'lshift('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'lshift('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__lshift__(y_other);
@@ -209,7 +225,9 @@ function lshift(x_this: any, y_other: any): any {
 // Right Bitwise Shift
 function rshift(x_this: any, y_other: any): any {
 
-	var err: string = 'rshift('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'rshift('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__rshift__(y_other);
@@ -234,7 +252,9 @@ function rshift(x_this: any, y_other: any): any {
 // Bitwise AND
 function and(x_this: any, y_other: any): any {
 
-	var err: string = 'and('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'and('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__and__(y_other);
@@ -259,7 +279,9 @@ function and(x_this: any, y_other: any): any {
 // Bitwise XOR
 function xor(x_this: any, y_other: any): any {
 
-	var err: string = 'xor('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'xor('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__xor__(y_other);
@@ -284,7 +306,9 @@ function xor(x_this: any, y_other: any): any {
 // Bitwise OR
 function or(x_this: any, y_other: any): any {
 
-	var err: string = 'or('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'or('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__or__(y_other);
@@ -309,7 +333,9 @@ function or(x_this: any, y_other: any): any {
 // Division - Assume Classic Mode
 function div(x_this: any, y_other: any): any {
 
-	var err: string = 'div('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'div('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__div__(y_other);
@@ -334,7 +360,9 @@ function div(x_this: any, y_other: any): any {
 // True Division
 function truediv(x_this: any, y_other: any): any {
 
-	var err: string = 'truediv('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'truediv('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__truediv__(y_other);
@@ -359,7 +387,9 @@ function truediv(x_this: any, y_other: any): any {
 // Negative Literal
 function neg(x_this: any): any {
 
-	var err: string = 'neg('+x_this.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'neg('+x_this.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__neg__();
@@ -381,7 +411,9 @@ function neg(x_this: any): any {
 // Positive Literal
 function pos(x_this: any): any {
 
-	var err: string = 'pos('+x_this.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'pos('+x_this.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__pos__();
@@ -403,7 +435,9 @@ function pos(x_this: any): any {
 // Absolute Value
 function abs(x_this: any): any {
 
-	var err: string = 'abs('+x_this.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'abs('+x_this.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__abs__();
@@ -425,7 +459,9 @@ function abs(x_this: any): any {
 // Inversion
 function invert(x_this: any): any {
 
-	var err: string = 'invert('+x_this.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'invert('+x_this.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__invert__();
@@ -480,7 +516,9 @@ function complex(real?: any, imag?: any): any {
 // Integer Conversion
 function int(x_this: any): any {
 
-	var err: string = 'int('+x_this.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'int('+x_this.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__int__();
@@ -498,7 +536,9 @@ function int(x_this: any): any {
 // Long Conversion
 function long(x_this: any): any {
 
-	var err: string = 'long('+x_this.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'long('+x_this.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__long__();
@@ -516,7 +556,9 @@ function long(x_this: any): any {
 // Float Conversion
 function float(x_this: any): any {
 
-	var err: string = 'float('+x_this.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'float('+x_this.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__float__();
@@ -534,7 +576,9 @@ function float(x_this: any): any {
 // Octal Conversion
 function oct(x_this: any): any {
 
-	var err: string = 'oct('+x_this.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'oct('+x_this.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__oct__();
@@ -556,7 +600,9 @@ function oct(x_this: any): any {
 // Hex Conversion
 function hex(x_this: any): any {
 
-	var err: string = 'hex('+x_this.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'hex('+x_this.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__hex__();
@@ -578,7 +624,9 @@ function hex(x_this: any): any {
 // Index
 function index(x_this: any): any {
 
-	var err: string = 'index('+x_this.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'index('+x_this.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__index__();
@@ -596,7 +644,9 @@ function index(x_this: any): any {
 // Coercion
 function coerce(x_this: any, y_other: any): any {
 
-	var err: string = 'coerce('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'coerce('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Input(s) not defined.'; }
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__coerce__(y_other);

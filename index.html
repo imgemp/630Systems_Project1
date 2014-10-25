@@ -37,6 +37,10 @@
       fs.writeFile('TestFile.pyc',fileBuffer, function (err) {
         if (err) throw err;
         runTestSuite('TestFile.pyc');
+        fs.writeFile('TestFile.pyc','', function (err) {
+          if (err) throw err;
+          console.log('TestFile.pyc cleared.')
+        });
       });
     };
     reader.readAsArrayBuffer(file);
@@ -55,6 +59,10 @@
 <script>
   function clearLogOut() {
     document.getElementById("logOut").value = '';
+    fs.writeFile('TestFile.pyc','', function (err) {
+      if (err) throw err;
+      console.log('TestFile.pyc cleared.')
+    });
   }
 </script>
 
