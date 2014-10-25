@@ -2,18 +2,20 @@
 
 function printToOutput(input: any,skipReturn?: boolean,isProgram?: boolean) {
 	var output;
-	try {
-		if ((typeof input !== 'string') && (typeof input !== 'undefined') && (input !== null) && (input.length>1)) {
-			output = [];
-			for (var i=0;i<input.length;i++) {
-				output[i] = str(input[i]);
+	if (input !== null) {
+		try {
+			if ((typeof input !== 'string') && (typeof input !== 'undefined') && (input.length>1)) {
+				output = [];
+				for (var i=0;i<input.length;i++) {
+					output[i] = str(input[i]);
+				}
+			} else {
+				output = input.toString();
 			}
-		} else {
-			output = input.toString();
+		} catch(err) {
+			throw err;
 		}
-	} catch(err) {
-		throw err;
-	}
+	} else { output = 'null'; }
     var skipReturn = skipReturn || false;
     var isProgram = isProgram || false;
     if (isVerbose || isProgram) {
