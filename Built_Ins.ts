@@ -169,8 +169,9 @@ function staticmethod(){}
 
 
 function str(object: any): string {
-	console.log(object);
-	var err: string = 'str('+object.constructor.name+') NotImplemented';
+	var err: string;
+	try { err = 'str('+object.constructor.name+') NotImplemented'; }
+	catch(err) { err = 'Object not defined.'; }
 	var result: string;
 	if (object instanceof Numeric) {
 		result = object.__str__();

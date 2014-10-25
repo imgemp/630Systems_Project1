@@ -562,6 +562,7 @@ class CodeObject {
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         printToOutput('index='+index.toString());
         Stack.push(this.consts[index]);
+        printToOutput(this.consts[index]);
         this.pc += 3;
     }
     public LOAD_NAME(){
