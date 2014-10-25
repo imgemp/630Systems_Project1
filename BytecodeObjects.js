@@ -828,8 +828,6 @@ var CodeObject = (function () {
         // argc is the operand from the bytecode (low bit = number of positional args, high bit = number of keyword args)
         var numArgs = this.code[this.pc + 1];
         var numKwargs = this.code[this.pc + 2];
-        console.log(numArgs);
-        console.log(numKwargs);
 
         // Retrieve arguments from Stack and add to varnames
         var args = [];
@@ -853,7 +851,6 @@ var CodeObject = (function () {
         if (isBuiltIn) {
             function_object = builtIns[function_object];
             varnamesOriginal = getArgNames(function_object);
-            console.log(varnamesOriginal);
             argcount = function_object.length;
         } else if (isClass) {
             var class_object = function_object;
@@ -927,7 +924,6 @@ var CodeObject = (function () {
         var returnedValue;
         if (isBuiltIn) {
             returnedValue = function_object.apply(null, varnamesNew);
-            console.log(returnedValue);
             if (returnedValue == 'NotImplemented') {
                 returnedValue = null;
             }

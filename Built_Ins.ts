@@ -170,7 +170,6 @@ function staticmethod(){}
 
 function str(object: any): string {
 	var err: string;
-	console.log(object);
 	if (object !== null) {
 		if ((object.hasOwnProperty('length')) && (typeof object !== 'string')) {
 			for (var i=0;i<object.length;i++) {
