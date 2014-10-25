@@ -94,7 +94,7 @@ var Integer = (function (_super) {
     Integer.prototype.__floordiv__ = function (other) {
         if (other instanceof Integer) {
             if (other.value == 0) {
-                return new Err('ZeroDivisionError: integer floordiv by zero');
+                return new Err('ZeroDivisionError: integer floordiv by zero', 'throw');
             } else {
                 return new Integer(Math.floor(this.value / other.value));
             }

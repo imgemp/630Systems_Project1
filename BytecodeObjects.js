@@ -3,16 +3,19 @@
 /// <reference path="Arithmetic.ts" />
 /// <reference path="Built_Ins.ts" />
 var Block = (function () {
-    function Block(delta, start) {
+    function Block(delta, start, type) {
         this.delta = delta;
         this.start = start;
         this.end = start + delta - 1;
+        this.type = type;
+        this.flag = false;
     }
     return Block;
 })();
 
 // Implemented bytecode functions in a CodeObject class
 var CodeObject = (function () {
+    // BlockStack: any;
     function CodeObject() {
         this.argcount = undefined;
         this.nlocals = undefined;
@@ -31,7 +34,7 @@ var CodeObject = (function () {
         this.returnedValue = undefined;
         this.pc = 0;
         this.self = {};
-        this.BlockStack = [];
+        // this.BlockStack = [];
     }
     CodeObject.prototype.STOP_CODE = function () {
         //do nothing
@@ -419,9 +422,9 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.BREAK_LOOP = function () {
         //move the program to the end of the block by going ahead the size of the block
-        var block = this.BlockStack.pop();
+        var block = BlockStack.pop();
         this.pc = block.end;
-        this.BlockStack.push(block);
+        BlockStack.push(block);
     };
     CodeObject.prototype.WITH_CLEANUP = function () {
         this.pc += 1;
@@ -460,8 +463,12 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.POP_BLOCK = function () {
-        this.BlockStack.pop();
-        this.pc += 1;
+        var block = BlockStack.pop();
+        if (block.flag) {
+            this.pc = block.end + 1;
+        } else {
+            this.pc += 1;
+        }
     };
     CodeObject.prototype.END_FINALLY = function () {
         this.pc += 1;
@@ -749,24 +756,24 @@ var CodeObject = (function () {
         //pushes block of size delta bytes
         var delta = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var start = this.pc + 3;
-        var block = new Block(delta, start);
-        this.BlockStack.push(block);
+        var block = new Block(delta, start, 'loop');
+        BlockStack.push(block);
         this.pc += 3;
     };
     CodeObject.prototype.SETUP_EXCEPT = function () {
         //target address(relative)
         var delta = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var start = this.pc + 3;
-        var block = new Block(delta, start);
-        this.BlockStack.push(block);
+        var block = new Block(delta, start, 'except');
+        BlockStack.push(block);
         this.pc += 3;
     };
     CodeObject.prototype.SETUP_FINALLY = function () {
         //target address(relative)
         var delta = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var start = this.pc + 3;
-        var block = new Block(delta, start);
-        this.BlockStack.push(block);
+        var block = new Block(delta, start, 'finally');
+        BlockStack.push(block);
         this.pc += 3;
     };
     CodeObject.prototype.LOAD_FAST = function () {

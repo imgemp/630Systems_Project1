@@ -7,8 +7,28 @@
 class Err {
 
     value: any;
+    action: string;
 
-    constructor(value: any) { this.value = value; }
+    constructor(value: any, action?: string) {
+
+        this.value = value;
+        if (action == 'throw') {
+            this.__throw__();
+        }
+
+    }
+
+    public __throw__() {
+
+        var block = BlockStack.pop();
+        if (block.type == 'except') {
+            block.flag = true;
+        } else {
+            throw this.__str__();
+        }
+        BlockStack.push(block);
+
+    }
 
     public __str__() {
 
@@ -17,6 +37,9 @@ class Err {
     }
 
 }
+
+// Initiliaze global block stack
+var BlockStack = [];
 
 // Assume verbose output requested
 var isVerbose = true;

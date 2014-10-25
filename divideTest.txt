@@ -1,0 +1,125 @@
+magic number: 32431310
+time stamp: 1651826684
+code object:
+	argcount:
+	0
+	nlocals:
+	0
+	stacksize:
+	3
+	flags:
+	40
+	code: (52)
+		0:  100 (0,0)
+		3:  132 (0,0)
+		6:  90  (0,0)
+		9:  101 (0,0)
+		12: 100 (1,0)
+		15: 100 (2,0)
+		18: 131 (2,0)
+		21: 1
+		22: 101 (0,0)
+		25: 100 (1,0)
+		28: 100 (3,0)
+		31: 131 (2,0)
+		34: 1
+		35: 101 (0,0)
+		38: 100 (4,0)
+		41: 100 (5,0)
+		44: 131 (2,0)
+		47: 1
+		48: 100 (6,0)
+		51: 83
+	consts: (7)
+		code object:
+			argcount:
+			2
+			nlocals:
+			3
+			stacksize:
+			5
+			flags:
+			43
+			code: (65)
+				0:  122 (52,0) 	Setup Finally
+				3:  121 (14,0) 	Setup Except
+				6:  124 (0,0)  	Load Fast
+				9:  124 (1,0) 	Load Fast
+				12: 21			Binary Divide
+				13: 125 (2,0)	Store Fast
+				16: 87			Pop Block
+				17: 110 (22,0)	Jump Forward
+				20: 4 			Dup Top
+				21: 116 (0,0)	Load Global
+				24: 107 (10,0)	Compare Op
+				27: 114 (41,0)
+				30: 1
+				31: 1
+				32: 1
+				33: 100 (1,0)
+				36: 71
+				37: 72
+				38: 110 (10,0)
+				41: 88
+				42: 100 (2,0)
+				45: 71
+				46: 124 (2,0)
+				49: 71
+				50: 72
+				51: 87
+				52: 100 (0,0)
+				55: 100 (3,0)
+				58: 71
+				59: 72
+				60: 88
+				61: 100 (0,0)
+				64: 83
+			consts: (4)
+				None
+				division by zero!
+				result is
+				executing finally clause
+			names: (1)
+				(interned)ZeroDivisionError
+			varnames: (3)
+				(interned)x
+				(interned)y
+				(interned)result
+			freevars: (0)
+			cellvars: (0)
+			filename:
+			divideTest.py
+			name:
+			(interned)divide
+			firstlineno:
+			1
+			lnotab: (7)
+			(0,1)
+			(3,0)
+			(3,1)
+			(14,1)
+			(13,1)
+			(9,2)
+			(13,2)
+		2
+		1
+		0
+		(interned)2
+		(interned)1
+		None
+	names: (1)
+		ref to interned string in position 4
+	varnames: (0)
+	freevars: (0)
+	cellvars: (0)
+	filename:
+	divideTest.py
+	name:
+	(interned)<module>
+	firstlineno:
+	1
+	lnotab: (3)
+	(9,10)
+	(13,1)
+	(13,1)
+internedList = ZeroDivisionError,x,y,result,divide,2,1,<module>

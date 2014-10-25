@@ -4,14 +4,30 @@
 /// <reference path="Arithmetic.ts" />
 // Error objects for try catch
 var Err = (function () {
-    function Err(value) {
+    function Err(value, action) {
         this.value = value;
+        if (action == 'throw') {
+            this.__throw__();
+        }
     }
+    Err.prototype.__throw__ = function () {
+        var block = BlockStack.pop();
+        if (block.type == 'except') {
+            block.flag = true;
+        } else {
+            throw this.__str__();
+        }
+        BlockStack.push(block);
+    };
+
     Err.prototype.__str__ = function () {
         return this.value.toString();
     };
     return Err;
 })();
+
+// Initiliaze global block stack
+var BlockStack = [];
 
 // Assume verbose output requested
 var isVerbose = true;
