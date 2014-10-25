@@ -638,7 +638,7 @@ var CodeObject = (function () {
         printToOutput('TOS=' + TOS);
         if (TOS == 'self') {
             Stack.push(this.self[attr]);
-        } else if (attr in builtIns) {
+        } else if (attr.replace(/__/g, '') in builtIns) {
             Stack.push(attr);
             Stack.push(TOS);
         } else if (TOS instanceof classObject) {
