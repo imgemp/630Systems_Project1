@@ -12,7 +12,7 @@ var Err = (function () {
     }
     Err.prototype.__throw__ = function () {
         var block = BlockStack.pop();
-        if (block.type == 'except') {
+        if (block !== undefined) {
             block.flag = true;
             block.value = this.__str__();
         } else {

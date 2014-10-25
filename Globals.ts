@@ -21,7 +21,7 @@ class Err {
     public __throw__() {
 
         var block = BlockStack.pop();
-        if (block.type == 'except') {
+        if (block !== undefined) {
             block.flag = true;
             block.value = this.__str__();
         } else {
