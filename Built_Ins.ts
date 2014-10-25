@@ -170,18 +170,17 @@ function staticmethod(){}
 
 function str(object: any): string {
 	var err: string;
+	var result: string = '';
 	if (object !== null) {
 		if ((object.hasOwnProperty('length')) && (typeof object !== 'string')) {
+			result += '['
 			for (var i=0;i<object.length;i++) {
 				try { err = 'str('+object[i].constructor.name+') NotImplemented'; }
 				catch(err) { err = 'Object not defined.'; }
-				var result: string;
 				if (object[i] instanceof Numeric) {
-					result = object[i].__str__();
+					result += object[i].__str__()+',';
 					if (result == 'NotImplemented') {
 						throw err;
-					} else {
-						return result;
 					}
 				} else {
 					try {
@@ -191,10 +190,12 @@ function str(object: any): string {
 					}
 				}
 			}
+			result = result.substring(0,result.length-1);
+			result += ']';
+			return result;
 		} else {
 			try { err = 'str('+object.constructor.name+') NotImplemented'; }
 			catch(err) { err = 'Object not defined.'; }
-			var result: string;
 			if (object instanceof Numeric) {
 				result = object.__str__();
 				if (result == 'NotImplemented') {

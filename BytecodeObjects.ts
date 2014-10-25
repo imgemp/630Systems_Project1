@@ -853,7 +853,7 @@ class CodeObject {
                 // call opcode
                 printToOutput(OpCodeList[opcode]);
                 function_object.func_code[OpCodeList[opcode]]();
-                printToOutput(Stack);
+                printToOutput(str(Stack));
             }
             // Reset varnames
             function_object.func_code.varnames = varnamesOriginal.slice(0);
