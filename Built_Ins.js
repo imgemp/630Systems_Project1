@@ -209,24 +209,49 @@ function staticmethod() {
 function str(object) {
     var err;
     if (object !== null) {
-        try  {
-            err = 'str(' + object.constructor.name + ') NotImplemented';
-        } catch (err) {
-            err = 'Object not defined.';
-        }
-        var result;
-        if (object instanceof Numeric) {
-            result = object.__str__();
-            if (result == 'NotImplemented') {
-                throw err;
-            } else {
-                return result;
+        if (object.hasOwnProperty('length')) {
+            for (var i = 0; i < object.length; i++) {
+                try  {
+                    err = 'str(' + object[i].constructor.name + ') NotImplemented';
+                } catch (err) {
+                    err = 'Object not defined.';
+                }
+                var result;
+                if (object[i] instanceof Numeric) {
+                    result = object[i].__str__();
+                    if (result == 'NotImplemented') {
+                        throw err;
+                    } else {
+                        return result;
+                    }
+                } else {
+                    try  {
+                        return object[i].toString();
+                    } catch (err) {
+                        throw err;
+                    }
+                }
             }
         } else {
             try  {
-                return object.toString();
+                err = 'str(' + object.constructor.name + ') NotImplemented';
             } catch (err) {
-                throw err;
+                err = 'Object not defined.';
+            }
+            var result;
+            if (object instanceof Numeric) {
+                result = object.__str__();
+                if (result == 'NotImplemented') {
+                    throw err;
+                } else {
+                    return result;
+                }
+            } else {
+                try  {
+                    return object.toString();
+                } catch (err) {
+                    throw err;
+                }
             }
         }
     } else {
