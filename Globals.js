@@ -2,6 +2,17 @@
 /// <reference path="Log.ts" />
 /// <reference path="Built_Ins.ts" />
 /// <reference path="Arithmetic.ts" />
+// Error objects for try catch
+var Err = (function () {
+    function Err(value) {
+        this.value = value;
+    }
+    Err.prototype.__str__ = function () {
+        return this.value.toString();
+    };
+    return Err;
+})();
+
 // Assume verbose output requested
 var isVerbose = true;
 

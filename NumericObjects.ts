@@ -95,7 +95,7 @@ class Integer extends Numeric {
 	public __floordiv__(other: any): any {
 
 		if (other instanceof Integer) {
-			if (other.value == 0) { return 'ZeroDivisionError: integer floordiv by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError: integer floordiv by zero'); }
 			else { return new Integer(Math.floor( this.value / other.value )); }
 		} else if (other instanceof Float) {
 			return 'NotImplemented'; // can't downcast float to integer

@@ -3,6 +3,21 @@
 /// <reference path="Built_Ins.ts" />
 /// <reference path="Arithmetic.ts" />
 
+// Error objects for try catch
+class Err {
+
+    value: any;
+
+    constructor(value: any) { this.value = value; }
+
+    public __str__() {
+
+        return this.value.toString();
+
+    }
+
+}
+
 // Assume verbose output requested
 var isVerbose = true;
 
