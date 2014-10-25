@@ -170,23 +170,25 @@ function staticmethod(){}
 
 function str(object: any): string {
 	var err: string;
-	try { err = 'str('+object.constructor.name+') NotImplemented'; }
-	catch(err) { err = 'Object not defined.'; }
-	var result: string;
-	if (object instanceof Numeric) {
-		result = object.__str__();
-		if (result == 'NotImplemented') {
-			throw err;
+	if (object !== null) {
+		try { err = 'str('+object.constructor.name+') NotImplemented'; }
+		catch(err) { err = 'Object not defined.'; }
+		var result: string;
+		if (object instanceof Numeric) {
+			result = object.__str__();
+			if (result == 'NotImplemented') {
+				throw err;
+			} else {
+				return result;
+			}
 		} else {
-			return result;
+			try {
+				return object.toString();
+			} catch(err) {
+				throw err;
+			}
 		}
-	} else {
-		try {
-			return object.toString();
-		} catch(err) {
-			throw err;
-		}
-	}
+	} else { return 'null'; }
 
 }
 
