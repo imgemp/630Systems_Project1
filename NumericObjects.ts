@@ -110,7 +110,7 @@ class Integer extends Numeric {
 	public __rfloordiv__(other: any): any {
 
 		if (other instanceof Integer) {
-			if (this.value == 0) { throw 'ZeroDivisionError: integer floordiv by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Integer(Math.floor( other.value / this.value )); }
 		} else if (other instanceof Float) {
 			return 'NotImplemented'; // can't downcast float to integer
@@ -126,7 +126,7 @@ class Integer extends Numeric {
 	public __mod__(other: any): any {
 
 		if (other instanceof Integer) {
-			if (other.value == 0) { throw 'ZeroDivisionError: integer mod by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Integer(this.value % other.value); }
 		} else if (other instanceof Float) {
 			return 'NotImplemented'; // can't downcast float to integer
@@ -141,7 +141,7 @@ class Integer extends Numeric {
 	public __rmod__(other: any): any {
 
 		if (other instanceof Integer) {
-			if (this.value == 0) { throw 'ZeroDivisionError: integer mod by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Integer(other.value % this.value); }
 		} else if (other instanceof Float) {
 			return 'NotImplemented'; // can't downcast float to integer
@@ -157,7 +157,7 @@ class Integer extends Numeric {
 	public __divmod__(other: any): any {
 
 		if (other instanceof Integer) {
-			if (other.value == 0) { throw 'ZeroDivisionError: integer divmod by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				var quotient: Integer = this.__floordiv__(other);
 				var remainder: Integer = this.__sub__(quotient.__mul__(other));
@@ -176,7 +176,7 @@ class Integer extends Numeric {
 	public __rdivmod__(other: any): any {
 
 		if (other instanceof Integer) {
-			if (this.value == 0) { throw 'ZeroDivisionError: integer divmod by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				var quotient: Integer = other.__floordiv__(this);
 				var remainder: Integer = other.__sub__(quotient.__mul__(this));
@@ -361,7 +361,7 @@ class Integer extends Numeric {
 	public __truediv__(other: any): any {
 
 		if (other instanceof Integer) {
-			if (other.value == 0) { throw 'ZeroDivisionError: integer truediv by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float( this.value / other.value ); }
 		} else if (other instanceof Float) {
 			return 'NotImplemented'; // can't downcast float to integer
@@ -376,7 +376,7 @@ class Integer extends Numeric {
 	public __rtruediv__(other: any): any {
 
 		if (other instanceof Integer) {
-			if (this.value == 0) { throw 'ZeroDivisionError: integer truediv by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float( other.value / this.value ); }
 		} else if (other instanceof Float) {
 			return 'NotImplemented'; // can't downcast float to integer
@@ -576,10 +576,10 @@ class Float extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to float
-			if (other.value == 0) { throw 'ZeroDivisionError: float floordiv by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float(Math.floor( this.value / other.value )); }
 		} else if (other instanceof Float) {
-			if (other.value == 0) { throw 'ZeroDivisionError: float floordiv by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float(Math.floor( this.value / other.value )); }
 		} else if (other instanceof Complex) {
 			return 'NotImplemented'; // can't downcast complex to float
@@ -593,10 +593,10 @@ class Float extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to float
-			if (this.value == 0) { throw 'ZeroDivisionError: float floordiv by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float(Math.floor( other.value / this.value )); }
 		} else if (other instanceof Float) {
-			if (this.value == 0) { throw 'ZeroDivisionError: float floordiv by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float(Math.floor( other.value / this.value )); }
 		} else if (other instanceof Complex) {
 			return 'NotImplemented'; // can't downcast complex to float
@@ -611,10 +611,10 @@ class Float extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to float
-			if (other.value == 0) { throw 'ZeroDivisionError: float mod by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float(this.value % other.value); }
 		} else if (other instanceof Float) {
-			if (other.value == 0) { throw 'ZeroDivisionError: float mod by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float(this.value % other.value); }
 		} else if (other instanceof Complex) {
 			return 'NotImplemented'; // can't downcast complex to float
@@ -628,10 +628,10 @@ class Float extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to float
-			if (this.value == 0) { throw 'ZeroDivisionError: float mod by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float(other.value % this.value); }
 		} else if (other instanceof Float) {
-			if (this.value == 0) { throw 'ZeroDivisionError: float mod by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float(other.value % this.value); }
 		} else if (other instanceof Complex) {
 			return 'NotImplemented'; // can't downcast complex to float
@@ -646,7 +646,7 @@ class Float extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to float
-			if (other.value == 0) { throw 'ZeroDivisionError: float divmod by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				other = new Float(other.value);
 				var quotient: Float = this.__floordiv__(other);
@@ -654,7 +654,7 @@ class Float extends Numeric {
 				return [quotient,remainder];
 			}
 		} else if (other instanceof Float) {
-			if (other.value == 0) { throw 'ZeroDivisionError: float divmod by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				var quotient: Float = this.__floordiv__(other);
 				var remainder: Float = this.__sub__(quotient.__mul__(other));
@@ -672,7 +672,7 @@ class Float extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to float
-			if (this.value == 0) { throw 'ZeroDivisionError: float mod by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				other = new Float(other.value);
 				var quotient: Float = other.__floordiv__(this);
@@ -680,7 +680,7 @@ class Float extends Numeric {
 				return [quotient,remainder];
 			}
 		} else if (other instanceof Float) {
-			if (this.value == 0) { throw 'ZeroDivisionError: float mod by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				var quotient: Float = other.__floordiv__(this);
 				var remainder: Float = other.__sub__(quotient.__mul__(this));
@@ -853,10 +853,10 @@ class Float extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to float
-			if (other.value == 0) { throw 'ZeroDivisionError: float div by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float( this.value / other.value ); }
 		} else if (other instanceof Float) {
-			if (other.value == 0) { throw 'ZeroDivisionError: float div by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float( this.value / other.value ); }
 		} else if (other instanceof Complex) {
 			return 'NotImplemented'; // can't downcast complex to float
@@ -870,10 +870,10 @@ class Float extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to float
-			if (this.value == 0) { throw 'ZeroDivisionError: float div by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float( other.value / this.value ); }
 		} else if (other instanceof Float) {
-			if (this.value == 0) { throw 'ZeroDivisionError: float div by zero'; }
+			if (this.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Float( other.value / this.value ); }
 		} else if (other instanceof Complex) {
 			return 'NotImplemented'; // can't downcast complex to float
@@ -1090,14 +1090,14 @@ class Complex extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to complex
-			if (other.value == 0) { throw 'ZeroDivisionError: complex floordiv by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Complex(Math.floor( this.real / other.value ), Math.floor( this.imag / other.value )); }
 		} else if (other instanceof Float) {
 			// upcast float to complex
-			if (other.value == 0) { throw 'ZeroDivisionError: complex floordiv by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Complex(Math.floor( this.real / other.value ), Math.floor( this.imag / other.value )); }
 		} else if (other instanceof Complex) {
-			if ((other.real == 0) && (other.imag == 0)) { throw 'ZeroDivisionError: complex floordiv by zero'; }
+			if ((other.real == 0) && (other.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else { 
 				var newComplex: Complex = new Complex(0,0);
 				var den: number = Math.pow(other.real,2)+Math.pow(other.imag,2);
@@ -1115,7 +1115,7 @@ class Complex extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to complex
-			if ((this.real == 0) && (this.imag == 0)) { throw 'ZeroDivisionError: complex floordiv by zero'; }
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				var newComplex: Complex = new Complex(0,0);
 				var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);
@@ -1125,7 +1125,7 @@ class Complex extends Numeric {
 			}
 		} else if (other instanceof Float) {
 			// upcast float to complex
-			if ((this.real == 0) && (this.imag == 0)) { throw 'ZeroDivisionError: complex floordiv by zero'; }
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				var newComplex: Complex = new Complex(0,0);
 				var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);
@@ -1134,7 +1134,7 @@ class Complex extends Numeric {
 				return newComplex;
 			}
 		} else if (other instanceof Complex) {
-			if ((this.real == 0) && (this.imag == 0)) { throw 'ZeroDivisionError: complex floordiv by zero'; }
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				var newComplex: Complex = new Complex(0,0);
 				var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);
@@ -1153,20 +1153,20 @@ class Complex extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to complex
-			if (other.value == 0) { throw 'ZeroDivisionError: complex mod by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				other = new Complex(other.value,0);
 				return this.__sub__(other.__mul__(this.__floordiv__(other))); //remainder of a/b = a - floor(a/b)*b, a = this, b = other
 			}
 		} else if (other instanceof Float) {
 			// upcast float to complex
-			if (other.value == 0) { throw 'ZeroDivisionError: complex mod by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				other = new Complex(other.value,0);
 				return this.__sub__(other.__mul__(this.__floordiv__(other))); //remainder of a/b = a - floor(a/b)*b, a = this, b = other
 			}
 		} else if (other instanceof Complex) {
-			if ((other.real == 0) && (other.imag == 0)) { throw 'ZeroDivisionError: complex mod by zero'; }
+			if ((other.real == 0) && (other.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				return this.__sub__(other.__mul__(this.__floordiv__(other))); //remainder of a/b = a - floor(a/b)*b, a = this, b = other
 			}
@@ -1180,20 +1180,20 @@ class Complex extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to complex
-			if ((this.real == 0) && (this.imag == 0)) { throw 'ZeroDivisionError: complex mod by zero'; }
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				other = new Complex(other.value,0);
 				return other.__sub__(this.__mul__(other.__floordiv__(this))); //remainder of a/b = a - floor(a/b)*b, a = other, b = this
 			}
 		} else if (other instanceof Float) {
 			// upcast float to complex
-			if ((this.real == 0) && (this.imag == 0)) { throw 'ZeroDivisionError: complex mod by zero'; }
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				other = new Complex(other.value,0);
 				return other.__sub__(this.__mul__(other.__floordiv__(this))); //remainder of a/b = a - floor(a/b)*b, a = other, b = this
 			}
 		} else if (other instanceof Complex) {
-			if ((this.real == 0) && (this.imag == 0)) { throw 'ZeroDivisionError: complex mod by zero'; }
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				return other.__sub__(this.__mul__(other.__floordiv__(this))); //remainder of a/b = a - floor(a/b)*b, a = other, b = this
 			}
@@ -1406,14 +1406,14 @@ class Complex extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to complex
-			if (other.value == 0) { throw 'ZeroDivisionError: complex div by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Complex( this.real / other.value , this.imag / other.value ); }
 		} else if (other instanceof Float) {
 			// upcast float to complex
-			if (other.value == 0) { throw 'ZeroDivisionError: complex div by zero'; }
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
 			else { return new Complex( this.real / other.value , this.imag / other.value ); }
 		} else if (other instanceof Complex) {
-			if ((other.real == 0) && (other.imag == 0)) { throw 'ZeroDivisionError: complex div by zero'; }
+			if ((other.real == 0) && (other.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				var newComplex: Complex = new Complex(0,0);
 				var den: number = Math.pow(other.real,2)+Math.pow(other.imag,2);
@@ -1431,7 +1431,7 @@ class Complex extends Numeric {
 
 		if (other instanceof Integer) {
 			// upcast integer to complex
-			if ((this.real == 0) && (this.imag == 0)) { throw 'ZeroDivisionError: complex div by zero'; }
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				var newComplex: Complex = new Complex(0,0);
 				var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);
@@ -1441,7 +1441,7 @@ class Complex extends Numeric {
 			}
 		} else if (other instanceof Float) {
 			// upcast float to complex
-			if ((this.real == 0) && (this.imag == 0)) { throw 'ZeroDivisionError: complex div by zero'; }
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				var newComplex: Complex = new Complex(0,0);
 				var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);
@@ -1450,7 +1450,7 @@ class Complex extends Numeric {
 				return newComplex;
 			}
 		} else if (other instanceof Complex) {
-			if ((this.real == 0) && (this.imag == 0)) { throw 'ZeroDivisionError: complex div by zero'; }
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
 			else {
 				var newComplex: Complex = new Complex(0,0);
 				var den: number = Math.pow(this.real,2)+Math.pow(this.imag,2);

@@ -59,6 +59,7 @@
 <script>
   function clearLogOut() {
     document.getElementById("logOut").value = '';
+    var fs = require('fs');
     fs.writeFile('TestFile.pyc','', function (err) {
       if (err) throw err;
       console.log('TestFile.pyc cleared.')

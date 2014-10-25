@@ -112,7 +112,7 @@ var Integer = (function (_super) {
     Integer.prototype.__rfloordiv__ = function (other) {
         if (other instanceof Integer) {
             if (this.value == 0) {
-                throw 'ZeroDivisionError: integer floordiv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Integer(Math.floor(other.value / this.value));
             }
@@ -131,7 +131,7 @@ var Integer = (function (_super) {
     Integer.prototype.__mod__ = function (other) {
         if (other instanceof Integer) {
             if (other.value == 0) {
-                throw 'ZeroDivisionError: integer mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Integer(this.value % other.value);
             }
@@ -149,7 +149,7 @@ var Integer = (function (_super) {
     Integer.prototype.__rmod__ = function (other) {
         if (other instanceof Integer) {
             if (this.value == 0) {
-                throw 'ZeroDivisionError: integer mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Integer(other.value % this.value);
             }
@@ -168,7 +168,7 @@ var Integer = (function (_super) {
     Integer.prototype.__divmod__ = function (other) {
         if (other instanceof Integer) {
             if (other.value == 0) {
-                throw 'ZeroDivisionError: integer divmod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var quotient = this.__floordiv__(other);
                 var remainder = this.__sub__(quotient.__mul__(other));
@@ -188,7 +188,7 @@ var Integer = (function (_super) {
     Integer.prototype.__rdivmod__ = function (other) {
         if (other instanceof Integer) {
             if (this.value == 0) {
-                throw 'ZeroDivisionError: integer divmod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var quotient = other.__floordiv__(this);
                 var remainder = other.__sub__(quotient.__mul__(this));
@@ -363,7 +363,7 @@ var Integer = (function (_super) {
     Integer.prototype.__truediv__ = function (other) {
         if (other instanceof Integer) {
             if (other.value == 0) {
-                throw 'ZeroDivisionError: integer truediv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(this.value / other.value);
             }
@@ -381,7 +381,7 @@ var Integer = (function (_super) {
     Integer.prototype.__rtruediv__ = function (other) {
         if (other instanceof Integer) {
             if (this.value == 0) {
-                throw 'ZeroDivisionError: integer truediv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(other.value / this.value);
             }
@@ -557,13 +557,13 @@ var Float = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to float
             if (other.value == 0) {
-                throw 'ZeroDivisionError: float floordiv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(Math.floor(this.value / other.value));
             }
         } else if (other instanceof Float) {
             if (other.value == 0) {
-                throw 'ZeroDivisionError: float floordiv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(Math.floor(this.value / other.value));
             }
@@ -580,13 +580,13 @@ var Float = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to float
             if (this.value == 0) {
-                throw 'ZeroDivisionError: float floordiv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(Math.floor(other.value / this.value));
             }
         } else if (other instanceof Float) {
             if (this.value == 0) {
-                throw 'ZeroDivisionError: float floordiv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(Math.floor(other.value / this.value));
             }
@@ -604,13 +604,13 @@ var Float = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to float
             if (other.value == 0) {
-                throw 'ZeroDivisionError: float mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(this.value % other.value);
             }
         } else if (other instanceof Float) {
             if (other.value == 0) {
-                throw 'ZeroDivisionError: float mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(this.value % other.value);
             }
@@ -627,13 +627,13 @@ var Float = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to float
             if (this.value == 0) {
-                throw 'ZeroDivisionError: float mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(other.value % this.value);
             }
         } else if (other instanceof Float) {
             if (this.value == 0) {
-                throw 'ZeroDivisionError: float mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(other.value % this.value);
             }
@@ -651,7 +651,7 @@ var Float = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to float
             if (other.value == 0) {
-                throw 'ZeroDivisionError: float divmod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 other = new Float(other.value);
                 var quotient = this.__floordiv__(other);
@@ -660,7 +660,7 @@ var Float = (function (_super) {
             }
         } else if (other instanceof Float) {
             if (other.value == 0) {
-                throw 'ZeroDivisionError: float divmod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var quotient = this.__floordiv__(other);
                 var remainder = this.__sub__(quotient.__mul__(other));
@@ -679,7 +679,7 @@ var Float = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to float
             if (this.value == 0) {
-                throw 'ZeroDivisionError: float mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 other = new Float(other.value);
                 var quotient = other.__floordiv__(this);
@@ -688,7 +688,7 @@ var Float = (function (_super) {
             }
         } else if (other instanceof Float) {
             if (this.value == 0) {
-                throw 'ZeroDivisionError: float mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var quotient = other.__floordiv__(this);
                 var remainder = other.__sub__(quotient.__mul__(this));
@@ -855,13 +855,13 @@ var Float = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to float
             if (other.value == 0) {
-                throw 'ZeroDivisionError: float div by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(this.value / other.value);
             }
         } else if (other instanceof Float) {
             if (other.value == 0) {
-                throw 'ZeroDivisionError: float div by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(this.value / other.value);
             }
@@ -878,13 +878,13 @@ var Float = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to float
             if (this.value == 0) {
-                throw 'ZeroDivisionError: float div by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(other.value / this.value);
             }
         } else if (other instanceof Float) {
             if (this.value == 0) {
-                throw 'ZeroDivisionError: float div by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Float(other.value / this.value);
             }
@@ -1072,20 +1072,20 @@ var Complex = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to complex
             if (other.value == 0) {
-                throw 'ZeroDivisionError: complex floordiv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Complex(Math.floor(this.real / other.value), Math.floor(this.imag / other.value));
             }
         } else if (other instanceof Float) {
             // upcast float to complex
             if (other.value == 0) {
-                throw 'ZeroDivisionError: complex floordiv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Complex(Math.floor(this.real / other.value), Math.floor(this.imag / other.value));
             }
         } else if (other instanceof Complex) {
             if ((other.real == 0) && (other.imag == 0)) {
-                throw 'ZeroDivisionError: complex floordiv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var newComplex = new Complex(0, 0);
                 var den = Math.pow(other.real, 2) + Math.pow(other.imag, 2);
@@ -1104,7 +1104,7 @@ var Complex = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to complex
             if ((this.real == 0) && (this.imag == 0)) {
-                throw 'ZeroDivisionError: complex floordiv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var newComplex = new Complex(0, 0);
                 var den = Math.pow(this.real, 2) + Math.pow(this.imag, 2);
@@ -1115,7 +1115,7 @@ var Complex = (function (_super) {
         } else if (other instanceof Float) {
             // upcast float to complex
             if ((this.real == 0) && (this.imag == 0)) {
-                throw 'ZeroDivisionError: complex floordiv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var newComplex = new Complex(0, 0);
                 var den = Math.pow(this.real, 2) + Math.pow(this.imag, 2);
@@ -1125,7 +1125,7 @@ var Complex = (function (_super) {
             }
         } else if (other instanceof Complex) {
             if ((this.real == 0) && (this.imag == 0)) {
-                throw 'ZeroDivisionError: complex floordiv by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var newComplex = new Complex(0, 0);
                 var den = Math.pow(this.real, 2) + Math.pow(this.imag, 2);
@@ -1145,7 +1145,7 @@ var Complex = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to complex
             if (other.value == 0) {
-                throw 'ZeroDivisionError: complex mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 other = new Complex(other.value, 0);
                 return this.__sub__(other.__mul__(this.__floordiv__(other)));
@@ -1153,14 +1153,14 @@ var Complex = (function (_super) {
         } else if (other instanceof Float) {
             // upcast float to complex
             if (other.value == 0) {
-                throw 'ZeroDivisionError: complex mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 other = new Complex(other.value, 0);
                 return this.__sub__(other.__mul__(this.__floordiv__(other)));
             }
         } else if (other instanceof Complex) {
             if ((other.real == 0) && (other.imag == 0)) {
-                throw 'ZeroDivisionError: complex mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return this.__sub__(other.__mul__(this.__floordiv__(other)));
             }
@@ -1175,7 +1175,7 @@ var Complex = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to complex
             if ((this.real == 0) && (this.imag == 0)) {
-                throw 'ZeroDivisionError: complex mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 other = new Complex(other.value, 0);
                 return other.__sub__(this.__mul__(other.__floordiv__(this)));
@@ -1183,14 +1183,14 @@ var Complex = (function (_super) {
         } else if (other instanceof Float) {
             // upcast float to complex
             if ((this.real == 0) && (this.imag == 0)) {
-                throw 'ZeroDivisionError: complex mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 other = new Complex(other.value, 0);
                 return other.__sub__(this.__mul__(other.__floordiv__(this)));
             }
         } else if (other instanceof Complex) {
             if ((this.real == 0) && (this.imag == 0)) {
-                throw 'ZeroDivisionError: complex mod by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return other.__sub__(this.__mul__(other.__floordiv__(this)));
             }
@@ -1397,20 +1397,20 @@ var Complex = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to complex
             if (other.value == 0) {
-                throw 'ZeroDivisionError: complex div by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Complex(this.real / other.value, this.imag / other.value);
             }
         } else if (other instanceof Float) {
             // upcast float to complex
             if (other.value == 0) {
-                throw 'ZeroDivisionError: complex div by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 return new Complex(this.real / other.value, this.imag / other.value);
             }
         } else if (other instanceof Complex) {
             if ((other.real == 0) && (other.imag == 0)) {
-                throw 'ZeroDivisionError: complex div by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var newComplex = new Complex(0, 0);
                 var den = Math.pow(other.real, 2) + Math.pow(other.imag, 2);
@@ -1429,7 +1429,7 @@ var Complex = (function (_super) {
         if (other instanceof Integer) {
             // upcast integer to complex
             if ((this.real == 0) && (this.imag == 0)) {
-                throw 'ZeroDivisionError: complex div by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var newComplex = new Complex(0, 0);
                 var den = Math.pow(this.real, 2) + Math.pow(this.imag, 2);
@@ -1440,7 +1440,7 @@ var Complex = (function (_super) {
         } else if (other instanceof Float) {
             // upcast float to complex
             if ((this.real == 0) && (this.imag == 0)) {
-                throw 'ZeroDivisionError: complex div by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var newComplex = new Complex(0, 0);
                 var den = Math.pow(this.real, 2) + Math.pow(this.imag, 2);
@@ -1450,7 +1450,7 @@ var Complex = (function (_super) {
             }
         } else if (other instanceof Complex) {
             if ((this.real == 0) && (this.imag == 0)) {
-                throw 'ZeroDivisionError: complex div by zero';
+                return new Err('ZeroDivisionError', 'throw');
             } else {
                 var newComplex = new Complex(0, 0);
                 var den = Math.pow(this.real, 2) + Math.pow(this.imag, 2);

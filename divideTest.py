@@ -14,3 +14,5 @@ print('Divide by Zero Test ||||||||||||||||||||||||||||||||||||||||||||||')
 divide(2, 0)
 print('Divide with Strings Test||||||||||||||||||||||||||||||||||||||||||')
 divide("2", "1")
+print('Divide by Zero Outside of Try Block Test |||||||||||||||||||||||||')
+2/0
