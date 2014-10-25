@@ -639,8 +639,7 @@ var CodeObject = (function () {
         if (TOS == 'self') {
             Stack.push(this.self[attr]);
         } else if (attr.replace(/__/g, '') in builtIns) {
-            Stack.push(attr.replace(/__/g, ''));
-            Stack.push(TOS);
+            throw 'Cannot handle attribute calls like this.';
         } else if (TOS instanceof classObject) {
             Stack.push(TOS.methods[attr]);
         } else {
