@@ -1280,15 +1280,7 @@ class Complex extends Numeric {
 	}
 
 	public pol2cart(r: number, theta: number) {
-
-		// var tan_theta: number = Math.tan(theta);
-		// var sign: number = 1;
-		// if ((theta<Math.PI/2) || (theta>Math.PI/2)) {
-		// 	sign = -1;
-		// }
-		// var real_part: number = sign*r/Math.sqrt(1+Math.pow(tan_theta,2));
-		// var imag_part: number = real_part*tan_theta;
-		// return new Complex(real_part,imag_part);
+		
 		return new Complex(r*Math.cos(theta),r*Math.sin(theta));
 
 	}
