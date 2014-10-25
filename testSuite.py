@@ -158,7 +158,6 @@ while i < len(tests):
         print(complex(a))
         print(int(a))
         print(float(a))
-        print(coerce(a,b))
     i = i + 1
 #tests rest of arithmetic builtins
 tests = [[3,-1-2j],[3.5,-1-2j],[3+4j,-1-2j]]
@@ -182,7 +181,13 @@ while i < len(tests):
         print(abs(a))
         print(complex(a))
     i = i + 1
-
+#testing coercion
+print(coerce(1,2))
+print(coerce(1.3,2))
+print(coerce(1.3,2.5))
+print(coerce(1+1j,2))
+print(coerce(1+1j,2.5))
+print(coerce(1+1j,2+2j))
 
 
 # Expected Output
