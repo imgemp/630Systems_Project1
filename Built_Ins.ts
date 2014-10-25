@@ -206,9 +206,9 @@ function str(object: any): string {
 					return result;
 				}
 			} else {
-				if ((object[i] !== undefined) && (object[i] !== null)) {
+				if ((object !== undefined) && (object !== null)) {
 					try {
-						return object[i].toString();
+						return object.toString();
 					} catch(err) {
 						throw err;
 					}
