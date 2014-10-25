@@ -103,9 +103,13 @@ b = complex(real=2,imag=2);
 print(a+b);
 #tests arithmetic builtins
 tests = [[3,-2],[3,-2.0],[3,-1-2j],[3.0,-2.0],[3.0,-1-2j],[3+4j,-1-2j]]
-for [a,b] in tests:
-    for i in xrange(2):
+i = 0
+while i < len(tests):
+    [b,a] = tests[i]
+    j = 0
+    while j < 2:
         a,b = b,a
+        j = j + 1
         print(a.__add__(b))
         print(a.__sub__(b))
         print(a.__mul__(b))
