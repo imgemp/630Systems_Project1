@@ -178,14 +178,14 @@ function str(object: any): string {
 				try { err = 'str('+object[i].constructor.name+') NotImplemented'; }
 				catch(err) { err = 'Object not defined.'; }
 				if (object[i] instanceof Numeric) {
-					result += object[i].__str__()+',';
+					result += str(object[i])+',';
 					if (result == 'NotImplemented') {
 						throw err;
 					}
 				} else {
 					if ((object[i] !== undefined) && (object[i] !== null)) {
 						try {
-							return object[i].toString();
+							return str(object[i]);
 						} catch(err) {
 							throw err;
 						}
