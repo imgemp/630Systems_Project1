@@ -1281,14 +1281,15 @@ class Complex extends Numeric {
 
 	public pol2cart(r: number, theta: number) {
 
-		var tan_theta: number = Math.tan(theta);
-		var sign: number = 1;
-		if ((theta<Math.PI/2) || (theta>Math.PI/2)) {
-			sign = -1;
-		}
-		var real_part: number = sign*r/Math.sqrt(1+Math.pow(tan_theta,2));
-		var imag_part: number = real_part*tan_theta;
-		return new Complex(real_part,imag_part);
+		// var tan_theta: number = Math.tan(theta);
+		// var sign: number = 1;
+		// if ((theta<Math.PI/2) || (theta>Math.PI/2)) {
+		// 	sign = -1;
+		// }
+		// var real_part: number = sign*r/Math.sqrt(1+Math.pow(tan_theta,2));
+		// var imag_part: number = real_part*tan_theta;
+		// return new Complex(real_part,imag_part);
+		return new Complex(r*Math.cos(theta),r*Math.sin(theta));
 
 	}
 
@@ -1298,19 +1299,19 @@ class Complex extends Numeric {
 		if (other instanceof Integer) {
 			// upcast integer to complex
 			var this_pol: any = this.cart2pol(this);
-			var result_r: number = this_pol[0];
+			var result_r: number = Math.pow(this_pol[0],other.value);
 			var result_theta: number = this_pol[1]*other.value;
 			return this.pol2cart(result_r,result_theta);
 		} else if (other instanceof Float) {
 			// upcast float to complex
 			var this_pol: any = this.cart2pol(this);
-			var result_r: number = this_pol[0];
+			var result_r: number = Math.pow(this_pol[0],other.value);
 			var result_theta: number = this_pol[1]*other.value;
 			return this.pol2cart(result_r,result_theta);
 		} else if (other instanceof Complex) {
 			var this_pol: any = this.cart2pol(this);
-			var result_r: number = this_pol[0]*Math.exp(-this_pol[1]*other.imag);
-			var result_theta: number = this_pol[1]*other.real;
+			var result_r: number = Math.pow(this_pol[0],other.real)*Math.exp(-this_pol[1]*other.imag);
+			var result_theta: number = Math.log(this_pol[0])*other.imag+this_pol[1]*other.real;
 			return this.pol2cart(result_r,result_theta);
 		} else if (other instanceof Long) {
 			return 'NotImplemented';
@@ -1324,20 +1325,20 @@ class Complex extends Numeric {
 			// upcast integer to complex
 			var other_theta: number = 0;
 			if (other.value<0) { other_theta = Math.PI; }
-			var result_r: number = Math.abs(other.value)*Math.exp(-other_theta*this.imag);
-			var result_theta: number = other_theta*this.real;
+			var result_r: number = Math.pow(Math.abs(other.value),this.real)*Math.exp(-other_theta*this.imag);
+			var result_theta: number = Math.log(Math.abs(other.value))*this.imag+other_theta*this.real;
 			return this.pol2cart(result_r,result_theta);
 		} else if (other instanceof Float) {
 			// upcast float to complex
 			var other_theta: number = 0;
 			if (other.value<0) { other_theta = Math.PI; }
-			var result_r: number = Math.abs(other.value)*Math.exp(-other_theta*this.imag);
-			var result_theta: number = other_theta*this.real;
+			var result_r: number = Math.pow(Math.abs(other.value),this.real)*Math.exp(-other_theta*this.imag);
+			var result_theta: number = Math.log(Math.abs(other.value))*this.imag+other_theta*this.real;
 			return this.pol2cart(result_r,result_theta);
 		} else if (other instanceof Complex) {
 			var other_pol: any = this.cart2pol(other);
-			var result_r: number = other_pol[0]*Math.exp(-other_pol[1]*this.imag);
-			var result_theta: number = other_pol[1]*this.real;
+			var result_r: number = Math.pow(other_pol[0],this.real)*Math.exp(-other_pol[1]*this.imag);
+			var result_theta: number = Math.log(other_pol[0])*this.imag+other_pol[1]*this.real;
 			return this.pol2cart(result_r,result_theta);
 		} else if (other instanceof Long) {
 			return 'NotImplemented';
