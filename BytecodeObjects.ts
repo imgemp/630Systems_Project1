@@ -752,6 +752,8 @@ class CodeObject {
         // argc is the operand from the bytecode (low bit = number of positional args, high bit = number of keyword args)
         var numArgs = this.code[this.pc+1]; // # of positional args
         var numKwargs = this.code[this.pc+2]; // # of keyword args
+        console.log(numArgs);
+        console.log(numKwargs);
         // Retrieve arguments from Stack and add to varnames
         var args = [];
         var kwargs = [];
