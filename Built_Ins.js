@@ -209,7 +209,7 @@ function staticmethod() {
 function str(object) {
     var err;
     if (object !== null) {
-        if (object.hasOwnProperty('length')) {
+        if ((object.hasOwnProperty('length')) && (typeof object !== 'string')) {
             for (var i = 0; i < object.length; i++) {
                 try  {
                     err = 'str(' + object[i].constructor.name + ') NotImplemented';

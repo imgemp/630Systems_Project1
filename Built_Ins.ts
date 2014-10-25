@@ -171,7 +171,7 @@ function staticmethod(){}
 function str(object: any): string {
 	var err: string;
 	if (object !== null) {
-		if (object.hasOwnProperty('length')) {
+		if ((object.hasOwnProperty('length')) && (typeof object !== 'string')) {
 			for (var i=0;i<object.length;i++) {
 				try { err = 'str('+object[i].constructor.name+') NotImplemented'; }
 				catch(err) { err = 'Object not defined.'; }
