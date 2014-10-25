@@ -616,7 +616,7 @@ class CodeObject {
         var TOS = Stack.pop();
         printToOutput('TOS='+TOS);
         if (TOS=='self') { Stack.push(this.self[attr]); }
-        else if (attr.replace(/__/g,'') in builtIns) { Stack.push(attr); Stack.push(TOS); }
+        else if (attr.replace(/__/g,'') in builtIns) { Stack.push(attr.replace(/__/g,'')); Stack.push(TOS); }
         else if (TOS instanceof classObject) { Stack.push(TOS.methods[attr]); }
         else { Stack.push(TOS[attr]); }
         this.pc += 3;
