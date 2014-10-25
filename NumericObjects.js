@@ -1201,6 +1201,79 @@ var Complex = (function (_super) {
         }
     };
 
+    // Divmod
+    Complex.prototype.__divmod__ = function (other) {
+        if (other instanceof Integer) {
+            // upcast integer to complex
+            if (other.value == 0) {
+                return new Err('ZeroDivisionError', 'throw');
+            } else {
+                other = new Complex(other.value, 0);
+                var quotient = this.__floordiv__(other);
+                var remainder = this.__sub__(quotient.__mul__(other));
+                return [quotient, remainder];
+            }
+        } else if (other instanceof Float) {
+            // upcast float to complex
+            if (other.value == 0) {
+                return new Err('ZeroDivisionError', 'throw');
+            } else {
+                other = new Complex(other.value, 0);
+                var quotient = this.__floordiv__(other);
+                var remainder = this.__sub__(quotient.__mul__(other));
+                return [quotient, remainder];
+            }
+        } else if (other instanceof Complex) {
+            if ((other.real == 0) && (other.imag == 0)) {
+                return new Err('ZeroDivisionError', 'throw');
+            } else {
+                var quotient = this.__floordiv__(other);
+                var remainder = this.__sub__(quotient.__mul__(other));
+                return [quotient, remainder];
+            }
+        } else if (other instanceof Long) {
+            return 'NotImplemented';
+        } else {
+            return 'NotImplemented';
+        }
+    };
+
+    Complex.prototype.__rdivmod__ = function (other) {
+        if (other instanceof Integer) {
+            // upcast integer to float
+            if ((this.real == 0) && (this.imag == 0)) {
+                return new Err('ZeroDivisionError', 'throw');
+            } else {
+                other = new Complex(other.value, 0);
+                var quotient = other.__floordiv__(this);
+                var remainder = other.__sub__(quotient.__mul__(this));
+                return [quotient, remainder];
+            }
+        } else if (other instanceof Float) {
+            // upcast integer to float
+            if ((this.real == 0) && (this.imag == 0)) {
+                return new Err('ZeroDivisionError', 'throw');
+            } else {
+                other = new Complex(other.value, 0);
+                var quotient = other.__floordiv__(this);
+                var remainder = other.__sub__(quotient.__mul__(this));
+                return [quotient, remainder];
+            }
+        } else if (other instanceof Complex) {
+            if ((this.real == 0) && (this.imag == 0)) {
+                return new Err('ZeroDivisionError', 'throw');
+            } else {
+                var quotient = other.__floordiv__(this);
+                var remainder = other.__sub__(quotient.__mul__(this));
+                return [quotient, remainder];
+            }
+        } else if (other instanceof Long) {
+            return 'NotImplemented';
+        } else {
+            return 'NotImplemented';
+        }
+    };
+
     // Cartesian-Polar Transformations
     Complex.prototype.cart2pol = function (cart) {
         var r = Math.sqrt(Math.pow(cart.real, 2) + Math.pow(cart.imag, 2));

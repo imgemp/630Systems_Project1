@@ -1203,6 +1203,73 @@ class Complex extends Numeric {
 
 	}
 
+	// Divmod
+	public __divmod__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to complex
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
+			else {
+				other = new Complex(other.value,0);
+				var quotient: Complex = this.__floordiv__(other);
+				var remainder: Complex = this.__sub__(quotient.__mul__(other));
+				return [quotient,remainder];
+			}
+		} else if (other instanceof Float) {
+			// upcast float to complex
+			if (other.value == 0) { return new Err('ZeroDivisionError','throw'); }
+			else {
+				other = new Complex(other.value,0);
+				var quotient: Complex = this.__floordiv__(other);
+				var remainder: Complex = this.__sub__(quotient.__mul__(other));
+				return [quotient,remainder];
+			}
+		} else if (other instanceof Complex) {
+			if ((other.real == 0) && (other.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
+			else {
+				var quotient: Complex = this.__floordiv__(other);
+				var remainder: Complex = this.__sub__(quotient.__mul__(other));
+				return [quotient,remainder];
+			}
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
+	public __rdivmod__(other: any): any {
+
+		if (other instanceof Integer) {
+			// upcast integer to float
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
+			else {
+				other = new Complex(other.value,0);
+				var quotient: Complex = other.__floordiv__(this);
+				var remainder: Complex = other.__sub__(quotient.__mul__(this));
+				return [quotient,remainder];
+			}
+		} else if (other instanceof Float) {
+			// upcast integer to float
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
+			else {
+				other = new Complex(other.value,0);
+				var quotient: Complex = other.__floordiv__(this);
+				var remainder: Complex = other.__sub__(quotient.__mul__(this));
+				return [quotient,remainder];
+			}
+		} else if (other instanceof Complex) {
+			if ((this.real == 0) && (this.imag == 0)) { return new Err('ZeroDivisionError','throw'); }
+			else {
+				var quotient: Complex = other.__floordiv__(this);
+				var remainder: Complex = other.__sub__(quotient.__mul__(this));
+				return [quotient,remainder];
+			}
+		} else if (other instanceof Long) {
+			return 'NotImplemented';
+		} else { return 'NotImplemented'; }
+
+	}
+
 	// Cartesian-Polar Transformations
 	public cart2pol(cart: Complex): any {
 
