@@ -101,8 +101,8 @@ print(b)
 a = complex(real=1);
 b = complex(real=2,imag=2);
 print(a+b);
-#tests arithmetic builtins
-tests = [[3,-2],[3,-2.0],[3,-1-2j],[3.0,-2.0],[3.0,-1-2j],[3+4j,-1-2j]]
+#tests integer only arithmetic builtins
+tests = [[3,-2]]
 i = 0
 while i < len(tests):
     [b,a] = tests[i]
@@ -134,7 +134,32 @@ while i < len(tests):
         print(hex(a))
         print(index(a))
         print(coerce(a,b))
-
+    i = i + 1
+#tests other arithmetic builtins
+tests = [[3,-2.0],[3,-1-2j],[3.0,-2.0],[3.0,-1-2j],[3+4j,-1-2j]]
+i = 0
+while i < len(tests):
+    [b,a] = tests[i]
+    j = 0
+    while j < 2:
+        a,b = b,a
+        j = j + 1
+        print(a+b)
+        print(a-b)
+        print(a*b)
+        print(a//b)
+        print(a%b)
+        print(divmod(a,b))
+        print(a**b)
+        print(a/b)
+        print(-a)
+        print(+a)
+        print(abs(a))
+        print(complex(a))
+        print(int(a))
+        print(float(a))
+        print(coerce(a,b))
+    i = i + 1
 
 
 # Expected Output
