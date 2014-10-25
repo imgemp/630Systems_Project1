@@ -105,7 +105,8 @@ print(a+b);
 tests = [[3,2]]
 i = 0
 while i < len(tests):
-    [b,a] = tests[i]
+    b = tests[i][0]
+    a = tests[i][1]
     j = 0
     print('a='+str(a))
     print('b='+str(b))
@@ -142,7 +143,8 @@ while i < len(tests):
 tests = [[3,2.5],[3.5,2.5]]
 i = 0
 while i < len(tests):
-    [b,a] = tests[i]
+    b = tests[i][0]
+    a = tests[i][1]
     j = 0
     while j < 2:
         a,b = b,a
@@ -166,7 +168,8 @@ while i < len(tests):
 tests = [[3,-1-2j],[3.5,-1-2j],[3+4j,-1-2j]]
 i = 0
 while i < len(tests):
-    [b,a] = tests[i]
+    b = tests[i][0]
+    a = tests[i][1]
     j = 0
     while j < 2:
         a,b = b,a
