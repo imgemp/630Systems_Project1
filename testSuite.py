@@ -108,12 +108,8 @@ while i < len(tests):
     b = tests[i][0]
     a = tests[i][1]
     j = 0
-    print('a='+str(a))
-    print('b='+str(b))
     while j < 2:
         a,b = b,a
-        print('a='+str(a))
-        print('b='+str(b))
         j = j + 1
         print(str(a)+'+'+str(b)+'='+str(a+b))
         print(str(a)+'-'+str(b)+'='+str(a-b))
@@ -128,15 +124,15 @@ while i < len(tests):
         print(str(a)+'^'+str(b)+'='+str(a^b))
         print(str(a)+'|'+str(b)+'='+str(a|b))
         print(str(a)+'/'+str(b)+'='+str(a/b))
-        print(str(a)+'neg'+str(b)+'='+str(-a))
-        print(str(a)+'pos'+str(b)+'='+str(+a))
-        print(str(a)+'abs'+str(b)+'='+str(abs(a)))
-        print(str(a)+'~'+str(b)+'='+str(~a))
-        print(str(a)+'complex'+str(b)+'='+str(complex(a)))
-        print(str(a)+'int'+str(b)+'='+str(int(a)))
-        print(str(a)+'float'+str(b)+'='+str(float(a)))
-        print(str(a)+'oct'+str(b)+'='+str(oct(a)))
-        print(str(a)+'hex'+str(b)+'='+str(hex(a)))
+        print('neg'+str(a)+'='+str(-a))
+        print('pos'+str(a)+'='+str(+a))
+        print('abs'+str(a)+'='+str(abs(a)))
+        print('~'+str(a)+'='+str(~a))
+        print('complex'+str(a)+'='+str(complex(a)))
+        print('int'+str(a)+'='+str(int(a)))
+        print('float'+str(a)+'='+str(float(a)))
+        print('oct'+str(a)+'='+str(oct(a)))
+        print('hex'+str(a)+'='+str(hex(a)))
         print(str(a)+'coerce'+str(b)+'='+str(coerce(a,b)))
     i = i + 1
 #tests other non complex arithmetic builtins
@@ -149,20 +145,20 @@ while i < len(tests):
     while j < 2:
         a,b = b,a
         j = j + 1
-        print(a+b)
-        print(a-b)
-        print(a*b)
-        print(a//b)
-        print(a%b)
-        print(divmod(a,b))
-        print(a**b)
-        print(a/b)
-        print(-a)
-        print(+a)
-        print(abs(a))
-        print(complex(a))
-        print(int(a))
-        print(float(a))
+        print(str(a)+'+'+str(b)+'='+str(a+b))
+        print(str(a)+'-'+str(b)+'='+str(a-b))
+        print(str(a)+'*'+str(b)+'='+str(a*b))
+        print(str(a)+'//'+str(b)+'='+str(a//b))
+        print(str(a)+'%'+str(b)+'='+str(a%b))
+        print(str(a)+'divmod'+str(b)+'='+str(divmod(a,b)))
+        print(str(a)+'**'+str(b)+'='+str(a**b))
+        print(str(a)+'/'+str(b)+'='+str(a/b))
+        print('neg'+str(a)+'='+str(-a))
+        print('pos'+str(a)+'='+str(+a))
+        print('abs'+str(a)+'='+str(abs(a)))
+        print('complex'+str(a)+'='+str(complex(a)))
+        print('int'+str(a)+'='+str(int(a)))
+        print('float'+str(a)+'='+str(float(a)))
     i = i + 1
 #tests rest of arithmetic builtins
 tests = [[3,-1-2j],[3.5,-1-2j],[3+4j,-1-2j]]
@@ -174,26 +170,26 @@ while i < len(tests):
     while j < 2:
         a,b = b,a
         j = j + 1
-        print(a+b)
-        print(a-b)
-        print(a*b)
-        print(a//b)
-        print(a%b)
-        print(divmod(a,b))
-        print(a**b)
-        print(a/b)
-        print(-a)
-        print(+a)
-        print(abs(a))
-        print(complex(a))
+        print(str(a)+'+'+str(b)+'='+str(a+b))
+        print(str(a)+'-'+str(b)+'='+str(a-b))
+        print(str(a)+'*'+str(b)+'='+str(a*b))
+        print(str(a)+'//'+str(b)+'='+str(a//b))
+        print(str(a)+'%'+str(b)+'='+str(a%b))
+        print(str(a)+'divmod'+str(b)+'='+str(divmod(a,b)))
+        print(str(a)+'**'+str(b)+'='+str(a**b))
+        print(str(a)+'/'+str(b)+'='+str(a/b))
+        print('neg'+str(a)+'='+str(-a))
+        print('pos'+str(a)+'='+str(+a))
+        print('abs'+str(a)+'='+str(abs(a)))
+        print('complex'+str(a)+'='+str(complex(a)))
     i = i + 1
 #testing coercion
-print(coerce(1,2))
-print(coerce(1.3,2))
-print(coerce(1.3,2.5))
-print(coerce(1+1j,2))
-print(coerce(1+1j,2.5))
-print(coerce(1+1j,2+2j))
+print(str(1)+'coerce'+str(2)+'='+str(coerce(1,2)))
+print(str(1.3)+'coerce'+str(2)+'='+str(coerce(1.3,2)))
+print(str(1.3)+'coerce'+str(2.5)+'='+str(coerce(1.3,2.5)))
+print(str(1+1j)+'coerce'+str(2)+'='+str(coerce(1+1j,2)))
+print(str(1+1j)+'coerce'+str(2.5)+'='+str(coerce(1+1j,2.5)))
+print(str(1+1j)+'coerce'+str(2+2j)+'='+str(coerce(1+1j,2+2j)))
 
 
 # Expected Output
