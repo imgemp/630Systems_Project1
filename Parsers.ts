@@ -50,7 +50,7 @@ function readInt32(bytecode:NodeBuffer, ptr:number, level:number) {
 function readInt64(bytecode:NodeBuffer, ptr:number, level:number) {
     var low = bytecode.readInt32LE(ptr);
     var high = bytecode.readInt32LE(ptr+4);
-    var val = low + Math.pow(2,16)*high;
+    var val = low + Math.pow(2,32)*high;
     var obj: Integer = new Integer(val);
     printToOutput(Array(level).join('\t') + val);
     return [ptr + 8, obj];
