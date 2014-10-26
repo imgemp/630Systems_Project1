@@ -48,8 +48,11 @@ function readInt32(bytecode:NodeBuffer, ptr:number, level:number) {
 }
 
 function readInt64(bytecode:NodeBuffer, ptr:number, level:number) {
-    printToOutput('Int64 Not implemented yet!');
-    var obj = 'Int64 Not implemented yet!';
+    var low = bytecode.readInt32LE(ptr);
+    var high = bytecode.readInt32LE(ptr+4);
+    var val = low + Math.pow(2,16)*high;
+    var obj: Integer = new Integer(val);
+    printToOutput(Array(level).join('\t') + val);
     return [ptr + 8, obj];
 }
 
@@ -70,9 +73,6 @@ function readFloat64(bytecode:NodeBuffer, ptr:number, level:number) {
 function readComplex32(bytecode:NodeBuffer, ptr:number, level:number) {
     var real = bytecode.readFloatLE(ptr);
     var imag = bytecode.readFloatLE(ptr+4);
-    printToOutput('complex32');
-    printToOutput('real='+real);
-    printToOutput('imag='+imag);
     var obj: Complex = new Complex(real,imag);
     return [ptr + 8, obj];
 }
@@ -80,9 +80,6 @@ function readComplex32(bytecode:NodeBuffer, ptr:number, level:number) {
 function readComplex64(bytecode:NodeBuffer, ptr:number, level:number) {
     var real = bytecode.readDoubleLE(ptr);
     var imag = bytecode.readDoubleLE(ptr+8);
-    printToOutput('complex64');
-    printToOutput('real='+real);
-    printToOutput('imag='+imag);
     var obj: Complex = new Complex(real,imag);
     return [ptr + 16, obj];
 }

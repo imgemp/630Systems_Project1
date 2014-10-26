@@ -31,15 +31,18 @@
     var reader = new FileReader();
     reader.onload = function (e) {
       // When this event fires, the data is ready.
-      console.log('Writing file to buffer...');
-      fileBuffer = new Buffer(e.target.result);
+      BlockStack = [];
+      Stack = [];
+      byteObject:any = {};
       var fs = require('fs');
-      fs.writeFile('TestFile.pyc',fileBuffer, function (err) {
+      fs.writeFile('TestFile.pyc','', function (err) {
         if (err) throw err;
-        runTestSuite('TestFile.pyc');
-        fs.writeFile('TestFile.pyc','', function (err) {
+        console.log('TestFile.pyc cleared.')
+        console.log('Writing file to buffer...');
+        fileBuffer = new Buffer(e.target.result);
+        fs.writeFile('TestFile.pyc',fileBuffer, function (err) {
           if (err) throw err;
-          console.log('TestFile.pyc cleared.')
+          runTestSuite('TestFile.pyc');
         });
       });
     };
@@ -59,14 +62,6 @@
 <script>
   function clearLogOut() {
     document.getElementById("logOut").value = '';
-    BlockStack = [];
-    Stack = [];
-    byteObject:any = {};
-    var fs = require('fs');
-    fs.writeFile('TestFile.pyc','', function (err) {
-      if (err) throw err;
-      console.log('TestFile.pyc cleared.')
-    });
   }
 </script>
 

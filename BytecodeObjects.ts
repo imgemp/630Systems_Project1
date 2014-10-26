@@ -119,14 +119,14 @@ class CodeObject {
     }
     public UNARY_NOT(){
         var TOS = getValue(Stack.pop());
-        TOS = !TOS;/////////////////////////////////////////////////////////////////////////
+        TOS = !TOS;
         Stack.push(TOS);
         this.pc += 1;
     }
     public UNARY_CONVERT(){
         var TOS = getValue(Stack.pop());
         TOS = TOS.toString(); // Not completely accurate
-        Stack.push(TOS);/////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS);
         this.pc += 1;
     }
     public UNARY_INVERT(){
@@ -180,7 +180,7 @@ class CodeObject {
     public BINARY_SUBSCR(){
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
-        Stack.push(TOS1[TOS]);/////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS1[TOS]);
         this.pc += 1;
     }
     //implements TOS = TOS1 // TOS
@@ -208,33 +208,33 @@ class CodeObject {
     // Implements TOS[:] = TOS1
     public SLICE_0(){ 
         var TOS = getValue(Stack.pop());
-        Stack.push(TOS.slice(0,TOS.length));/////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS.slice(0,TOS.length));
         this.pc += 1;
     }
     //Implements TOS1[TOS:] = TOS2
     public SLICE_1(){
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
-        Stack.push(TOS1.slice(TOS,TOS1.length));/////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS1.slice(TOS,TOS1.length));
         this.pc += 1;
     }
     public SLICE_2(){
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
-        Stack.push(TOS1.slice(0,TOS));/////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS1.slice(0,TOS));
         this.pc += 1;
     }
     public SLICE_3(){
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
         var TOS2 = getValue(Stack.pop());
-        Stack.push(TOS2.slice(TOS1,TOS));/////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS2.slice(TOS1,TOS));
         this.pc += 1;
     }
     public STORE_SLICE_0(){
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
-        for (var i=0; i<TOS.length; i++) { TOS[i] = TOS1[i]; }/////////////////////////////////////////////////////////////////////////
+        for (var i=0; i<TOS.length; i++) { TOS[i] = TOS1[i]; }
         Stack.push(TOS);
         this.pc += 1; 
     }
@@ -242,7 +242,7 @@ class CodeObject {
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
         var TOS2 = getValue(Stack.pop());
-        for (var i=TOS; i<TOS1.length; i++) { TOS1[i] = TOS2[i-TOS]; }/////////////////////////////////////////////////////////////////////////
+        for (var i=TOS; i<TOS1.length; i++) { TOS1[i] = TOS2[i-TOS]; }
         Stack.push(TOS1);
         this.pc += 1;
     }
@@ -250,7 +250,7 @@ class CodeObject {
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
         var TOS2 = getValue(Stack.pop());
-        for (var i=0; i<TOS; i++) { TOS1[i] = TOS2[i]; }/////////////////////////////////////////////////////////////////////////
+        for (var i=0; i<TOS; i++) { TOS1[i] = TOS2[i]; }
         Stack.push(TOS1);
         this.pc += 1;
     }
@@ -259,28 +259,28 @@ class CodeObject {
         var TOS1 = getValue(Stack.pop());
         var TOS2 = getValue(Stack.pop());
         var TOS3 = getValue(Stack.pop());
-        for (var i=TOS1; i<TOS; i++) { TOS2[i] = TOS3[i-TOS1]; }/////////////////////////////////////////////////////////////////////////
+        for (var i=TOS1; i<TOS; i++) { TOS2[i] = TOS3[i-TOS1]; }
         Stack.push(TOS2);
         this.pc += 1;
     }
     public DELETE_SLICE_0(){
         var TOS = getValue(Stack.pop());
         TOS.splice(0,TOS.length);
-        Stack.push(TOS);/////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS);
         this.pc += 1;
     }
     public DELETE_SLICE_1(){
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
         TOS1.splice(TOS,TOS1.length);
-        Stack.push(TOS1);/////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS1);
         this.pc += 1;
     }
     public DELETE_SLICE_2(){ 
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
         TOS1.splice(0,TOS);
-        Stack.push(TOS1);/////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS1);
         this.pc += 1;
     }
     public DELETE_SLICE_3(){
@@ -288,14 +288,14 @@ class CodeObject {
         var TOS1 = getValue(Stack.pop());
         var TOS2 = getValue(Stack.pop());
         TOS2.splice(TOS1,TOS);
-        Stack.push(TOS2);/////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS2);
         this.pc += 1;
     }
     public STORE_MAP(){
         var val = getValue(Stack.pop());
         var key = getValue(Stack.pop());
         var dic = getValue(Stack.pop());
-        dic[key] = val;/////////////////////////////////////////////////////////////////////////
+        dic[key] = val;
         Stack.push(dic);
         this.pc += 1; 
     } public INPLACE_ADD(){
@@ -318,13 +318,13 @@ class CodeObject {
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
         var TOS2 = getValue(Stack.pop());
-        TOS1[TOS] = TOS2;/////////////////////////////////////////////////////////////////////////
+        TOS1[TOS] = TOS2;
         this.pc += 1; 
     }
     public DELETE_SUBSCR(){
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
-        delete TOS1[TOS];/////////////////////////////////////////////////////////////////////////
+        delete TOS1[TOS];
         this.pc += 1; 
     }
     public BINARY_LSHIFT(){ 
@@ -363,7 +363,7 @@ class CodeObject {
     public GET_ITER(){
         var TOS = getValue(Stack.pop());
         var TOS = TOS.iter();
-        Stack.push(TOS);/////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS);
         this.pc += 1;
     }
     public PRINT_EXPR(){ 
@@ -394,6 +394,7 @@ class CodeObject {
         this.pc += 1;
     }
     public PRINT_ITEM_TO(){ 
+        throw 'Opcode Not Implemented';
         if (isVerbose) {
             printToOutput('NOT WORKING - SHOULD PRINT TO FILE: --------------------- ',false);
         } else {
@@ -401,7 +402,8 @@ class CodeObject {
         }
         this.pc += 1; 
     }
-    public PRINT_NEWLINE_TO(){ 
+    public PRINT_NEWLINE_TO(){
+        throw 'Opcode Not Implemented'; 
         if (isVerbose) {
             printToOutput('NOT WORKING - SHOULD PRINT NEWLINE TO FILE: --------------------- ',false);
         } else {
@@ -430,8 +432,9 @@ class CodeObject {
         this.pc = block.end;
         BlockStack.push(block); 
     }
-    public WITH_CLEANUP(){ 
-        this.pc += 1; 
+    public WITH_CLEANUP(){
+        throw 'Opcode Not Implemented';
+        this.pc += 1;
     }
     public LOAD_LOCALS(){ 
         var locals = {};
@@ -452,12 +455,15 @@ class CodeObject {
     }
     // Implements 'from module import *'
     public IMPORT_STAR(){ 
+        throw 'Opcode Not Implemented';
         this.pc += 1; 
     }
     public EXEC_STMT(){ 
+        throw 'Opcode Not Implemented';
         this.pc += 1; 
     }
     public YIELD_VALUE(){ 
+        throw 'Opcode Not Implemented';
         this.pc += 1; 
     }
     public POP_BLOCK(){ 
@@ -468,6 +474,7 @@ class CodeObject {
         } else { this.pc += 1; }
     }
     public END_FINALLY(){ 
+        throw 'Opcode Not Implemented';
         this.pc += 1; 
     }
     // Creates a new class object
@@ -503,6 +510,7 @@ class CodeObject {
         this.pc += 3;
     } 
     public FOR_ITER(){
+        throw 'Opcode Not Implemented';
         var incrCounter = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         var TOS = Stack.pop();
         //if(!(TOS instanceof Iterator)){
@@ -523,6 +531,7 @@ class CodeObject {
        
     }
     public LIST_APPEND(){
+        throw 'Opcode Not Implemented';
         var value = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         this.pc += 3;
     }
@@ -599,7 +608,8 @@ class CodeObject {
         Stack.push(list);
         this.pc += 3; 
     } 
-    public BUILD_SET(){// NOT ON PYTHON DISASSEMBLE SITE //////////////////////////////////////////////////////////////////////////////////////////////
+    public BUILD_SET(){// NOT ON PYTHON DISASSEMBLE SITE /////////////////////
+        throw 'Opcode Not Implemented';
         var numItems = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         this.pc += 3;
     }
@@ -641,10 +651,12 @@ class CodeObject {
         this.pc += 3;
     } 
     public IMPORT_NAME (){ 
+        throw 'Opcode Not Implemented';
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         this.pc += 3; 
     }
     public IMPORT_FROM(){ 
+        throw 'Opcode Not Implemented';
         var index = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         this.pc += 3; 
     } 
@@ -688,6 +700,7 @@ class CodeObject {
     } 
     public CONTINUE_LOOP(){
         //start of loop(absolute)
+        throw 'Opcode Not Implemented';
         var start = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         this.pc = start; 
     }
@@ -936,35 +949,42 @@ class CodeObject {
     /* The next 3 opcodes must be contiguous and satisfy
        (CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
     public CALL_FUNCTION_VAR(){
+        throw 'Opcode Not Implemented';
         //number args + (number kwargs<<8)
         var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         this.pc += 3; 
     } 
     public CALL_FUNCTION_KW(){
+        throw 'Opcode Not Implemented';
         //number args + (number kwargs<<8)
         var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         this.pc += 3;
     } 
     public CALL_FUNCTION_VAR_KW(){ 
+        throw 'Opcode Not Implemented';
         //number args + (number kwargs<<8)
         var argc = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         this.pc += 3; 
     }
 
     public SETUP_WITH(){ 
+        throw 'Opcode Not Implemented';
         var delta = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         this.pc += 3;
     }
     /* Support for opargs more than 16 bits long */
     public EXTENDED_ARG(){
+        throw 'Opcode Not Implemented';
         var ext = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2];
         this.pc += 3; 
     }
     /***** have to determine what type of arguments these take *****/
     public SET_ADD(){ 
+        throw 'Opcode Not Implemented';
         this.pc += 3; 
     }
     public MAP_ADD(){ 
+        throw 'Opcode Not Implemented';
         this.pc += 3; 
     }
 }
