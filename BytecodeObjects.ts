@@ -988,7 +988,6 @@ class CodeObject {
         this.pc += 3; 
     }
 }
-
 // Defines class object
 class classObject{
     name: string;

@@ -203,6 +203,7 @@ enum OpCodeList {
     SET_ADD = 146,
     MAP_ADD = 147
 };
+<<<<<<< Updated upstream
 //Dictionary list of Python built-in functions
 var builtIns = {};
 builtIns['abs'] = abs;

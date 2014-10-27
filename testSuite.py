@@ -22,7 +22,11 @@ def foo3():
     return bar
 bar = foo3()
 print(bar())
+<<<<<<< HEAD
 #tests document string and function name properties
+=======
+#test for document string help
+>>>>>>> numerics
 """Other doc string"""
 def foo4():
     """Doc string test."""
