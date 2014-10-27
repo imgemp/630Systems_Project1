@@ -102,7 +102,7 @@ function eval1(){}
 function execfile(){}
 function file(){}
 function filter(){}
-function floater(){}
+function float(){}
 function format(){}
 function frozenset(){}
 function getattr(obj: any, attrName:String, dfault?:any): any{
@@ -122,7 +122,7 @@ function help(){}
 // function hex(){}
 function id(obj: any){}
 function input(){}
-function inter(){}
+function int(){}
 function isinstance(){}
 function issubclass(){}
 function iter(){}
@@ -131,7 +131,7 @@ function len(s:any): number{
 }
 function list(){}
 function locals(){}
-function longer(){}
+function long(){}
 function map(){}
 function max(){}
 function memoryview(){}
