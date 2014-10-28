@@ -509,7 +509,6 @@ class CodeObject {
         } else { this.pc += 1; }
     }
     public END_FINALLY(){ 
-        throw 'Opcode Not Implemented';
         this.pc += 1; 
     }
     // Creates a new class object
@@ -729,7 +728,6 @@ class CodeObject {
     } 
     public CONTINUE_LOOP(){
         //start of loop(absolute)
-        throw 'Opcode Not Implemented';
         var start = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         this.pc = start; 
     }

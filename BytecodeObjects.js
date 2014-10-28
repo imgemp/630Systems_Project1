@@ -505,7 +505,6 @@ var CodeObject = (function () {
         }
     };
     CodeObject.prototype.END_FINALLY = function () {
-        throw 'Opcode Not Implemented';
         this.pc += 1;
     };
 
@@ -784,7 +783,7 @@ var CodeObject = (function () {
         this.pc += 3;
     };
     CodeObject.prototype.CONTINUE_LOOP = function () {
-        throw 'Opcode Not Implemented';
+        //start of loop(absolute)
         var start = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc = start;
     };
