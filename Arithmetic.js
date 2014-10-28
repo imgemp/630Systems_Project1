@@ -1,7 +1,7 @@
 /// <reference path="Globals.ts" />
 /// <reference path="Log.ts" />
 /// <reference path="NumericObjects.ts" />
-// Addition
+// Addition of two numeric objects
 function add(x_this, y_other) {
     var err;
     try  {

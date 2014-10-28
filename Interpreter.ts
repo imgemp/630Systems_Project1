@@ -25,7 +25,7 @@ function parseBytecode(bytecode) {
 
     // Check Magic Number Against Python 2.7 (03f3 0d0a)
     var my_version = '32431310';
-    for (var j = 0; j < 4; j++) {
+    for (var j = 0; j < 8; j++) {
         if (magic_number[j] != my_version[j]) {
             printToOutput('Not right version!');
             return false;
@@ -63,7 +63,7 @@ function execBytecode(){
     }
 }
 
-// First function called to parse and exectute bytecode
+// First function called to parse and exectute the bytecode
 function interpretBytecode(bytecode:NodeBuffer) {
     // Parse Bytecode and Return Op Codes:
     if (parseBytecode(bytecode)) {

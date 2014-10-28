@@ -27,7 +27,7 @@ var Err = (function () {
     return Err;
 })();
 
-// Initiliaze global block stack
+// Initialize global block stack
 var BlockStack = [];
 
 // Assume verbose output requested
@@ -138,7 +138,7 @@ var OpCodeList;
     OpCodeList[OpCodeList["END_FINALLY"] = 88] = "END_FINALLY";
     OpCodeList[OpCodeList["BUILD_CLASS"] = 89] = "BUILD_CLASS";
 
-    //Opcodes from here have an argument HAVE_ARGUMENT 90
+    /**Opcodes from here have an argument: HAVE_ARGUMENT 90**/
     OpCodeList[OpCodeList["STORE_NAME"] = 90] = "STORE_NAME";
     OpCodeList[OpCodeList["DELETE_NAME"] = 91] = "DELETE_NAME";
     OpCodeList[OpCodeList["UNPACK_SEQUENCE"] = 92] = "UNPACK_SEQUENCE";
@@ -291,7 +291,4 @@ builtIns['xor'] = xor;
 builtIns['xrange'] = xrange;
 builtIns['zip'] = zip;
 builtIns['_import_'] = _import_;
-builtIns['apply'] = apply;
-builtIns['buffer'] = buffer;
 builtIns['coerce'] = coerce;
-builtIns['intern'] = intern;

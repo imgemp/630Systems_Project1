@@ -81,6 +81,7 @@ Once the bytecode has been fully parsed, the python interpreter begins to procee
 
 - Iterator objects are not implemented (i.e. for loops), however, while loops function as expected.\\
 - With blocks are not implemented.\\
+-There is no difference between inplace and binary arithmetic operations in our code. 
 - Imports are not implemented although our interface only allows a single .pyc file to be run at once, so it's not to be expected.\\
 - Sets and maps are not implemented.\\
 - A few other opcodes are not implemented as well, but we have yet to use some of these in our own extensive work with python so do not expect them to be major obstacles/downfalls.
@@ -114,11 +115,11 @@ We chose to treat the stack as a global object as opposed to maintaining a separ
 \\
 The heaviest opcode is undoubtedly the {\underline call function} opcode.  This op code is responsible for a series of operations including retrieving arguments off the stack, passing arguments to the function to be called, executing the corresponding function's op code list, and finally pushing the returned value to the stack.  It's interesting to note that python makes function calls to class objects directly instead of first retrieving the object's constructor ('\_\_init\_\_') as an attribute which is how it handles all other class method calls.  For this reason, we check to see if the function being called is actually a function object or if it is in fact a class object.  We also check to see if the function refers to a builtin such as float() or odd() which we have implemented directly in typescript.  Once the function has been identified, its argument names list is retrieved for comparison against the arguments supplied on the stack.  Keyword arguments, positional arguments, and default values are added to an argument list that will be used by the function.  The function is then called, either by executing its list of opcodes or by calling the builtin directly.  The returned value is then pushed onto the stack.  In the case of the class object, that object is also pushed back onto the stack and represents an initialized class instance.\\
 \\
-Since the interpreter level mechanisms behind Python's try-except, loops, and blocks are not explicitly documented, we designed our own implementation to handle exceptions and loops.  In our interpreter in addition to the regular stack, there is a global {\em block stack} that maintains individual blocks. Blocks hold properties defining their type (e.g. 'except') as well as a boolean flag indicating the state of the program. They also contain the size of the block which is important when breaking out of a block or continuing back to the beginning of a block. The program may raise an exception by constructing an error object and calling it's throw method. When an exception is thrown, the top of the block stack is temporarily popped and it's flag is set to true if the block is an exception block (e.g. type equals 'except').  If the block is not an exception block, the program is halted.  Otherwise, the program continues and is expected to encounter a pop block statement which pops a block, inspects it's flag, and updates the program counter to the start of the exception handler if the flag is true.
+Since the interpreter level mechanisms behind Python's try-except, loops, and blocks are not explicitly documented, we designed our own implementation to handle exceptions and loops.  In our interpreter in addition to the regular stack, there is a global {\em block stack} that maintains individual blocks. Blocks hold properties defining their type (e.g. 'except') as well as a boolean flag indicating the state of the program. They also contain the size of the block which is important when breaking out of a block. The program may raise an exception by constructing an error object and calling it's throw method. When an exception is thrown, the top of the block stack is temporarily popped and it's flag is set to true if the block is an exception block (e.g. type equals 'except').  If the block is not an exception block, the program is halted.  Otherwise, the program continues and is expected to encounter a pop block statement which pops a block, inspects it's flag, and updates the program counter to the start of the exception handler if the flag is true.
 
-\section{Browser Interface}
+\section{Browser Interface \& Testing}
 
-The browser interface is very simple.  The user may choose a single .pyc file to execute. The user has the option of viewing the interpreter operations in detail including opcode executions and stack manipulations or they can view just the output that is printed out and returned by the program.  {\em Run Interpreter} clears any bytecode in local storage and then interprets the new bytecode while the {\em Clear Output} button will clear the entire text area.\\
+The browser interface is very simple using a mix of basic html and javascript.  The user may choose a single .pyc file to execute. The user has the option of viewing the interpreter operations in detail including opcode executions and stack manipulations or they can view just the output that is printed out and returned by the program.  {\em Run Interpreter} clears any bytecode in local storage and then interprets the new bytecode while the {\em Clear Output} button will clear the entire text area.\\
 \\
 The interpreter is located at \verb!http://shaylyna.github.io/630Systems_Project1/!.  In order to run the test suite, simply choose the file \verb!testSuite.pyc!.  This file tests a number of operations outlined below:\\
 \\
@@ -140,21 +141,6 @@ The interpreter is located at \verb!http://shaylyna.github.io/630Systems_Project
 Our initial impression of python bytecode and the underlying mechanisms of the interpreter was complete bewilderment.  Documentation is sparse at best and very few references are available online.  Only a few rare enthusiasts have explored the machinery.  As we put together the bare skeleton of the interpreter and became more comfortable with its high level operations, we began to see the elegance of the design.  This impression lasted only temporarily.  Once we began to implement more complex features (e.g. classes, blocks, etc.), we discovered that the supposedly elegant design is really just a simplistic container for more the obscure, subtle operations happening inside the interpreter.  It appears as though the creators did their best to adhere to a simple design philosophy as long as they could until they were forced to abandon the approach for a more practical engineering effort.  Some of their final design choices still elude us.\\
 \\
  Although our learning curve was extremely shallow at first, we eventually ramped up to speed and started to understand the inner workings of the python bytecode and the interpreter.  The principles learned from this project are extremely valuable and we have already begun to apply some of them in our work outside of class.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

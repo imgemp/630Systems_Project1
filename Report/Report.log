@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  27 OCT 2014 18:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  27 OCT 2014 20:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -394,55 +394,62 @@ Underfull \hbox (badness 10000) in paragraph at lines 70--75
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 111--118
+Underfull \hbox (badness 10000) in paragraph at lines 112--119
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 111--118
+Underfull \hbox (badness 10000) in paragraph at lines 112--119
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 111--118
+Underfull \hbox (badness 10000) in paragraph at lines 112--119
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 121--137
+Underfull \hbox (badness 10000) in paragraph at lines 122--138
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 121--137
+Underfull \hbox (badness 10000) in paragraph at lines 122--138
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 121--137
+Underfull \hbox (badness 10000) in paragraph at lines 122--138
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 140--143
+Underfull \hbox (badness 10000) in paragraph at lines 141--144
 
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 161.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 147.
 [4]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 161.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 147.
  (./Report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 161.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 161.
-Package rerunfilecheck Info: File `Report.out' has not changed.
-(rerunfilecheck)             Checksum: DAE6A1C0B229C2C68A5806E4BF1803AF;666.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 161.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 147.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 147.
+
+
+Package rerunfilecheck Warning: File `Report.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `Report.out':
+(rerunfilecheck)             Before: DCCD0FA3FF906A00EA6B5D2CCAD5A02D;567
+(rerunfilecheck)             After:  8E3BC97F2631E4CD30B6D5D060B85665;679.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 147.
  ) 
 Here is how much of TeX's memory you used:
- 6405 strings out of 493117
- 92964 string characters out of 6135433
+ 6403 strings out of 493117
+ 92942 string characters out of 6135433
  184069 words of memory out of 5000000
- 9771 multiletter control sequences out of 15000+600000
+ 9769 multiletter control sequences out of 15000+600000
  11709 words of font info for 46 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  29i,12n,28p,1397b,325s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -453,10 +460,10 @@ usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></us
 r/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/
 local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/l
 ocal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on Report.pdf (4 pages, 108597 bytes).
+Output written on Report.pdf (4 pages, 109021 bytes).
 PDF statistics:
- 101 PDF objects out of 1000 (max. 8388607)
- 87 compressed objects within 1 object stream
+ 95 PDF objects out of 1000 (max. 8388607)
+ 81 compressed objects within 1 object stream
  16 named destinations out of 1000 (max. 500000)
- 89 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 73 words of extra memory for PDF output out of 10000 (max. 10000000)
 

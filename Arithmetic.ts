@@ -2,12 +2,15 @@
 /// <reference path="Log.ts" />
 /// <reference path="NumericObjects.ts" />
 
-// Addition
+// Addition of two numeric objects
 function add(x_this: any, y_other: any): any {
-
 	var err: string;
-	try { err = 'add('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; }
-	catch(err) { err = 'Input(s) not defined.'; }
+	try { 
+		err = 'add('+x_this.constructor.name+','+y_other.constructor.name+') NotImplemented'; 
+	}
+	catch(err) { 
+		err = 'Input(s) not defined.'; 
+	}
 	var result: any;
 	if (x_this instanceof Numeric) {
 		result = x_this.__add__(y_other);

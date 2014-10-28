@@ -22,11 +22,7 @@ def foo3():
     return bar
 bar = foo3()
 print(bar())
-<<<<<<< HEAD
-#tests document string and function name properties
-=======
 #test for document string help
->>>>>>> numerics
 """Other doc string"""
 def foo4():
     """Doc string test."""
@@ -196,7 +192,7 @@ print(str(1+1j)+' coerce '+str(2.5)+' = '+str(coerce(1+1j,2.5)))
 print(str(1+1j)+' coerce '+str(2+2j)+' = '+str(coerce(1+1j,2+2j)))
 
 
-# Expected Output
+# Expected Output of suite:
 # Hello 1
 # 4
 # 1

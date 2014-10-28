@@ -1,4 +1,5 @@
 /// <reference path="NumericObjects.ts" />
+// Will yield the value associated with a numeric object or just returns the object
 function getValue(object) {
     if (object instanceof Numeric) {
         if (object instanceof Complex) {
@@ -11,6 +12,7 @@ function getValue(object) {
     }
 }
 
+// Extracts the relevant arguments
 function getArgNames(func) {
     var reg = /\(([\s\S]*?)\)/;
     var args = reg.exec(func);
@@ -22,26 +24,17 @@ function getArgNames(func) {
     }
 }
 
-// console.log(getArgNames(getArgNames));
-// function abs(x: any): any{
-// 	if(x instanceof Complex){
-// 		var x2 = Math.pow(x.real,2);
-// 		var xi2 = Math.pow(x.imag,2);
-// 		return Math.sqrt((x2+xi2));
-// 	}else if ((x instanceof Integer) || (x instanceof Float) || (x instanceof Long)) {
-// 		return Math.abs(x);
-// 	}else{
-// 		return 'NotImplemented';
-// 	}
-// }
-//iterator
+//iterable check
 function all() {
+    throw 'Built-in Not Implemented';
 }
 
-//iterator
+//iterable check
 function any() {
+    throw 'Built-in Not Implemented';
 }
 function basestring() {
+    throw 'Built-in Not Implemented';
 }
 function bin(x) {
     if (x instanceof Integer) {
@@ -51,7 +44,7 @@ function bin(x) {
 function bool(x) {
     var xVal = x || false;
     if (xVal != false) {
-        if (xVal == 'None' || xVal == '') {
+        if (xVal == 'None' || xVal == '' || xVal == undefined || xVal == 0) {
             xVal = false;
         } else {
             xVal = true;
@@ -60,17 +53,20 @@ function bool(x) {
     return xVal;
 }
 function bytearray() {
+    throw 'Built-in Not Implemented';
 }
 function callable(obj) {
+    throw 'Built-in Not Implemented';
 }
 function chr(i) {
     if (i <= 255 && i >= 0) {
         return String.fromCharCode(i);
     } else {
-        return "ValueError";
+        throw "ValueError";
     }
 }
 function classmethod(func) {
+    throw 'Built-in Not Implemented';
 }
 function cmp(x, y) {
     if (x === y) {
@@ -82,33 +78,63 @@ function cmp(x, y) {
     }
 }
 function compile() {
+    throw 'Built-in Not Implemented';
 }
-
-// function complex(){}
 function delattr(obj, attrName) {
     delete obj.attrName;
 }
-function dict() {
+function dict(iter) {
+    throw 'Built-in Not Implemented';
 }
-function dir() {
+function dir(obj) {
+    throw 'Built-in Not Implemented';
+}
+function enumerate(seq, start) {
+    start = 0;
+    throw 'Built-in Not Implemented';
+}
+function eval1(express) {
+    throw 'Built-in Not Implemented';
+}
+function execfile(fileName) {
+    throw 'Built-in Not Implemented';
+}
+function file(name) {
+    throw 'Built-in Not Implemented';
 }
 
-// function divmod(){}
-function enumerate() {
+//iterable
+function filter(funct, iter) {
+    throw 'Built-in Not Implemented';
 }
-function eval1() {
+function format(value, format) {
+    var format = format || '';
+    if (format == '') {
+        value.str();
+    }
+    if (format == 'fill') {
+        throw 'Built-in Not Implemented';
+    }
+    if (format == 'align') {
+        throw 'Built-in Not Implemented';
+    }
+    if (format == 'sign') {
+        throw 'Built-in Not Implemented';
+    }
+    if (format == 'width') {
+        throw 'Built-in Not Implemented';
+    }
+    if (format == 'precision') {
+        throw 'Built-in Not Implemented';
+    }
+    if (format == 'type') {
+        throw 'Built-in Not Implemented';
+    }
 }
-function execfile() {
-}
-function file() {
-}
-function filter() {
-}
-function floater() {
-}
-function format() {
-}
-function frozenset() {
+
+//iterable
+function frozenset(iterable) {
+    throw 'Built-in Not Implemented';
 }
 function getattr(obj, attrName, dfault) {
     var dflt = dfault || false;
@@ -117,56 +143,72 @@ function getattr(obj, attrName, dfault) {
     } else if (dflt != false) {
         return dflt;
     } else {
-        return "AttributeError";
+        throw "AttributeError";
     }
 }
 function func_globals() {
+    throw 'Built-in Not Implemented';
 }
-function hashattr() {
+function hashattr(obj, name) {
+    try  {
+        getattr(obj, name);
+    } catch (err) {
+        return false;
+    }
+    return true;
 }
-function hash() {
+function hash(obj) {
+    throw 'Built-in Not Implemented';
 }
-function help() {
+function help(obj) {
+    throw 'Built-in Not Implemented';
 }
-
-// function hex(){}
 function id(obj) {
+    throw 'Built-in Not Implemented';
 }
 function input() {
-}
-function inter() {
+    throw 'Built-in Not Implemented';
 }
 function isinstance() {
+    throw 'Built-in Not Implemented';
 }
 function issubclass() {
+    throw 'Built-in Not Implemented';
 }
 function iter() {
+    throw 'Built-in Not Implemented';
 }
 function len(s) {
     return s.length;
 }
 function list() {
+    throw 'Built-in Not Implemented';
 }
 function locals() {
-}
-function longer() {
+    throw 'Built-in Not Implemented';
 }
 function map() {
+    throw 'Built-in Not Implemented';
 }
-function max() {
+function max(arg1, arg2) {
+    //not entirely correct
+    return Math.max(arg1, arg2);
 }
 function memoryview() {
+    throw 'Built-in Not Implemented';
 }
-function min() {
+function min(arg1, arg2) {
+    //not entirely correct
+    return Math.min(arg1, arg2);
 }
-function next() {
+function next(iter) {
+    throw 'Built-in Not Implemented';
 }
 function object() {
     return new Object;
 }
-
-// function oct(){}
-function open1() {
+function open1(name) {
+    throw 'Built-in Not Implemented';
 }
 function ord(c) {
     if (c.length > 1) {
@@ -175,37 +217,54 @@ function ord(c) {
         return c.charCodeAt(0);
     }
 }
-
-// function pow(x, y, z?){}
 function print1() {
+    throw 'Built-in Not Implemented';
 }
 function property() {
+    throw 'Built-in Not Implemented';
 }
-function range() {
+function range(stop, start, step) {
+    var start = start || 0;
+    var step = step || 1;
+    throw 'Built-in Not Implemented';
 }
 function raw_input() {
-}
-function reduce() {
-}
-function reload() {
-}
-function repr() {
-}
-function reversed() {
-}
-function round(num, ndigits) {
-}
-function set() {
-}
-function setattr() {
-}
-function slice() {
-}
-function sorted() {
-}
-function staticmethod() {
+    throw 'Built-in Not Implemented';
 }
 
+//iterable
+function reduce() {
+    throw 'Built-in Not Implemented';
+}
+function reload() {
+    throw 'Built-in Not Implemented';
+}
+function repr() {
+    throw 'Built-in Not Implemented';
+}
+function reversed() {
+    throw 'Built-in Not Implemented';
+}
+function round(num, ndigits) {
+    return Math.round(num);
+}
+function set() {
+    throw 'Built-in Not Implemented';
+}
+function setattr(obj, name, value) {
+    obj.name = value;
+}
+function slice(start, stop, step) {
+    throw 'Built-in Not Implemented';
+}
+function sorted() {
+    throw 'Built-in Not Implemented';
+}
+function staticmethod() {
+    throw 'Built-in Not Implemented';
+}
+
+// Takes in an object and returns its string representation
 function str(object) {
     var err;
     var result = '';
@@ -264,31 +323,34 @@ function str(object) {
     }
 }
 
+//iterable
 function sum() {
+    throw 'Built-in Not Implemented';
 }
 function super1() {
+    throw 'Built-in Not Implemented';
 }
 function tuple() {
+    throw 'Built-in Not Implemented';
 }
 function type() {
+    throw 'Built-in Not Implemented';
 }
-function unichar() {
+function unichar(i) {
+    return String.fromCharCode(i);
 }
 function unicode() {
+    throw 'Built-in Not Implemented';
 }
 function vars() {
+    throw 'Built-in Not Implemented';
 }
 function xrange() {
+    throw 'Built-in Not Implemented';
 }
 function zip() {
+    throw 'Built-in Not Implemented';
 }
 function _import_() {
-}
-function apply() {
-}
-function buffer() {
-}
-
-// function coerce(){}
-function intern() {
+    throw 'Built-in Not Implemented';
 }

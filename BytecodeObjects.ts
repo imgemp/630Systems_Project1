@@ -3,8 +3,8 @@
 /// <reference path="Arithmetic.ts" />
 /// <reference path="Built_Ins.ts" />
 
+// Block class to be used for exceptions and loops
 class Block {
-
     delta: number;
     start: number;
     end: number;
@@ -12,10 +12,47 @@ class Block {
     flag: boolean;
     value: any;
 
+    //determine size of block upon set up
     constructor(delta: number, start: number, type: string) {
+        this.delta = delta; this.start = start; 
+        this.end = start + delta -1; 
+        this.type = type; this.flag = false;
+    }
+}
+// Defines class object with methods and 'self' property
+class classObject{
+    name: string;
+    bases: any;
+    methods: any;
+    self: any;
+    constructor(name: string, bases: any, methods: any) { 
+        this.name = name; this.bases = bases;
+        this.methods = methods; 
+        this.self = {}; 
+    }
+}
 
-        this.delta = delta; this.start = start; this.end = start + delta -1; this.type = type; this.flag = false;
+// Defines class for a function object
+class FunctionObject {
+    func_closure: number;
+    func_code: CodeObject;
+    func_defaults: any;
+    func_dict: any;
+    func_doc: string;
+    func_globals: any;
+    func_name: string;
 
+    constructor(code_object: CodeObject, defaults: any) { 
+        this.func_code = code_object; 
+        this.func_defaults = defaults; 
+    }
+}
+
+//Class for internedString that maintains an index
+class internedString {
+    index: number;
+    constructor(index: number) { 
+        this.index = index; 
     }
 }
 
@@ -40,8 +77,8 @@ class CodeObject {
     returnedValue: any;
     pc: number;
     self: any;
-    // BlockStack: any;
 
+    //initialize all associated properties
     constructor() {
         this.argcount = undefined;
         this.nlocals = undefined;
@@ -60,7 +97,6 @@ class CodeObject {
         this.returnedValue = undefined;
         this.pc = 0;
         this.self = {};
-        // this.BlockStack = [];
     }
 
     public STOP_CODE(){
@@ -162,11 +198,11 @@ class CodeObject {
         Stack.push(mod(TOS1,TOS));
         this.pc += 1;
     }
-    //implemsnts TOS = TOS1 + TOS
+    //implements TOS = TOS1 + TOS
     public BINARY_ADD(){
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(add(TOS1,TOS)); //Math.add(TOS1,TOS)
+        Stack.push(add(TOS1,TOS)); 
         this.pc += 1;
     }
     //implements TOS = TOS1 - TOS
@@ -197,7 +233,6 @@ class CodeObject {
         Stack.push(truediv(TOS1,TOS));
         this.pc += 1;
     }
-    //DIFFERENCE OF THESE FROM BINARY?
     public INPLACE_FLOOR_DIVIDE(){
         this.BINARY_FLOOR_DIVIDE();
     }
@@ -511,15 +546,9 @@ class CodeObject {
     } 
     public FOR_ITER(){
         throw 'Opcode Not Implemented';
+        /** NOT COMPLETE **/
         var incrCounter = this.code[this.pc+1] + Math.pow(2,8)*this.code[this.pc+2]; 
         var TOS = Stack.pop();
-        //if(!(TOS instanceof Iterator)){
-        //     if(TOS instanceof Array || TOS instanceof String){
-        //         TOS = new Iterator(0, TOS.length);
-        //     }else if(TOS instanceof Object){
-        //         TOS = new Iterator(0, TOS.size);
-        //     }
-        // }
         var newVal = TOS.next();
         if(newVal != -1){
             Stack.push(TOS);
@@ -773,7 +802,7 @@ class CodeObject {
         
 
         // Initialize variables depending on function_object type
-        var function_object = Stack.pop(); // last grab function object
+        var function_object = Stack.pop(); // grabs function object
         var isBuiltIn = (function_object in builtIns);
         var isClass = (function_object instanceof classObject);
         var varnamesOriginal = [];
@@ -796,12 +825,11 @@ class CodeObject {
             varnamesOriginal = function_object.func_code.varnames.slice(0);
             argcount = function_object.func_code.argcount;
             defaults = function_object.func_defaults;
-        } else {
+        } else {//is a true function object then
             varnamesOriginal = function_object.func_code.varnames.slice(0);
             argcount = function_object.func_code.argcount;
             defaults = function_object.func_defaults;
         }
-
 
         // Replace function object's variable names with arguments from Stack & default arguments
         // Keyword argument variables
@@ -850,8 +878,7 @@ class CodeObject {
             }
         }
 
-
-        //Execute Function
+        //Execute Function accordingly
         var returnedValue;
         if (isBuiltIn) {
             returnedValue = function_object.apply(null, varnamesNew);
@@ -986,60 +1013,5 @@ class CodeObject {
     public MAP_ADD(){ 
         throw 'Opcode Not Implemented';
         this.pc += 3; 
-    }
-}
-// Defines class object
-class classObject{
-    name: string;
-    bases: any;
-    methods: any;
-    self: any;
-    // maybe add a 'self' property here to hold all the variables? should default to this.self = {} + methods should have func_globals set to self
-
-    constructor(name: string, bases: any, methods: any) { this.name = name; this.bases = bases; this.methods = methods; this.self = {}; }
-}
-
-// Defines class for a function object
-class FunctionObject {
-    func_closure: number;
-    func_code: CodeObject;
-    func_defaults: any;
-    func_dict: any;
-    func_doc: string;
-    func_globals: any;
-    func_name: string;
-
-    constructor(code_object: CodeObject, defaults: any) { this.func_code = code_object; this.func_defaults = defaults; }
-}
-
-class internedString {
-    index: number;
-
-    constructor(index: number) { this.index = index; }
-}
-
-//Iterator object implemented to use for Python iterators
-class Iterator{
-    curIndex: number;
-    high: number;
-
-    //pass in the bounds 
-    constructor(low:number, high:number){
-        this.curIndex = low;
-        this.high = high;
-    }
-    //returns itself
-    iter(){
-        return this;
-    }
-    //returns next element or StopIteration if nothing is left
-    next(){
-        if(this.curIndex > this.high){
-            //stop iteration
-            return -1;
-        }else{
-            this.curIndex += 1;
-            return (this.curIndex - 1); 
-        }
     }
 }

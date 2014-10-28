@@ -39,7 +39,7 @@ class Err {
 
 }
 
-// Initiliaze global block stack
+// Initialize global block stack
 var BlockStack = [];
 
 // Assume verbose output requested
@@ -148,7 +148,7 @@ enum OpCodeList {
     POP_BLOCK = 87,
     END_FINALLY = 88,
     BUILD_CLASS = 89,
-    //Opcodes from here have an argument HAVE_ARGUMENT 90
+    /**Opcodes from here have an argument: HAVE_ARGUMENT 90**/
     STORE_NAME = 90, //index in name list
     DELETE_NAME = 91, //index in name list
     UNPACK_SEQUENCE = 92, //number of sequence items
@@ -203,7 +203,6 @@ enum OpCodeList {
     SET_ADD = 146,
     MAP_ADD = 147
 };
-<<<<<<< Updated upstream
 //Dictionary list of Python built-in functions
 var builtIns = {};
 builtIns['abs'] = abs;
@@ -297,7 +296,4 @@ builtIns['xor'] = xor;
 builtIns['xrange'] = xrange;
 builtIns['zip'] = zip;
 builtIns['_import_'] = _import_;
-builtIns['apply'] = apply;
-builtIns['buffer'] = buffer;
 builtIns['coerce'] = coerce;
-builtIns['intern'] = intern;

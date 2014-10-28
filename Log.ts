@@ -1,5 +1,6 @@
 /// <reference path="Globals.ts" />
 
+//Function to format and produce the desired output of opcodes
 function printToOutput(input: any,skipReturn?: boolean,isProgram?: boolean) {
 	var output;
 	if (input !== null) {
@@ -21,6 +22,5 @@ function printToOutput(input: any,skipReturn?: boolean,isProgram?: boolean) {
     if (isVerbose || isProgram) {
         if (!skipReturn) { output += '\n'; }
         (<HTMLInputElement>document.getElementById("logOut")).value += output;
-        // process.stdout.write(output);
     }
 }

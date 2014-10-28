@@ -1,12 +1,11 @@
 /// <reference path="Globals.ts" />
 /// <reference path="Log.ts" />
 
+//Generic class to hold all types of numbers
 class Numeric {
-
 	constructor(){}
-
 }
-
+// Integer class that implements its own methods
 class Integer extends Numeric {
 
 	value: number;
@@ -482,7 +481,7 @@ class Integer extends Numeric {
 	}
 
 }
-
+//Class to represent float numbers
 class Float extends Numeric {
 
 	value: number;
@@ -992,6 +991,7 @@ class Float extends Numeric {
 
 }
 
+//Class that implements complex number arthimetic 
 class Complex extends Numeric {
 
 	real: number;
@@ -1632,7 +1632,7 @@ class Complex extends Numeric {
 	}
 
 }
-
+// Class for long numbers. NOT IMPLEMENTED
 class Long extends Numeric {
 
 	value: number;

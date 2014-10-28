@@ -1,4 +1,5 @@
 /// <reference path="Globals.ts" />
+//Function to format and produce the desired output of opcodes
 function printToOutput(input, skipReturn, isProgram) {
     var output;
     if (input !== null) {
@@ -24,6 +25,5 @@ function printToOutput(input, skipReturn, isProgram) {
             output += '\n';
         }
         document.getElementById("logOut").value += output;
-        // process.stdout.write(output);
     }
 }

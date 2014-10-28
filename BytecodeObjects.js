@@ -2,7 +2,9 @@
 /// <reference path="Log.ts" />
 /// <reference path="Arithmetic.ts" />
 /// <reference path="Built_Ins.ts" />
+// Block class to be used for exceptions and loops
 var Block = (function () {
+    //determine size of block upon set up
     function Block(delta, start, type) {
         this.delta = delta;
         this.start = start;
@@ -13,9 +15,37 @@ var Block = (function () {
     return Block;
 })();
 
+// Defines class object with methods and 'self' property
+var classObject = (function () {
+    function classObject(name, bases, methods) {
+        this.name = name;
+        this.bases = bases;
+        this.methods = methods;
+        this.self = {};
+    }
+    return classObject;
+})();
+
+// Defines class for a function object
+var FunctionObject = (function () {
+    function FunctionObject(code_object, defaults) {
+        this.func_code = code_object;
+        this.func_defaults = defaults;
+    }
+    return FunctionObject;
+})();
+
+//Class for internedString that maintains an index
+var internedString = (function () {
+    function internedString(index) {
+        this.index = index;
+    }
+    return internedString;
+})();
+
 // Implemented bytecode functions in a CodeObject class
 var CodeObject = (function () {
-    // BlockStack: any;
+    //initialize all associated properties
     function CodeObject() {
         this.argcount = undefined;
         this.nlocals = undefined;
@@ -34,7 +64,6 @@ var CodeObject = (function () {
         this.returnedValue = undefined;
         this.pc = 0;
         this.self = {};
-        // this.BlockStack = [];
     }
     CodeObject.prototype.STOP_CODE = function () {
         //do nothing
@@ -92,14 +121,14 @@ var CodeObject = (function () {
     };
     CodeObject.prototype.UNARY_NOT = function () {
         var TOS = getValue(Stack.pop());
-        TOS = !TOS; /////////////////////////////////////////////////////////////////////////
+        TOS = !TOS;
         Stack.push(TOS);
         this.pc += 1;
     };
     CodeObject.prototype.UNARY_CONVERT = function () {
         var TOS = getValue(Stack.pop());
         TOS = TOS.toString(); // Not completely accurate
-        Stack.push(TOS); /////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS);
         this.pc += 1;
     };
     CodeObject.prototype.UNARY_INVERT = function () {
@@ -138,11 +167,11 @@ var CodeObject = (function () {
         this.pc += 1;
     };
 
-    //implemsnts TOS = TOS1 + TOS
+    //implements TOS = TOS1 + TOS
     CodeObject.prototype.BINARY_ADD = function () {
         var TOS = Stack.pop();
         var TOS1 = Stack.pop();
-        Stack.push(add(TOS1, TOS)); //Math.add(TOS1,TOS)
+        Stack.push(add(TOS1, TOS));
         this.pc += 1;
     };
 
@@ -158,7 +187,7 @@ var CodeObject = (function () {
     CodeObject.prototype.BINARY_SUBSCR = function () {
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
-        Stack.push(TOS1[TOS]); /////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS1[TOS]);
         this.pc += 1;
     };
 
@@ -177,8 +206,6 @@ var CodeObject = (function () {
         Stack.push(truediv(TOS1, TOS));
         this.pc += 1;
     };
-
-    //DIFFERENCE OF THESE FROM BINARY?
     CodeObject.prototype.INPLACE_FLOOR_DIVIDE = function () {
         this.BINARY_FLOOR_DIVIDE();
     };
@@ -191,7 +218,7 @@ var CodeObject = (function () {
     // Implements TOS[:] = TOS1
     CodeObject.prototype.SLICE_0 = function () {
         var TOS = getValue(Stack.pop());
-        Stack.push(TOS.slice(0, TOS.length)); /////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS.slice(0, TOS.length));
         this.pc += 1;
     };
 
@@ -199,20 +226,20 @@ var CodeObject = (function () {
     CodeObject.prototype.SLICE_1 = function () {
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
-        Stack.push(TOS1.slice(TOS, TOS1.length)); /////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS1.slice(TOS, TOS1.length));
         this.pc += 1;
     };
     CodeObject.prototype.SLICE_2 = function () {
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
-        Stack.push(TOS1.slice(0, TOS)); /////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS1.slice(0, TOS));
         this.pc += 1;
     };
     CodeObject.prototype.SLICE_3 = function () {
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
         var TOS2 = getValue(Stack.pop());
-        Stack.push(TOS2.slice(TOS1, TOS)); /////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS2.slice(TOS1, TOS));
         this.pc += 1;
     };
     CodeObject.prototype.STORE_SLICE_0 = function () {
@@ -258,21 +285,21 @@ var CodeObject = (function () {
     CodeObject.prototype.DELETE_SLICE_0 = function () {
         var TOS = getValue(Stack.pop());
         TOS.splice(0, TOS.length);
-        Stack.push(TOS); /////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS);
         this.pc += 1;
     };
     CodeObject.prototype.DELETE_SLICE_1 = function () {
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
         TOS1.splice(TOS, TOS1.length);
-        Stack.push(TOS1); /////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS1);
         this.pc += 1;
     };
     CodeObject.prototype.DELETE_SLICE_2 = function () {
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
         TOS1.splice(0, TOS);
-        Stack.push(TOS1); /////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS1);
         this.pc += 1;
     };
     CodeObject.prototype.DELETE_SLICE_3 = function () {
@@ -280,14 +307,14 @@ var CodeObject = (function () {
         var TOS1 = getValue(Stack.pop());
         var TOS2 = getValue(Stack.pop());
         TOS2.splice(TOS1, TOS);
-        Stack.push(TOS2); /////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS2);
         this.pc += 1;
     };
     CodeObject.prototype.STORE_MAP = function () {
         var val = getValue(Stack.pop());
         var key = getValue(Stack.pop());
         var dic = getValue(Stack.pop());
-        dic[key] = val; /////////////////////////////////////////////////////////////////////////
+        dic[key] = val;
         Stack.push(dic);
         this.pc += 1;
     };
@@ -312,13 +339,13 @@ var CodeObject = (function () {
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
         var TOS2 = getValue(Stack.pop());
-        TOS1[TOS] = TOS2; /////////////////////////////////////////////////////////////////////////
+        TOS1[TOS] = TOS2;
         this.pc += 1;
     };
     CodeObject.prototype.DELETE_SUBSCR = function () {
         var TOS = getValue(Stack.pop());
         var TOS1 = getValue(Stack.pop());
-        delete TOS1[TOS]; /////////////////////////////////////////////////////////////////////////
+        delete TOS1[TOS];
         this.pc += 1;
     };
     CodeObject.prototype.BINARY_LSHIFT = function () {
@@ -357,7 +384,7 @@ var CodeObject = (function () {
     CodeObject.prototype.GET_ITER = function () {
         var TOS = getValue(Stack.pop());
         var TOS = TOS.iter();
-        Stack.push(TOS); /////////////////////////////////////////////////////////////////////////
+        Stack.push(TOS);
         this.pc += 1;
     };
     CodeObject.prototype.PRINT_EXPR = function () {
@@ -390,6 +417,7 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.PRINT_ITEM_TO = function () {
+        throw 'Opcode Not Implemented';
         if (isVerbose) {
             printToOutput('NOT WORKING - SHOULD PRINT TO FILE: --------------------- ', false);
         } else {
@@ -398,6 +426,7 @@ var CodeObject = (function () {
         this.pc += 1;
     };
     CodeObject.prototype.PRINT_NEWLINE_TO = function () {
+        throw 'Opcode Not Implemented';
         if (isVerbose) {
             printToOutput('NOT WORKING - SHOULD PRINT NEWLINE TO FILE: --------------------- ', false);
         } else {
@@ -427,6 +456,7 @@ var CodeObject = (function () {
         BlockStack.push(block);
     };
     CodeObject.prototype.WITH_CLEANUP = function () {
+        throw 'Opcode Not Implemented';
         this.pc += 1;
     };
     CodeObject.prototype.LOAD_LOCALS = function () {
@@ -454,12 +484,15 @@ var CodeObject = (function () {
 
     // Implements 'from module import *'
     CodeObject.prototype.IMPORT_STAR = function () {
+        throw 'Opcode Not Implemented';
         this.pc += 1;
     };
     CodeObject.prototype.EXEC_STMT = function () {
+        throw 'Opcode Not Implemented';
         this.pc += 1;
     };
     CodeObject.prototype.YIELD_VALUE = function () {
+        throw 'Opcode Not Implemented';
         this.pc += 1;
     };
     CodeObject.prototype.POP_BLOCK = function () {
@@ -472,6 +505,7 @@ var CodeObject = (function () {
         }
     };
     CodeObject.prototype.END_FINALLY = function () {
+        throw 'Opcode Not Implemented';
         this.pc += 1;
     };
 
@@ -511,16 +545,11 @@ var CodeObject = (function () {
         this.pc += 3;
     };
     CodeObject.prototype.FOR_ITER = function () {
+        throw 'Opcode Not Implemented';
+
+        /** NOT COMPLETE **/
         var incrCounter = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         var TOS = Stack.pop();
-
-        //if(!(TOS instanceof Iterator)){
-        //     if(TOS instanceof Array || TOS instanceof String){
-        //         TOS = new Iterator(0, TOS.length);
-        //     }else if(TOS instanceof Object){
-        //         TOS = new Iterator(0, TOS.size);
-        //     }
-        // }
         var newVal = TOS.next();
         if (newVal != -1) {
             Stack.push(TOS);
@@ -531,6 +560,7 @@ var CodeObject = (function () {
         }
     };
     CodeObject.prototype.LIST_APPEND = function () {
+        throw 'Opcode Not Implemented';
         var value = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
@@ -618,6 +648,7 @@ var CodeObject = (function () {
         this.pc += 3;
     };
     CodeObject.prototype.BUILD_SET = function () {
+        throw 'Opcode Not Implemented';
         var numItems = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
@@ -691,10 +722,12 @@ var CodeObject = (function () {
         this.pc += 3;
     };
     CodeObject.prototype.IMPORT_NAME = function () {
+        throw 'Opcode Not Implemented';
         var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
     CodeObject.prototype.IMPORT_FROM = function () {
+        throw 'Opcode Not Implemented';
         var index = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
@@ -751,7 +784,7 @@ var CodeObject = (function () {
         this.pc += 3;
     };
     CodeObject.prototype.CONTINUE_LOOP = function () {
-        //start of loop(absolute)
+        throw 'Opcode Not Implemented';
         var start = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc = start;
     };
@@ -920,7 +953,7 @@ var CodeObject = (function () {
             }
         }
 
-        //Execute Function
+        //Execute Function accordingly
         var returnedValue;
         if (isBuiltIn) {
             returnedValue = function_object.apply(null, varnamesNew);
@@ -1044,91 +1077,48 @@ var CodeObject = (function () {
     /* The next 3 opcodes must be contiguous and satisfy
     (CALL_FUNCTION_VAR - CALL_FUNCTION) & 3 == 1  */
     CodeObject.prototype.CALL_FUNCTION_VAR = function () {
+        throw 'Opcode Not Implemented';
+
         //number args + (number kwargs<<8)
         var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
     CodeObject.prototype.CALL_FUNCTION_KW = function () {
+        throw 'Opcode Not Implemented';
+
         //number args + (number kwargs<<8)
         var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
     CodeObject.prototype.CALL_FUNCTION_VAR_KW = function () {
+        throw 'Opcode Not Implemented';
+
         //number args + (number kwargs<<8)
         var argc = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
 
     CodeObject.prototype.SETUP_WITH = function () {
+        throw 'Opcode Not Implemented';
         var delta = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
 
     /* Support for opargs more than 16 bits long */
     CodeObject.prototype.EXTENDED_ARG = function () {
+        throw 'Opcode Not Implemented';
         var ext = this.code[this.pc + 1] + Math.pow(2, 8) * this.code[this.pc + 2];
         this.pc += 3;
     };
 
     /***** have to determine what type of arguments these take *****/
     CodeObject.prototype.SET_ADD = function () {
+        throw 'Opcode Not Implemented';
         this.pc += 3;
     };
     CodeObject.prototype.MAP_ADD = function () {
+        throw 'Opcode Not Implemented';
         this.pc += 3;
     };
     return CodeObject;
-})();
-
-// Defines class object
-var classObject = (function () {
-    // maybe add a 'self' property here to hold all the variables? should default to this.self = {} + methods should have func_globals set to self
-    function classObject(name, bases, methods) {
-        this.name = name;
-        this.bases = bases;
-        this.methods = methods;
-        this.self = {};
-    }
-    return classObject;
-})();
-
-// Defines class for a function object
-var FunctionObject = (function () {
-    function FunctionObject(code_object, defaults) {
-        this.func_code = code_object;
-        this.func_defaults = defaults;
-    }
-    return FunctionObject;
-})();
-
-var internedString = (function () {
-    function internedString(index) {
-        this.index = index;
-    }
-    return internedString;
-})();
-
-//Iterator object implemented to use for Python iterators
-var Iterator = (function () {
-    //pass in the bounds
-    function Iterator(low, high) {
-        this.curIndex = low;
-        this.high = high;
-    }
-    //returns itself
-    Iterator.prototype.iter = function () {
-        return this;
-    };
-
-    //returns next element or StopIteration if nothing is left
-    Iterator.prototype.next = function () {
-        if (this.curIndex > this.high) {
-            //stop iteration
-            return -1;
-        } else {
-            this.curIndex += 1;
-            return (this.curIndex - 1);
-        }
-    };
-    return Iterator;
 })();

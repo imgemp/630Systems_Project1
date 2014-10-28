@@ -6,12 +6,14 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+//Generic class to hold all types of numbers
 var Numeric = (function () {
     function Numeric() {
     }
     return Numeric;
 })();
 
+// Integer class that implements its own methods
 var Integer = (function (_super) {
     __extends(Integer, _super);
     function Integer(value) {
@@ -470,6 +472,7 @@ var Integer = (function (_super) {
     return Integer;
 })(Numeric);
 
+//Class to represent float numbers
 var Float = (function (_super) {
     __extends(Float, _super);
     function Float(value) {
@@ -980,6 +983,7 @@ var Float = (function (_super) {
     return Float;
 })(Numeric);
 
+//Class that implements complex number arthimetic
 var Complex = (function (_super) {
     __extends(Complex, _super);
     function Complex(real, imag) {
@@ -1614,6 +1618,7 @@ var Complex = (function (_super) {
     return Complex;
 })(Numeric);
 
+// Class for long numbers. NOT IMPLEMENTED
 var Long = (function (_super) {
     __extends(Long, _super);
     function Long(value) {

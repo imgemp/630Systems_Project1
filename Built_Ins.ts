@@ -1,7 +1,7 @@
 /// <reference path="NumericObjects.ts" />
 
+// Will yield the value associated with a numeric object or just returns the object
 function getValue(object) {
-
 	if (object instanceof Numeric) {
 		if (object instanceof Complex) {
 			return object.real;
@@ -11,43 +11,26 @@ function getValue(object) {
 	} else {
 		return object;
 	}
-
 }
-
+// Extracts the relevant arguments 
 function getArgNames(func) {
-
 	var reg = /\(([\s\S]*?)\)/;
 	var args = reg.exec(func);
 	if (args) { 
     	var arg_names = args[1].split(',').map(Function.prototype.call, String.prototype.trim);
     	return arg_names;
     } else { return []; }
-
 }
-
-// console.log(getArgNames(getArgNames));
-
-// function abs(x: any): any{
-// 	if(x instanceof Complex){
-// 		var x2 = Math.pow(x.real,2);
-// 		var xi2 = Math.pow(x.imag,2);
-// 		return Math.sqrt((x2+xi2));
-// 	}else if ((x instanceof Integer) || (x instanceof Float) || (x instanceof Long)) {
-// 		return Math.abs(x);
-// 	}else{
-// 		return 'NotImplemented';
-// 	}
-// }
-//iterator
+//iterable check
 function all(){
-	
+	throw 'Built-in Not Implemented';
 }
-//iterator
+//iterable check
 function any(){
-	
+	throw 'Built-in Not Implemented';
 }
 function basestring(){
-
+	throw 'Built-in Not Implemented';
 }
 function bin(x: any):any{
 	if( x instanceof Integer){
@@ -57,7 +40,7 @@ function bin(x: any):any{
 function bool(x?:any) : boolean{
 	var xVal = x || false;
 	if(xVal != false){
-		if( xVal == 'None' || xVal == ''){
+		if( xVal == 'None' || xVal == ''|| xVal == undefined || xVal == 0){
 			xVal = false;
 		}else{
 			xVal = true;
@@ -65,19 +48,21 @@ function bool(x?:any) : boolean{
 	}
 	return xVal;
 }
-function bytearray(){}
+function bytearray(){
+	throw 'Built-in Not Implemented';
+}
 function callable(obj: any){
-
+	throw 'Built-in Not Implemented';
 }
 function chr(i : number){
 	if( i <= 255 && i >= 0){
 		return String.fromCharCode(i);
 	}else{
-		return "ValueError";
+		throw "ValueError";
 	}
 }
 function classmethod(func: any){
-
+	throw 'Built-in Not Implemented';
 }
 function cmp(x:any, y:any):number{
 	if(x === y){
@@ -89,59 +74,138 @@ function cmp(x:any, y:any):number{
 	}
 
 }
-function compile(){}
-// function complex(){}
+function compile(){
+	throw 'Built-in Not Implemented';
+}
 function delattr(obj:any, attrName: String){
 	delete obj.attrName; 
 }
-function dict(){}
-function dir(){}
-// function divmod(){}
-function enumerate(){}
-function eval1(){}
-function execfile(){}
-function file(){}
-function filter(){}
-function float(){}
-function format(){}
-function frozenset(){}
+function dict(iter:any){
+	throw 'Built-in Not Implemented';
+}
+function dir(obj:any){
+	throw 'Built-in Not Implemented';
+}
+function enumerate(seq:any, start:any){
+	start = 0;
+	throw 'Built-in Not Implemented';
+}
+function eval1(express:any){
+	throw 'Built-in Not Implemented';
+}
+function execfile(fileName:string){
+	throw 'Built-in Not Implemented';
+}
+function file(name:any){
+	throw 'Built-in Not Implemented';
+}
+//iterable
+function filter(funct:any, iter:any){
+	throw 'Built-in Not Implemented';
+}
+function format(value:any, format?:any){
+	var format = format || '';
+	if(format == '' ){
+		value.str();
+	}
+	if(format == 'fill' ){
+		throw 'Built-in Not Implemented';
+	}
+	if(format == 'align' ){
+		throw 'Built-in Not Implemented';
+	}
+	if(format == 'sign' ){
+		throw 'Built-in Not Implemented';
+	}
+	if(format == 'width' ){
+		throw 'Built-in Not Implemented';
+	}
+	if(format == 'precision' ){
+		throw 'Built-in Not Implemented';
+	}
+	if(format == 'type' ){
+		throw 'Built-in Not Implemented';
+	}
+}
+//iterable
+function frozenset(iterable:any){
+	throw 'Built-in Not Implemented';
+}
 function getattr(obj: any, attrName:String, dfault?:any): any{
 	var dflt = dfault || false;
 	if(obj.attrName != null){
 		return obj.attrName;
 	}else if(dflt != false){
-		return dflt
+		return dflt;
 	}else{
-		return "AttributeError"
+		throw "AttributeError";
 	}
 }
-function func_globals(){}
-function hashattr(){}
-function hash(){}
-function help(){}
-// function hex(){}
-function id(obj: any){}
-function input(){}
-function int(){}
-function isinstance(){}
-function issubclass(){}
-function iter(){}
+function func_globals(){
+	throw 'Built-in Not Implemented';
+}
+function hashattr(obj:any, name:String): boolean{
+	//see if getattr raises an exception
+	try{
+		getattr(obj, name);
+	}catch(err){
+		return false;
+	}
+	return true;
+}
+function hash(obj:any){
+	throw 'Built-in Not Implemented';
+}
+function help(obj:any){
+	throw 'Built-in Not Implemented';
+}
+function id(obj: any){
+	throw 'Built-in Not Implemented';
+}
+function input(){
+	throw 'Built-in Not Implemented';
+}
+function isinstance(){
+	throw 'Built-in Not Implemented';
+}
+function issubclass(){
+	throw 'Built-in Not Implemented';
+}
+function iter(){
+	throw 'Built-in Not Implemented';
+}
 function len(s:any): number{
 	return s.length;
 }
-function list(){}
-function locals(){}
-function long(){}
-function map(){}
-function max(){}
-function memoryview(){}
-function min(){}
-function next(){}
+function list(){
+	throw 'Built-in Not Implemented';
+}
+function locals(){
+	throw 'Built-in Not Implemented';
+}
+function map(){
+	throw 'Built-in Not Implemented';
+}
+function max(arg1:number, arg2:number){
+	//not entirely correct
+	return Math.max(arg1, arg2);
+}
+function memoryview(){
+	throw 'Built-in Not Implemented';
+}
+function min(arg1:number, arg2:number){
+	//not entirely correct
+	return Math.min(arg1, arg2);
+}
+function next(iter:any){
+	throw 'Built-in Not Implemented';
+}
 function object(){
 	return new Object;
 }
-// function oct(){}
-function open1(){}
+function open1(name:string){
+	throw 'Built-in Not Implemented';
+}
 function ord(c){
 	if(c.length > 1){
 		return "TypeError";
@@ -149,25 +213,52 @@ function ord(c){
 		return c.charCodeAt(0);
 	}
 }
-// function pow(x, y, z?){}
-function print1(){}
-function property(){}
-function range(){}
-function raw_input(){}
-function reduce(){}
-function reload(){}
-function repr(){}
-function reversed(){}
-function round(num: any, ndigits?:number){
-	
+function print1(){
+	throw 'Built-in Not Implemented';
 }
-function set(){}
-function setattr(){}
-function slice(){}
-function sorted(){}
-function staticmethod(){}
-
-
+function property(){
+	throw 'Built-in Not Implemented';
+}
+function range( stop:number, start?:number, step?:number){
+	var start = start || 0;
+	var step = step || 1;
+	throw 'Built-in Not Implemented';
+}
+function raw_input(){
+	throw 'Built-in Not Implemented';
+}
+//iterable
+function reduce(){
+	throw 'Built-in Not Implemented';
+}
+function reload(){
+	throw 'Built-in Not Implemented';
+}
+function repr(){
+	throw 'Built-in Not Implemented';
+}
+function reversed(){
+	throw 'Built-in Not Implemented';
+}
+function round(num: any, ndigits?:number){
+	return Math.round(num);
+}
+function set(){
+	throw 'Built-in Not Implemented';
+}
+function setattr(obj:any, name:string, value:any){
+	obj.name = value;
+}
+function slice(start:number, stop:number, step?:number){
+	throw 'Built-in Not Implemented';
+}
+function sorted(){
+	throw 'Built-in Not Implemented';
+}
+function staticmethod(){
+	throw 'Built-in Not Implemented';
+}
+// Takes in an object and returns its string representation
 function str(object: any): string {
 	var err: string;
 	var result: string = '';
@@ -218,19 +309,34 @@ function str(object: any): string {
 	} else { return 'null'; }
 
 }
-
-
-function sum(){}
-function super1(){}
-function tuple(){}
-function type(){}
-function unichar(){}
-function unicode(){}
-function vars(){}
-function xrange(){}
-function zip(){}
-function _import_(){}
-function apply(){}
-function buffer(){}
-// function coerce(){}
-function intern(){}
+//iterable
+function sum(){
+	throw 'Built-in Not Implemented';
+}
+function super1(){
+	throw 'Built-in Not Implemented';
+}
+function tuple(){
+	throw 'Built-in Not Implemented';
+}
+function type(){
+	throw 'Built-in Not Implemented';
+}
+function unichar(i:any){
+	return String.fromCharCode(i);
+}
+function unicode(){
+	throw 'Built-in Not Implemented';
+}
+function vars(){
+	throw 'Built-in Not Implemented';
+}
+function xrange(){
+	throw 'Built-in Not Implemented';
+}
+function zip(){
+	throw 'Built-in Not Implemented';
+}
+function _import_(){
+	throw 'Built-in Not Implemented';
+}

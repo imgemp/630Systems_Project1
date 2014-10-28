@@ -20,7 +20,7 @@ npm install -g typescript
 
 <reference path="node.d.ts" />
 
-Compile: tsc MasterFile.ts (which creates a .js file)
+To compile: tsc MasterFile.ts (which creates a .js file)
 
 **BrowserFS**
 
@@ -30,8 +30,10 @@ npm install
 
 See also the [README](https://github.com/jvilk/BrowserFS/blob/master/README.md)
 
+Our program is separated into multiple .ts/.js files that include appropriate references to other files at the beginning. We have designed a test suite for our program that can be run through the website using the testSuite.pyc file we have included. Expected output can be found in the commented section of the test file itself.  
+
 ##Known Bugs
-As of now our python interpreter cannot handle complex, long, or 64 bit integers and floats. Iterators are also not supported. Importing and set and map adds still need to be implemented. It is important to note that this program was built based upon Python 2.7 and other versions will not be parsed. 
+As of now our python interpreter does not support iterators. Importing, set and map adds, with statements and a couple other innocuous builtins and opcodes are included but were never implemented. Our program also does not specifically handle longs. It is important to note that this program was built based upon Python 2.7 and other versions will not be parsed. 
 
 ##Acknowledgements
 This project was delegated by Emery Berger for 630 Systems module at UMass Amherst. John Vilk aided with
